@@ -1,0 +1,62 @@
+.election__type__header{
+    font-family: GE SS Two;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 27.27px;
+    text-align: right;
+  }
+  .election__type{
+    padding: 20px 24px;
+    background-color: #fff;
+    box-shadow: 0px 4px 4px 0px #0000000F;
+  }
+  .election__type.new{
+    border-top: 4px solid #12B76A;
+  }
+  .election__type.to_do{
+    border-top: 4px solid #14B4D2;
+  }
+  .election__type.completed{
+    border-top: 4px solid #EEB72A;
+  }
+  .task_card{
+      border: 0.72px solid #F2F2F2;
+      background-color: #fff;
+      padding: 24px;
+      display: flex;
+      gap: 12px;
+      flex-direction: column;
+      border-radius: 16px;
+    }
+    .task_card_details{
+        font-family: GE SS Two;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 18px;
+        text-align: start;
+
+    }
+    .task_card_details_answer{
+        font-family: GE SS Two;
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 32.93px;
+        text-align: start;
+        
+
+    }
+  .task_card h4{
+    font-family: GE SS Two;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 21.9px;
+    text-align: start;
+    color: #131313;
+  }
+  .task_card p{
+    font-family: GE SS Two;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 28.81px;
+    text-align: right;    
+  }
