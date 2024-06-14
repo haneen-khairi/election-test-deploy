@@ -19,7 +19,6 @@ import {
 import { Bar } from "react-chartjs-2";
 import useFilterFamilyData from "../../Delegates/hooks/useFilterFamilyData";
 import "chartjs-plugin-datalabels";
-import { useMemo } from "react";
 
 ChartJS.register(
   ArcElement,
@@ -59,14 +58,14 @@ const FamilyRepBarChart = ({
     }
   };
 
-  const maxCount = useMemo(
-    () =>
-      filteredData?.data.reduce(
-        (acc, curr) => (curr.count > acc ? curr.count : acc),
-        0,
-      ) || 0,
-    [filteredData],
-  );
+  // const maxCount = useMemo(
+  //   () =>
+  //     filteredData?.data.reduce(
+  //       (acc, curr) => (curr.count > acc ? curr.count : acc),
+  //       0,
+  //     ) || 0,
+  //   [filteredData],
+  // );
 
   return (
     <Box>

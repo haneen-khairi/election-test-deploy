@@ -34,7 +34,7 @@ interface CustomChartElement {
 }
 
 const FamilyBarChartSection = () => {
-  const { data, isLoading } = useGetTopFamilies();
+  const { data, isLoading } = useGetTopFamilies({});
   const { setFilter } = useDashboardFilter();
   const filteredData = useFilterFamilyData(data);
 

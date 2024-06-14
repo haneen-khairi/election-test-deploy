@@ -3,8 +3,6 @@ import { ETable } from "@components/core";
 import { useGetDelegatesVotes } from "@services/hooks/voters/useVoters";
 import useVostersStore from "@store/VostersSotre";
 import useColumns from "./useColumns";
-import { useMemo } from "react";
-import { DelegatesVotes } from "@services/hooks/voters/Voters";
 import { DeliveringVote } from "@services/hooks/insights/Insights";
 
 const VotingTable = ({
@@ -13,12 +11,12 @@ const VotingTable = ({
   deliveringVoters: DeliveringVote;
 }) => {
   const { setPage, page } = useVostersStore();
-  const { data, isLoading, isFetching } = useGetDelegatesVotes();
+  const { data, isFetching } = useGetDelegatesVotes();
 
-  const voters: DelegatesVotes[] = useMemo(
-    () => (isLoading ? [] : data?.data || []),
-    [data, isLoading],
-  );
+  // const voters: DelegatesVotes[] = useMemo(
+  //   () => (isLoading ? [] : data?.data || []),
+  //   [data, isLoading],
+  // );
 
   const { columns } = useColumns();
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ThreePeopleIcon } from "@assets/icons";
-import { Box, Grid, HStack, Spinner, Text, VStack } from "@chakra-ui/react";
+import { Box, Grid, HStack, Text, VStack } from "@chakra-ui/react";
 import { Ebox } from "@components/core";
 import { useGetElectionDayStats } from "@services/hooks/voters/useVoters";
 import { displaySpinner } from "@services/utils/displaySpinner";
@@ -25,7 +25,9 @@ const dateToSlots = (
 const StatsSection = () => {
   const { data, isLoading } = useGetElectionDayStats();
 
-  const slots = dateToSlots(data?.timer);
+  const clone = structuredClone(data) as any;
+
+  const slots = dateToSlots(clone?.timer);
 
   const GreenBox = ({ direction }: { direction: "up" | "down" }) => (
     <Box
@@ -104,7 +106,7 @@ const StatsSection = () => {
           <Text width="100%" textAlign="center" fontSize="24px">
             متبقي على العملية الانتخابية
           </Text>
-          {data?.timer ? (
+          {clone?.timer ? (
             <ClockFace d={slots?.d} h={slots?.h} m={slots?.m} s={slots?.s} />
           ) : (
             "No data"
@@ -123,7 +125,9 @@ const StatsSection = () => {
           <Text fontSize="18px" mb="16px">
             أصواتي
           </Text>
-          <Text fontSize="20px">{displaySpinner(data?.my_votes_count, isLoading, "---")}</Text>
+          <Text fontSize="20px">
+            {displaySpinner(clone?.my_votes_count, isLoading, "---")}
+          </Text>
         </VStack>
       </Ebox>
 
@@ -143,7 +147,7 @@ const StatsSection = () => {
           height="fit-content"
           color="#12B76A"
         >
-          {displaySpinner(data?.delivered, isLoading, "---")}
+          {displaySpinner(clone?.delivered, isLoading, "---")}
         </Text>
       </Ebox>
 
@@ -163,7 +167,7 @@ const StatsSection = () => {
           height="fit-content"
           color="#12B76A"
         >
-          {displaySpinner(data?.is_voted, isLoading, "---")}
+          {displaySpinner(clone?.is_voted, isLoading, "---")}
         </Text>
       </Ebox>
 
@@ -183,7 +187,7 @@ const StatsSection = () => {
           height="fit-content"
           color="#D62C2C"
         >
-          {displaySpinner(data?.still_waiting_delivery, isLoading, "---")}
+          {displaySpinner(clone?.still_waiting_delivery, isLoading, "---")}
         </Text>
       </Ebox>
 
@@ -203,7 +207,7 @@ const StatsSection = () => {
           height="fit-content"
           color="#D62C2C"
         >
-          {displaySpinner(data?.is_not_voted, isLoading, "---")}
+          {displaySpinner(clone?.is_not_voted, isLoading, "---")}
         </Text>
       </Ebox>
     </Grid>

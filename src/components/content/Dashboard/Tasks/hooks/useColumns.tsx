@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useMemo } from "react";
 import {
   Box,
@@ -20,7 +21,7 @@ interface Props {
 }
 
 const useColumns = ({ edit, alert }: Props) => {
-  const [recordID, setRecordID] = useState<number>();
+  const [recordID, setRecordID] = useState<string>();
 
   const columns = useMemo(
     () => [

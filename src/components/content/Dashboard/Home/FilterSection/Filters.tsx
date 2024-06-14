@@ -10,7 +10,7 @@ import {
 } from "@components/content/DropDown";
 import BoxesSelect from "@components/content/DropDown/BoxesSelect";
 import CentersSelect from "@components/content/DropDown/CentersSelect";
-import CompanionNameSelect from "@components/content/DropDown/CompanionNameSelect";
+import SupporterNameSelect from "@components/content/DropDown/SupporterNameSelect";
 import ElectoralDistrictSelect from "@components/content/DropDown/ElectoralDistrictSelect";
 import RepresentativesNameSelect from "@components/content/DropDown/RepresentativesNameSelect";
 import { Btn } from "@components/core";
@@ -187,14 +187,14 @@ const Filters = ({
             <Controller
               control={control}
               name={
-                activeTabIndex === 3 ? "companion_name" : "representative_name"
+                activeTabIndex === 3 ? "supporter_name" : "representative_name"
               }
               render={({ field: { onChange, value } }) =>
                 activeTabIndex === 3 ? (
-                  <CompanionNameSelect
+                  <SupporterNameSelect
                     onChange={onChange}
                     value={value}
-                    error={errors?.companion_name?.message as string}
+                    error={errors?.supporter_name?.message as string}
                     key={value}
                   />
                 ) : (

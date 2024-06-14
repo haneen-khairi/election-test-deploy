@@ -11,7 +11,7 @@ import ExpensesWindow from "@components/content/Dashboard/Expenses/ExpensesWindo
 
 const ExpensesPage = () => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
-  const [filter, setFilter] = useState<FilterType>();
+  const [_filter, setFilter] = useState<FilterType>();
 
   const getComponent = () => {
     if (activeTabIndex === 0) return <StatsWindow />;

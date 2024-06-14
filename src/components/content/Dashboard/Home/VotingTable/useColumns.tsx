@@ -18,7 +18,7 @@ const useColumns = () => {
       },
       {
         Header: "عدد الأصوات",
-        Cell: ({ cell }: CellValue) => {
+        Cell: () => {
           return (
             <Text color="mPrimary" fontWeight="600" noOfLines={1}>
               [number]

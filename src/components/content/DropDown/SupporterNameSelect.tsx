@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { InputSelect } from "@components/core";
-import { useGetFirstNameDropdown } from "@services/hooks/dropdown/useDropDown";
+import { useGetSupporterNameDropdown } from "@services/hooks/dropdown/useDropDown";
 import { useEffect, useRef, useState } from "react";
 
 interface Props {
@@ -7,10 +8,10 @@ interface Props {
   onChange: (value: unknown) => void;
   error?: string;
 }
-const CompanionNameSelect = ({ value, onChange, error }: Props) => {
+const SupporterNameSelect = ({ value, onChange, error }: Props) => {
   const [search, setSearch] = useState<string>();
   const { data, fetchNextPage, hasNextPage, isFetching } =
-    useGetFirstNameDropdown(search);
+    useGetSupporterNameDropdown(search);
   const [isFetchingNextPage, setIsFetchingNextPage] = useState<boolean>(false);
   const sentinelRef = useRef(null);
   useEffect(() => {
@@ -60,4 +61,4 @@ const CompanionNameSelect = ({ value, onChange, error }: Props) => {
   );
 };
 
-export default CompanionNameSelect;
+export default SupporterNameSelect;

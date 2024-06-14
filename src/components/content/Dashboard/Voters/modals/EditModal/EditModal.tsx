@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   HStack,
@@ -34,19 +35,19 @@ import { useGetManadeebDropDown } from "@services/hooks/dropdown/useDropDown";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  recordID?: number;
+  recordID?: string;
 }
 
 const EditModal = ({ isOpen, onClose, recordID }: Props) => {
   const alert = useDisclosure();
   const { data: mainMandoob, isLoading: isMainMandoobLoading } =
-    useGetManadeebDropDown(4);
+    useGetManadeebDropDown("4");
   const { data: harakMandoob, isLoading: isHarakMandoobLoading } =
-    useGetManadeebDropDown(3);
+    useGetManadeebDropDown("3");
 
   const { data: info, isLoading: isDetailsLoading } = useGetVoterDetails(
-    recordID || 0,
-    isOpen
+    recordID || "",
+    isOpen,
   );
 
   const toast = useToast();

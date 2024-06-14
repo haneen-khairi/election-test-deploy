@@ -21,7 +21,7 @@ export type GeneralStats = {
 
 export type MapVoter = {
   boxes_count: number;
-  id: number;
+  id: string;
   latitude: string;
   longitude: string;
   name: string;
@@ -59,7 +59,7 @@ export type TransportationInsight = {
 };
 
 export type MandobInsight = {
-  id: number;
+  id: string;
   name: string;
   total_voters: number;
   delivered_voters: number;
@@ -73,7 +73,7 @@ export type VotersInsight = {
 };
 
 export type GuaranteedVoters = {
-  id: number;
+  id: string;
   voter: number;
   status: number;
   delivery_status: number;

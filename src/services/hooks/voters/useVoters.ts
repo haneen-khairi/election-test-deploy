@@ -8,6 +8,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import {
+  AssignSupporter,
   ElectionDayStats,
   GetVoterDetails,
   GetVoters,
@@ -30,14 +31,7 @@ export const useGetVoters = (filter?: FilterType, status?: string) => {
       api.getPageintaed({
         params: {
           page: page,
-          first_name: filter?.first_name,
-          second_name: filter?.second_name,
-          third_name: filter?.third_name,
-          last_name: filter?.last_name,
-          Place_of_residence: filter?.Place_of_residence,
-          electoral_district: filter?.electoral_district,
-          gender: filter?.gender,
-          status: status || undefined,
+          ...filter,
         },
       }),
     placeholderData: keepPreviousData,
@@ -151,7 +145,7 @@ export const useGetActivitiesVotes = (period: string) => {
   });
 };
 
-export const useGetVoterDetails = (id: number, isEnabled: boolean) => {
+export const useGetVoterDetails = (id: string, isEnabled: boolean) => {
   const api = new APIClient<GetVoterDetails>(`candidate/voter/${id}`);
   return useQuery({
     queryKey: ["VoterDetails", id, isEnabled],
@@ -185,7 +179,32 @@ export const useUpdateVoterInfo = () => {
   });
 };
 
-export const useDeleteVoter = (id: number) => {
+export const useAssignSupportersToVotes = () => {
+  const clientQuery = useQueryClient();
+  const api = new APIClient<AssignSupporter>(
+    "supporter/assign_selected_users_to_my_votes",
+  );
+
+  return useMutation<ItemResponse<string>, Error, any>({
+    mutationFn: async (data: AssignSupporter) => {
+      const response = (await api.put(data)) as unknown as ItemResponse<string>;
+      return response;
+    },
+    onSuccess: async (res) => {
+      if (!res.error) {
+        clientQuery.resetQueries({
+          queryKey: ["Supporters"],
+        });
+        return "Updated";
+      }
+    },
+    onError: (error: Error) => {
+      if (error) return error;
+    },
+  });
+};
+
+export const useDeleteVoter = (id: string) => {
   const clientQuery = useQueryClient();
   const removeUrl = new APIClient(`${url}/${id}`);
   return useMutation({
@@ -206,7 +225,7 @@ export const useDeleteVoter = (id: number) => {
   });
 };
 
-export const useDeleteVoters = (ids: number[]) => {
+export const useDeleteVoters = (_ids: string[]) => {
   const clientQuery = useQueryClient();
   const removeUrl = new APIClient(url);
   return useMutation({
@@ -227,12 +246,14 @@ export const useDeleteVoters = (ids: number[]) => {
   });
 };
 
-export const useDeleteSupporters = (ids: number[]) => {
+export const useDeleteSupporters = () => {
   const clientQuery = useQueryClient();
   const removeUrl = new APIClient("supporter/select_users_for_token");
   return useMutation({
-    mutationFn: async () => {
-      const response = await removeUrl.delete();
+    mutationFn: async (ids: string[]) => {
+      const response = await removeUrl.delete({
+        ids,
+      });
       return response;
     },
     onSuccess: async () => {

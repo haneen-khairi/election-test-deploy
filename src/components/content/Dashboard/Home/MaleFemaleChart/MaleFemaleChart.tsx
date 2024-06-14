@@ -29,7 +29,7 @@ ChartJS.register(
 );
 
 const MaleFemaleChart = () => {
-  const { data, isLoading } = useGetGeneralStats();
+  const { data, isLoading } = useGetGeneralStats({});
   const colors = ["#318973", "#36A88B"];
 
   return (

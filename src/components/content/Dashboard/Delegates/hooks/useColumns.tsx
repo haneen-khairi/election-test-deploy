@@ -17,7 +17,7 @@ interface Props {
 }
 
 const useColumns = ({ edit, alert }: Props) => {
-  const [recordID, setRecordID] = useState<number>();
+  const [recordID, setRecordID] = useState<string>();
 
   const columns = useMemo(
     () => [
@@ -42,7 +42,7 @@ const useColumns = ({ edit, alert }: Props) => {
           const data = cell.row.original.place_of_residence;
           return (
             <Text>
-              {data.map((item: { id: number; name: string }, index: number) => (
+              {data?.map((item: { id: string; name: string }, index: number) => (
                 <React.Fragment key={item.id}>
                   {item.name}
                   {index !== data.length - 1 && ", "}

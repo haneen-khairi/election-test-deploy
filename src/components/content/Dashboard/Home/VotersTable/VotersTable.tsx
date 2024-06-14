@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ETable } from "@components/core";
-import { useDeleteVoter, useDeleteVoters, useGetVoters } from "@services/hooks/voters/useVoters";
+import {
+  useDeleteVoter,
+  useDeleteVoters,
+  useGetVoters,
+} from "@services/hooks/voters/useVoters";
 import useVostersStore from "@store/VostersSotre";
 import useColumns from "./useColumns";
 import { useMemo } from "react";
@@ -33,7 +37,7 @@ const VotersTable = ({ filter }: { filter: any }) => {
 
   const handleCheckAll = () => {
     const votersData: {
-      id: number;
+      id: string;
     }[] = voters as [];
 
     setCheckedRows(
@@ -41,7 +45,7 @@ const VotersTable = ({ filter }: { filter: any }) => {
     );
   };
 
-  const removeVoter = useDeleteVoter(Number(recordID));
+  const removeVoter = useDeleteVoter(recordID || "");
   const removeVoters = useDeleteVoters(checkedRows);
 
   return (

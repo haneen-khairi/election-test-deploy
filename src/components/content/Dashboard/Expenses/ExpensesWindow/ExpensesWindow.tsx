@@ -7,23 +7,14 @@ import {
   DBTabs,
   DownloadDB,
   ExpensesSquare,
-  GoldBars,
-  MoneyCoins,
-  UpwardArrow,
 } from "@assets/icons";
-import { Box, Grid, HStack, Spinner, Text, VStack } from "@chakra-ui/react";
+import { Box, Grid, HStack, Text, VStack } from "@chakra-ui/react";
 import { Ebox } from "@components/core";
 import { ReactNode, useState } from "react";
 import ExpensesBarChart from "../ExpensesBarChart/ExpensesBarChart";
 import TabsContainer from "@components/core/tabsContainer/TabsContainer";
 import AccountsBarChart from "../AccountsBarChart/AccountsBarChart";
 import FinancialTable from "../FinancialTable/FinancialTable";
-import {
-  ExpenseAccountsData,
-  ExpenseSummary,
-  FinancialExpenseData,
-  IncomeExpensesType,
-} from "@services/hooks/expenses/Expenses";
 import { displaySpinner } from "@services/utils/displaySpinner";
 import {
   useGetExpenseAccountsData,

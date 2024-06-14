@@ -13,7 +13,7 @@ import {
 } from "./partials";
 
 const GeneralStats = () => {
-  const { data, isLoading } = useGetGeneralStats();
+  const { data, isLoading } = useGetGeneralStats({});
   const width = useBreakpointValue({
     base: "100%",
     md: "48%",

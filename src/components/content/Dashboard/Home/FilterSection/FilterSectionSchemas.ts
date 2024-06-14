@@ -13,4 +13,5 @@ export const filterSectionSchema = yup.object().shape({
   electoral_district: yup.string(),
   boxes: yup.string(),
   centers: yup.string(),
+  supporter_name: yup.string(),
 });

@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ETable } from "@components/core";
-import { useGetDelegatesVotes } from "@services/hooks/voters/useVoters";
 import useVostersStore from "@store/VostersSotre";
 import useColumns from "./useColumns";
-import { useMemo } from "react";
-import { DelegatesVotes } from "@services/hooks/voters/Voters";
 
 const PlaceBasedVotesTable = ({
   withCharts = true,

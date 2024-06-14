@@ -11,7 +11,7 @@ export const useGetVotingCenters = (isMapLoaded?: boolean) => {
   });
 };
 
-export const useGetVotingCentersBoxes = (id: number, isEnabled: boolean) => {
+export const useGetVotingCentersBoxes = (id: string, isEnabled: boolean) => {
   const api = new APIClient<BoxesType>(`data/map/voting_center/boxes/${id}`);
   return useQuery({
     queryKey: ["VotingCentersBoxes", id],

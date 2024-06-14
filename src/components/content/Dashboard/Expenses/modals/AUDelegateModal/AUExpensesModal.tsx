@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, HStack, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import {
   GradientButton,
@@ -24,7 +25,7 @@ import { PostPutExpensesType } from "@services/hooks/expenses/Expenses";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  recordID?: number;
+  recordID?: string;
 }
 
 const AUExpensesModal = ({ isOpen, onClose, recordID }: Props) => {
@@ -43,12 +44,12 @@ const AUExpensesModal = ({ isOpen, onClose, recordID }: Props) => {
   const { data: costs, isLoading: isCostsLoading } = useGetCosts();
 
   const { data, isLoading } = useGetExpense(
-    recordID || 0,
-    (recordID || 0) !== 0 && isOpen
+    recordID || "",
+    (recordID || "") !== "" && isOpen,
   );
   const toast = useToast();
   const addExpense = usePostExpense();
-  const updateExpense = usePutExpense(Number(recordID));
+  const updateExpense = usePutExpense(recordID || "");
 
   // Reset Form When Close
   useResetFormModal(isOpen, reset);
@@ -125,7 +126,7 @@ const AUExpensesModal = ({ isOpen, onClose, recordID }: Props) => {
     if (data?.data && !isLoading) {
       setValue("name", data?.data.name || "");
       setValue("amount", data?.data.amount || "");
-      setValue("cost", data?.data.cost.id || 0);
+      setValue("cost", data?.data.cost.id || "");
       setValue("date", data?.data.date || "");
       setValue("time", data?.data.time || "");
     }

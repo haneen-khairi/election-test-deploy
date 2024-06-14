@@ -6,7 +6,7 @@ interface Props {
   error?: string;
 }
 const SortSelect = ({ value, onChange, error }: Props) => {
-  const options = new Array(12).fill(0).map((x, index) => ({
+  const options = new Array(12).fill(0).map((_x, index) => ({
     value: String(index),
     label: String(index),
   }));

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ActivityChart, DownloadDB, MyVotes } from "@assets/icons";
@@ -21,7 +22,6 @@ import PlaceBasedVotesTable from "../PlaceBasedVotesTable/PlaceBasedVotesTable";
 
 const MyVotesWindow = ({
   filter,
-  setFilter,
 }: {
   filter: any;
   setFilter: any;

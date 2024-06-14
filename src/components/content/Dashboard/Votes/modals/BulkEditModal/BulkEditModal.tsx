@@ -29,15 +29,15 @@ import { LocationBox } from "../EditModal/partials";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  recordIDs?: number[];
+  recordIDs?: string[];
 }
 
 const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
   const alert = useDisclosure();
   const { data: mainMandoob, isLoading: isMainMandoobLoading } =
-    useGetManadeebDropDown(4);
+    useGetManadeebDropDown("4");
   const { data: harakMandoob, isLoading: isHarakMandoobLoading } =
-    useGetManadeebDropDown(3);
+    useGetManadeebDropDown("3");
 
   const toast = useToast();
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, HStack, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import {
   GradientButton,
@@ -29,7 +30,7 @@ import { InfoModal } from "@components/content/Dashboard/Modals";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  recordID?: number;
+  recordID?: string;
 }
 
 const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
@@ -51,16 +52,16 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
   const { data: VotingCenter, isLoading: isVotingCenterLoading } =
     useGetVotingCenterDropDown();
   const { data: Boxes, isLoading: isBoxesLoading } = useGetBoxesDropDown(
-    values.school
+    values.school,
   );
 
   const { data, isLoading } = useGetDelegate(
-    recordID || 0,
-    (recordID || 0) !== 0 && isOpen
+    recordID || "",
+    (recordID || "") !== "" && isOpen,
   );
   const toast = useToast();
   const addDelegate = usePostDelegate();
-  const updateDelegate = usePutDelegate(Number(recordID));
+  const updateDelegate = usePutDelegate(recordID || "");
 
   // Reset Form When Close
   useResetFormModal(isOpen, reset);
@@ -135,18 +136,18 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
     if (data?.data && !isLoading) {
       setValue("mobile_number", data?.data.mobile_number || "");
       setValue("name", data?.data.name || "");
-      setValue("group", data?.data.group.id || 0);
+      setValue("group", data?.data.group.id || "");
       setValue(
         "place_of_residence",
-        data?.data.place_of_residence?.map((item) => item.id.toString())
+        data?.data.place_of_residence?.map((item) => item.id.toString()),
       );
       setValue(
         "school",
-        data?.data.voting_center?.map((item) => item.id)
+        data?.data.voting_center?.map((item) => item.id),
       );
       setValue(
         "electoral_boxes",
-        data?.data?.electoral_boxes?.map((item) => item.id)
+        data?.data?.electoral_boxes?.map((item) => item.id),
       );
     }
   }, [data, isLoading, isOpen]);
@@ -226,7 +227,7 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                     error={errors.password?.message}
                   />
                 </Box>
-                {(values.group == 4 || values.group == 3) && (
+                {(values.group == "4" || values.group == "3") && (
                   <Box w="40%" flexGrow="1">
                     <Controller
                       control={control}
@@ -244,7 +245,7 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                     />
                   </Box>
                 )}
-                {values.group == 2 && (
+                {values.group == "2" && (
                   <>
                     <Box w="100%" flexGrow="1">
                       <Controller

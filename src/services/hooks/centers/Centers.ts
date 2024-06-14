@@ -1,5 +1,5 @@
 export type VotingCentersType = {
-  id: number;
+  id: string;
   name: string;
   latitude: string;
   longitude: string;
@@ -7,12 +7,12 @@ export type VotingCentersType = {
 };
 
 export type BoxType = {
-  id: number;
+  id: string;
   name: string;
 };
 
 export type BoxesType = {
-  id: number;
+  id: string;
   name: string;
   boxes_count: number;
   boxes: BoxType[];

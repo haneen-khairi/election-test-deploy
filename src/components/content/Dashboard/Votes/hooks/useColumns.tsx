@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useMemo } from "react";
 import {
   Box,
@@ -20,10 +21,10 @@ interface Props {
 }
 
 const useColumns = ({ edit, info }: Props) => {
-  const [checkedRows, setCheckedRows] = useState<number[]>([]);
-  const [recordID, setRecordID] = useState<number>();
+  const [checkedRows, setCheckedRows] = useState<string[]>([]);
+  const [recordID, setRecordID] = useState<string>();
 
-  const handleCheckboxChange = (id: number) => {
+  const handleCheckboxChange = (id: string) => {
     if (checkedRows.includes(id)) {
       setCheckedRows(checkedRows.filter((rowId) => rowId !== id));
     } else {

@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { MapVoter } from "@services/hooks/insights/Insights";
 
 const data: {
@@ -67,25 +68,25 @@ const GoogleGeoMap = ({ mapVoters }: { mapVoters: MapVoter[] }) => {
     lng: 36.5526912241781,
   };
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [loader, setLoader] = useState<Loader | null>(null);
+  // const [searchQuery, setSearchQuery] = useState("");
+  const [_map, setMap] = useState<google.maps.Map | null>(null);
+  const [_loader, setLoader] = useState<Loader | null>(null);
 
-  function createMarker(place: google.maps.places.PlaceResult) {
-    const infowindow: google.maps.InfoWindow = new google.maps.InfoWindow();
+  // function createMarker(place: google.maps.places.PlaceResult) {
+  //   const infowindow: google.maps.InfoWindow = new google.maps.InfoWindow();
 
-    if (!place.geometry || !place.geometry.location) return;
+  //   if (!place.geometry || !place.geometry.location) return;
 
-    const marker = new google.maps.Marker({
-      map,
-      position: place.geometry.location,
-    });
+  //   const marker = new google.maps.Marker({
+  //     map,
+  //     position: place.geometry.location,
+  //   });
 
-    google.maps.event.addListener(marker, "click", () => {
-      infowindow.setContent(place.name || "");
-      infowindow.open(map);
-    });
-  }
+  //   google.maps.event.addListener(marker, "click", () => {
+  //     infowindow.setContent(place.name || "");
+  //     infowindow.open(map);
+  //   });
+  // }
 
   useEffect(() => {
     const mapInit = async () => {
@@ -102,9 +103,9 @@ const GoogleGeoMap = ({ mapVoters }: { mapVoters: MapVoter[] }) => {
       }
 
       const { Map } = await loader.importLibrary("maps");
-      const { Marker } = (await loader.importLibrary(
-        "marker",
-      )) as google.maps.MarkerLibrary;
+      // const { Marker } = (await loader.importLibrary(
+      //   "marker",
+      // )) as google.maps.MarkerLibrary;
 
       const mapOptions = {
         center: position,

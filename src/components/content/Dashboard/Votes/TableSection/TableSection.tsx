@@ -39,7 +39,7 @@ const TableSection = ({ filter, status }: Props) => {
 
   const handleCheckAll = () => {
     const votersData: {
-      id: number;
+      id: string;
     }[] = MyVotes as [];
 
     setCheckedRows(

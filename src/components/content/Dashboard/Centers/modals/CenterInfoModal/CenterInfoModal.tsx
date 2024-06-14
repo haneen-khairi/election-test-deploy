@@ -10,7 +10,7 @@ interface Props {
   center?: VotingCentersType;
 }
 const CenterInfoModal = ({ isOpen, onClose, center }: Props) => {
-  const { data, isLoading } = useGetVotingCentersBoxes(center?.id || 0, isOpen);
+  const { data, isLoading } = useGetVotingCentersBoxes(center?.id || "", isOpen);
   console.log(data);
   return (
     <Popup title={center?.name} size="xl" isOpen={isOpen} onClose={onClose}>

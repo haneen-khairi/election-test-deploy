@@ -1,26 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useMemo, useState } from "react";
-import {
-  Box,
-  Button,
-  HStack,
-  Text,
-  UseDisclosureReturn,
-} from "@chakra-ui/react";
-import { ShowTime } from "@constants/functions/ShowTime";
+import { Box, HStack, Text, UseDisclosureReturn } from "@chakra-ui/react";
 import { truncateText } from "@constants/functions/TruncateText";
 import { CellValue } from "react-table";
-import { CheckBox } from "@components/core";
-import { EditPenIcon, TrashIcon } from "@assets/icons";
 
 interface Props {
   edit: UseDisclosureReturn;
   remove: UseDisclosureReturn;
 }
 
-const useColumns = ({ edit, remove }: Props) => {
-  const [checkedRows, setCheckedRows] = useState<number[]>([]);
-  const [recordID, setRecordID] = useState<number>();
+const useColumns = ({ edit }: Props) => {
+  const [checkedRows, setCheckedRows] = useState<string[]>([]);
+  const [recordID, _setRecordID] = useState<string>();
 
   const getDotColor = (status: number | undefined | null): string => {
     if (!status) return "#9F9F9F";
@@ -33,7 +25,7 @@ const useColumns = ({ edit, remove }: Props) => {
     return "#9F9F9F";
   };
 
-  const handleCheckboxChange = (id: number) => {
+  const handleCheckboxChange = (id: string) => {
     if (checkedRows.includes(id)) {
       setCheckedRows(checkedRows.filter((rowId) => rowId !== id));
     } else {
@@ -43,18 +35,18 @@ const useColumns = ({ edit, remove }: Props) => {
 
   const columns = useMemo(
     () => [
-      {
-        Header: " ",
-        Cell: ({ cell }: CellValue) => {
-          const id = cell.row.original.id;
-          return (
-            <CheckBox
-              checked={checkedRows.includes(id)}
-              onChange={() => handleCheckboxChange(id)}
-            />
-          );
-        },
-      },
+      // {
+      //   Header: " ",
+      //   Cell: ({ cell }: CellValue) => {
+      //     const id = cell.row.original.id;
+      //     return (
+      //       <CheckBox
+      //         checked={checkedRows.includes(id)}
+      //         onChange={() => handleCheckboxChange(id)}
+      //       />
+      //     );
+      //   },
+      // },
       {
         Header: "الإسم",
         Cell: ({ cell }: CellValue) => {
@@ -100,52 +92,52 @@ const useColumns = ({ edit, remove }: Props) => {
         Header: "صندوق",
         accessor: "",
       },
-      {
-        Header: "  ",
-        Cell: ({ cell }: CellValue) => {
-          const id = cell.row.original.id;
-          return (
-            <HStack justifyContent="center" gap="20px">
-              <Box
-                as={Button}
-                size="xs"
-                rounded="full"
-                px="0"
-                variant="ghost"
-                fontSize="15px"
-                color="primary.500"
-                onClick={() => {
-                  setRecordID(cell.row.original.id);
-                  edit.onOpen();
-                }}
-              >
-                <EditPenIcon />
-              </Box>
+      // {
+      //   Header: "  ",
+      //   Cell: ({ cell }: CellValue) => {
+      //     const id = cell.row.original.id;
+      //     return (
+      //       <HStack justifyContent="center" gap="20px">
+      //         <Box
+      //           as={Button}
+      //           size="xs"
+      //           rounded="full"
+      //           px="0"
+      //           variant="ghost"
+      //           fontSize="15px"
+      //           color="primary.500"
+      //           onClick={() => {
+      //             setRecordID(cell.row.original.id);
+      //             edit.onOpen();
+      //           }}
+      //         >
+      //           <EditPenIcon />
+      //         </Box>
 
-              <Box
-                as={Button}
-                size="xs"
-                rounded="full"
-                px="0"
-                variant="ghost"
-                fontSize="15px"
-                color="primary.500"
-                onClick={() => {
-                  setRecordID(cell.row.original.id);
-                  remove.onOpen();
-                }}
-              >
-                <TrashIcon />
-              </Box>
-            </HStack>
-          );
-        },
-      },
+      //         <Box
+      //           as={Button}
+      //           size="xs"
+      //           rounded="full"
+      //           px="0"
+      //           variant="ghost"
+      //           fontSize="15px"
+      //           color="primary.500"
+      //           onClick={() => {
+      //             setRecordID(cell.row.original.id);
+      //             remove.onOpen();
+      //           }}
+      //         >
+      //           <TrashIcon />
+      //         </Box>
+      //       </HStack>
+      //     );
+      //   },
+      // },
     ],
     [checkedRows, edit, handleCheckboxChange],
   );
 
-  return { columns, checkedRows, recordID, setCheckedRows };
+  return { columns, checkedRows, setCheckedRows, recordID };
 };
 
 export default useColumns;

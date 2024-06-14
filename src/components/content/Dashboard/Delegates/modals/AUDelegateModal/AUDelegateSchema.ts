@@ -8,7 +8,7 @@ export const AUDelegateSchema = yup.object().shape({
     .max(10, "رقم الجوال يجب ان يحتوي على 10 ارقام كحد اقصى")
     .min(10, "رقم الجوال يجب ان يحتوي على 10 ارقام كحد ادنى"),
   name: yup.string().required("هذا الحقل اجباري"),
-  group: yup.number().required("هذا الحقل اجباري"),
+  group: yup.string().required("هذا الحقل اجباري"),
   password: yup.string().required("هذا الحقل اجباري"),
   school: yup.array(),
   place_of_residence: yup

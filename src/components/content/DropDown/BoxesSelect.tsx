@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { InputSelect } from "@components/core";
 import { useGetBoxesDropdown } from "@services/hooks/dropdown/useDropDown";
@@ -12,7 +13,9 @@ interface Props {
 const BoxesSelect = ({ value, onChange, error, circlesData }: Props) => {
   const [search, setSearch] = useState<string>();
   const { data, fetchNextPage, hasNextPage, isFetching } = useGetBoxesDropdown(
-    circlesData,
+    circlesData?.pages
+      ? circlesData?.pages[0]?.data?.map((item: any) => item.id) || []
+      : [],
     search,
   );
   const [isFetchingNextPage, setIsFetchingNextPage] = useState<boolean>(false);

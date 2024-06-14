@@ -9,9 +9,11 @@ import {
 } from "@components/content/DropDown";
 import BoxesSelect from "@components/content/DropDown/BoxesSelect";
 import CentersSelect from "@components/content/DropDown/CentersSelect";
-import CompanionNameSelect from "@components/content/DropDown/CompanionNameSelect";
+import SupporterNameSelect from "@components/content/DropDown/SupporterNameSelect";
 import ElectoralDistrictSelect from "@components/content/DropDown/ElectoralDistrictSelect";
 import { Btn } from "@components/core";
+import { useGetVotingCentersDropdown } from "@services/hooks/dropdown/useDropDown";
+import { useState } from "react";
 import {
   Control,
   Controller,
@@ -32,6 +34,9 @@ const Filters = ({
   isDirty: boolean;
   handleSearch: () => void;
 }) => {
+  const [search, setSearch] = useState("");
+  const dropDownObj = useGetVotingCentersDropdown(search);
+
   return (
     <>
       <>
@@ -77,6 +82,7 @@ const Filters = ({
                 value={value}
                 error={errors?.boxes?.message as string}
                 key={value}
+                circlesData={dropDownObj?.data || []}
               />
             )}
           />
@@ -88,6 +94,8 @@ const Filters = ({
             name="centers"
             render={({ field: { onChange, value } }) => (
               <CentersSelect
+                dropDownObj={dropDownObj}
+                setSearch={setSearch}
                 onChange={onChange}
                 value={value}
                 error={errors?.centers?.message as string}
@@ -140,7 +148,7 @@ const Filters = ({
             control={control}
             name={"companion_name"}
             render={({ field: { onChange, value } }) => (
-              <CompanionNameSelect
+              <SupporterNameSelect
                 onChange={onChange}
                 value={value}
                 error={errors?.companion_name?.message as string}

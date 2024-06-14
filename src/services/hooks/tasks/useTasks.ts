@@ -39,7 +39,7 @@ export const useGetTasks = (filter?: FilterType) => {
   });
 };
 
-export const useGetTask = (id: number, isEnabled: boolean) => {
+export const useGetTask = (id: string, isEnabled: boolean) => {
   const api = new APIClient<GetTaskType>(`task/tasks/${id}`);
   return useQuery({
     queryKey: ["Task", id],
@@ -48,7 +48,7 @@ export const useGetTask = (id: number, isEnabled: boolean) => {
   });
 };
 
-export const usePutTask = (id: number) => {
+export const usePutTask = (id: string) => {
   const clientQuery = useQueryClient();
   const api = new APIClient<PostPutTaskType>(`task/tasks/${id}`);
   return useMutation<ItemResponse<string>, Error, PostPutTaskType>({

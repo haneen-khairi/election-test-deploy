@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useMemo, useState } from "react";
 import {
@@ -19,10 +20,10 @@ interface Props {
 }
 
 const useColumns = ({ edit, remove }: Props) => {
-  const [checkedRows, setCheckedRows] = useState<number[]>([]);
-  const [recordID, setRecordID] = useState<number>();
+  const [checkedRows, setCheckedRows] = useState<string[]>([]);
+  const [recordID, setRecordID] = useState<string>();
 
-  const handleCheckboxChange = (id: number) => {
+  const handleCheckboxChange = (id: string) => {
     if (checkedRows.includes(id)) {
       setCheckedRows(checkedRows.filter((rowId) => rowId !== id));
     } else {
@@ -103,7 +104,7 @@ const useColumns = ({ edit, remove }: Props) => {
       {
         Header: "  ",
         Cell: ({ cell }: CellValue) => {
-          const id = cell.row.original.id;
+          // const id = cell.row.original.id;
           return (
             <HStack justifyContent="center" gap="20px">
               <Box

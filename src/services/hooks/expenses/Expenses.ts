@@ -1,5 +1,5 @@
 export type CostType = {
-  id: number;
+  id: string;
   name: string;
 };
 
@@ -15,12 +15,12 @@ export type ExpensesChart = {
 };
 
 type ExpenseItemData = null | {
-  id: number;
+  id: string;
   name: string;
 };
 
 export type ExpenseItem = {
-  id: number;
+  id: string;
   to_account: ExpenseItemData;
   from_account: ExpenseItemData;
   type: ExpenseItemData;
@@ -32,7 +32,7 @@ export type ExpenseItem = {
 };
 
 export type GetExpensesType = {
-  id: number;
+  id: string;
   cost: CostType;
   name: string;
   amount: string;
@@ -41,7 +41,7 @@ export type GetExpensesType = {
 };
 
 export type PostPutExpensesType = {
-  cost?: number;
+  cost?: string;
   name?: string;
   amount?: string;
   date?: string;
@@ -73,7 +73,7 @@ export type ExpenseAccountsData = {
 export type IncomeExpensesType = { [key: string]: number };
 
 export type FinancialIncomeData = {
-  id: number;
+  id: string;
   from_main_account: string;
   to_main_account: string;
   from_sub_account: string;
@@ -84,7 +84,7 @@ export type FinancialIncomeData = {
 };
 
 export type FinancialExpenseData = {
-  id: number;
+  id: string;
   from_main_account: string;
   to_main_account: string;
   from_sub_account: string;

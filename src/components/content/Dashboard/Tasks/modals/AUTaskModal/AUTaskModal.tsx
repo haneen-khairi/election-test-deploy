@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, HStack, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import {
   GradientButton,
@@ -27,7 +28,7 @@ import { useGetManadeebDropDown } from "@services/hooks/dropdown/useDropDown";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  recordID?: number;
+  recordID?: string;
 }
 
 const AUTaskModal = ({ isOpen, onClose, recordID }: Props) => {
@@ -52,12 +53,12 @@ const AUTaskModal = ({ isOpen, onClose, recordID }: Props) => {
     useGetManadeebDropDown(values.mandob_type);
 
   const { data, isLoading } = useGetTask(
-    recordID || 0,
-    (recordID || 0) !== 0 && isOpen
+    recordID || "",
+    (recordID || "") !== "" && isOpen,
   );
   const toast = useToast();
   const addTask = usePostTask();
-  const updateTask = usePutTask(Number(recordID));
+  const updateTask = usePutTask(recordID || "");
 
   // Reset Form When Close
   useResetFormModal(isOpen, reset);

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
@@ -51,7 +52,6 @@ const HomeFilterSection = ({
     defaultValues: {
       district: undefined,
       representative_name: undefined,
-      companion_name: undefined,
       gender: "M",
       first_name: undefined,
       second_name: undefined,
@@ -61,6 +61,7 @@ const HomeFilterSection = ({
       electoral_district: undefined,
       boxes: undefined,
       centers: undefined,
+      supporter_name: undefined,
     },
   });
 
@@ -91,6 +92,9 @@ const HomeFilterSection = ({
       ...newFilter,
     }));
   };
+
+  console.log(watch("place_of_residence"));
+  
 
   useEffect(() => {
     const newFilter: any = {};

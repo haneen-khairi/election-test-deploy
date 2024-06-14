@@ -8,6 +8,7 @@ interface Props {
   error?: string;
   multi?: boolean;
   label?: string;
+  placeholder?: string;
 }
 const PlaceOfResidenceSelect = ({
   value,
@@ -15,6 +16,7 @@ const PlaceOfResidenceSelect = ({
   error,
   multi = false,
   label,
+  placeholder,
 }: Props) => {
   const [search, setSearch] = useState<string>();
   const { data, fetchNextPage, hasNextPage, isFetching } =
@@ -58,7 +60,7 @@ const PlaceOfResidenceSelect = ({
           : []
       }
       multi={multi}
-      placeholder={"مكان الإقامة"}
+      placeholder={placeholder || "مكان الإقامة"}
       value={value}
       error={error}
       onChange={onChange}

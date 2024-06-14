@@ -36,7 +36,7 @@ const TableSection = ({ filter }: Props) => {
 
   const handleCheckAll = () => {
     const votersData: {
-      id: number;
+      id: string;
     }[] = voters as [];
 
     setCheckedRows(

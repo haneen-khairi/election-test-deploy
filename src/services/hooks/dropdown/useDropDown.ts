@@ -7,6 +7,26 @@ import useFilterStore from "@store/FilterStore";
 
 const url = "candidate/dropdown";
 
+export const useGetSupporterNameDropdown = (search?: string) => {
+  const api = new APIClient<GetDropDown>("supporter/almuazereen");
+  return useInfiniteQuery<ListPageinated<GetDropDown>, Error>({
+    queryKey: ["supporter_name_dropdown", search],
+    queryFn: ({ pageParam = 1 }) =>
+      api.getPageintaed({
+        params: {
+          page: pageParam,
+          first_name: search || undefined,
+        },
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.next ? allPages.length + 1 : undefined;
+    },
+    staleTime: 24 * 60 * 60 * 1000,
+    retry: false,
+    initialPageParam: 1,
+  });
+};
+
 export const useGetFirstNameDropdown = (search?: string) => {
   const { filter } = useFilterStore();
   const api = new APIClient<GetDropDown>(`${url}/first_name`);
@@ -170,7 +190,9 @@ export const useGetVotingCentersDropdown = (search?: string) => {
 };
 
 export const useGetBoxesDropdown = (circlesData: any, search?: string) => {
-  const api = new APIClient<GetDropDown>("data/voting_center/boxes");
+  const api = new APIClient<GetDropDown>(
+    `data/voting_center/boxes?voting_center=[${circlesData ? circlesData.map((item: any) => `"${item}"`).join(",") : ""}]`,
+  );
   return useInfiniteQuery<ListPageinated<GetDropDown>, Error>({
     queryKey: ["boxes_dropdown", search],
     queryFn: ({ pageParam = 1 }) =>
@@ -178,7 +200,6 @@ export const useGetBoxesDropdown = (circlesData: any, search?: string) => {
         params: {
           page: pageParam,
           last_name: search || undefined,
-          voting_center: circlesData,
         },
       }),
     getNextPageParam: (lastPage, allPages) => {
@@ -321,7 +342,7 @@ export const useGetBoxesDropDown2 = (votingCenter: number) => {
   });
 };
 
-export const useGetManadeebDropDown = (id: number) => {
+export const useGetManadeebDropDown = (id: string) => {
   const api = new APIClient<GetDropDown>(`account/manadeeb/dropdown/${id}`);
   return useQuery({
     queryKey: ["GetManadeebDropDown", id],

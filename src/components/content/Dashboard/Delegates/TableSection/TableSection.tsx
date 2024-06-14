@@ -31,11 +31,11 @@ const TableSection = ({ filter }: Props) => {
 
   const delegates = useMemo(
     () => (isLoading ? [] : data?.data || []),
-    [data?.data, isLoading]
+    [data?.data, isLoading],
   );
 
   const { columns, recordID } = useColumns(modals);
-  const removeDelegate = useDeleteDelegate(Number(recordID));
+  const removeDelegate = useDeleteDelegate(recordID || "");
 
   return (
     <>

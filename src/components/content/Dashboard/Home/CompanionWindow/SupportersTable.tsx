@@ -1,14 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { DownloadDB, EditPenIcon, SwitchIcon, TrashIcon } from "@assets/icons";
+import { DownloadDB, SwitchIcon, TrashIcon } from "@assets/icons";
 import { Button, HStack, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { ETable } from "@components/core";
 import useColumns from "./useColumns";
 import { useMemo } from "react";
 import useSupportersStore from "@store/SupportersStore";
-import { useDeleteSupporters, useGetSupporters } from "@services/hooks/voters/useVoters";
+import {
+  useDeleteSupporters,
+  useGetSupporters,
+} from "@services/hooks/voters/useVoters";
 import { MdDeselect, MdSelectAll } from "react-icons/md";
 import { InfoModal } from "../../Modals";
+import BulkMoveModal from "../../Modals/BulkMoveModal/BulkMoveModal";
 
 const SupportersTable = ({ filter }: { filter: any }) => {
   const { data, isLoading, isFetching } = useGetSupporters(filter);
@@ -16,7 +20,6 @@ const SupportersTable = ({ filter }: { filter: any }) => {
 
   const bulkMove = useDisclosure();
   const remove = useDisclosure();
-  const bulkEdit = useDisclosure();
   const bulkRemove = useDisclosure();
 
   const supporters = useMemo(
@@ -24,15 +27,15 @@ const SupportersTable = ({ filter }: { filter: any }) => {
     [data?.data, isLoading],
   );
 
-  const { columns, setCheckedRows, checkedRows } = useColumns({
+  const { columns, setCheckedRows, checkedRows, recordID } = useColumns({
     remove,
   });
 
-  const removeSupporters = useDeleteSupporters(checkedRows);
+  const removeSupporters = useDeleteSupporters();
 
   const handleCheckAll = () => {
     const supportersData: {
-      id: number;
+      id: string;
     }[] = supporters as [];
 
     setCheckedRows(
@@ -48,24 +51,39 @@ const SupportersTable = ({ filter }: { filter: any }) => {
         <Text ml="5px">جدول المؤازرة</Text>
         <Text ml="auto">({supporters?.length || 0} صوت)</Text>
 
-        {checkedRows.length > 1 && (
-          <Button
-            rounded="full"
-            p="10px 15px"
-            variant="ghost"
-            colorScheme="green"
-            fontSize="20px"
-            onClick={bulkRemove.onOpen}
-            size="sm"
-            _hover={{
-              backgroundColor: "#ce112712",
-            }}
-          >
-            <TrashIcon />
-            <Text mr="10px" color="#CE1126">
-              حذف
-            </Text>
-          </Button>
+        {checkedRows?.length > 0 && (
+          <>
+            <Button
+              rounded="full"
+              p="10px 15px"
+              variant="ghost"
+              colorScheme="green"
+              fontSize="20px"
+              onClick={bulkRemove.onOpen}
+              size="sm"
+              _hover={{
+                backgroundColor: "#ce112712",
+              }}
+            >
+              <TrashIcon />
+              <Text mr="10px" color="#CE1126">
+                حذف
+              </Text>
+            </Button>
+
+            <Button
+              rounded="full"
+              p="10px 15px"
+              variant="ghost"
+              colorScheme="green"
+              fontSize="20px"
+              onClick={bulkMove.onOpen}
+              size="sm"
+            >
+              <SwitchIcon />
+              <Text color="#318973">نقل الى أصواتي</Text>
+            </Button>
+          </>
         )}
 
         <Button
@@ -95,19 +113,6 @@ const SupportersTable = ({ filter }: { filter: any }) => {
           variant="ghost"
           colorScheme="green"
           fontSize="20px"
-          onClick={bulkEdit.onOpen}
-          size="sm"
-        >
-          <SwitchIcon />
-          <Text color="#318973">نقل الى أصواتي</Text>
-        </Button>
-
-        <Button
-          rounded="full"
-          p="10px 15px"
-          variant="ghost"
-          colorScheme="green"
-          fontSize="20px"
           size="sm"
         >
           <DownloadDB />
@@ -120,14 +125,34 @@ const SupportersTable = ({ filter }: { filter: any }) => {
       <InfoModal
         isOpen={remove.isOpen}
         onClose={remove.onClose}
-        title="حذف الناخب"
-        description="هل أنت متأكد من حذف الناخب؟"
+        title="حذف المؤازر"
+        description="هل أنت متأكد من حذف المؤازر؟"
         type="delete"
         onProceed={() => {
-          removeSupporters.mutateAsync();
+          recordID && removeSupporters.mutateAsync([String(recordID)]);
           remove.onClose();
         }}
         isLoading={removeSupporters.isPending}
+      />
+
+      <InfoModal
+        isOpen={bulkRemove.isOpen}
+        onClose={bulkRemove.onClose}
+        title="حذف المؤازرين"
+        description="هل أنت متأكد من حذف المؤازرين؟"
+        type="delete"
+        onProceed={() => {
+          checkedRows &&
+            removeSupporters.mutateAsync(checkedRows.map((id) => String(id)));
+          bulkRemove.onClose();
+        }}
+        isLoading={removeSupporters.isPending}
+      />
+
+      <BulkMoveModal
+        isOpen={bulkMove.isOpen}
+        onClose={bulkMove.onClose}
+        recordIDs={checkedRows}
       />
 
       <ETable

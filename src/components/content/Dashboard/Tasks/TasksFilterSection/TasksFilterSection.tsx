@@ -8,22 +8,12 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { PlaceOfResidenceSelect } from "@components/content/DropDown";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { filterSectionSchema } from "./FilterSectionSchemas";
 import useAuthStore from "@store/AuthStore";
 import Filters from "./Filters";
-import TabsContainer from "@components/core/tabsContainer/TabsContainer";
-import {
-  CalenderIcon,
-  CompanionIcon,
-  DownloadIcon,
-  PeopleIcon,
-  StackIcon,
-} from "@assets/icons";
 import { Btn } from "@components/core";
-import ElectoralDistrictSelect from "@components/content/DropDown/ElectoralDistrictSelect";
 import { FaPlus } from "react-icons/fa";
 
 const TasksFilterSection = ({
@@ -34,7 +24,7 @@ const TasksFilterSection = ({
   const { data } = useAuthStore();
   const add = useDisclosure();
 
-  const companion = useDisclosure();
+  // const companion = useDisclosure();
 
   const {
     control,

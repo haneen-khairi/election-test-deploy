@@ -69,9 +69,9 @@ const FilterSection = ({ SFilter }: Props) => {
                 loading={isLoading}
                 options={
                   data?.data
-                    ? data?.data.map((el) => ({
+                    ? data?.data?.map((el) => ({
                         label: el.name || "",
-                        value: el.id || 0,
+                        value: el.id || "",
                       }))
                     : []
                 }

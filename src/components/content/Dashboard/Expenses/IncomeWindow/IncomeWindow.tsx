@@ -31,11 +31,9 @@ interface SideBox {
 
 const IncomeWindow = () => {
   const { data: incomeSummary, isLoading: isLoading1 } = useGetIncomeSummary();
-  const { data: incomeAccountsData, isLoading: isLoading2 } =
-    useGetIncomeAccountsData();
-  const { data: incomeTypes, isLoading: isLoading3 } = useGetIncomeTypes();
-  const { data: financialData, isLoading: isLoading4 } =
-    useGetFinancialIncomeData();
+  const { data: incomeAccountsData } = useGetIncomeAccountsData();
+  const { data: incomeTypes } = useGetIncomeTypes();
+  const { data: financialData } = useGetFinancialIncomeData();
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 

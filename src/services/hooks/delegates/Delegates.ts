@@ -1,10 +1,10 @@
 export interface GroupType {
-  id: number;
+  id: string;
   name: string;
 }
 
 export interface GetDelegates {
-  id: number;
+  id: string;
   name: string;
   mobile_number: string;
   group: GroupType;
@@ -12,7 +12,7 @@ export interface GetDelegates {
 }
 
 export interface GetDelegate {
-  id: number;
+  id: string;
   name: string;
   mobile_number: string;
   group: GroupType;
@@ -24,10 +24,10 @@ export interface GetDelegate {
 export interface PostDelegate {
   mobile_number?: string;
   name?: string;
-  group?: number;
+  group?: string;
   password?: string;
-  place_of_residence?: number[];
-  electoral_boxes?: number[];
+  place_of_residence?: string[];
+  electoral_boxes?: string[];
 }
 
 export interface PutDelegate extends PostDelegate {}

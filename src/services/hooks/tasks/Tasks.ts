@@ -1,10 +1,10 @@
 export type TaskType = {
-  id: number;
+  id: string;
   name: string;
 };
 
 export type GetTaskType = {
-  id: number;
+  id: string;
   mandob: TaskMandoobType;
   type: TaskType;
   description: string;
@@ -14,14 +14,14 @@ export type GetTaskType = {
 };
 
 export type TaskMandoobType = {
-  id: number;
+  id: string;
   name: string;
-  group: number;
+  group: string;
 };
 
 export type PostPutTaskType = {
-  mandob?: number;
-  type?: number;
+  mandob?: string;
+  type?: string;
   description?: string;
   date?: string;
   time?: string;

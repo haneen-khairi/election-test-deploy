@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useMemo } from "react";
 import {
   Box,
@@ -16,8 +17,8 @@ interface Props {
 }
 
 const useColumns = ({ remove }: Props) => {
-  const [checkedRows, setCheckedRows] = useState<number[]>([]);
-  const [recordID, setRecordID] = useState<number>();
+  const [checkedRows, setCheckedRows] = useState<string[]>([]);
+  const [recordID, setRecordID] = useState<string>();
 
   const getDotColor = (status: number | string | undefined | null): string => {
     if (!status) return "#9F9F9F";
@@ -32,7 +33,7 @@ const useColumns = ({ remove }: Props) => {
     return "#9F9F9F";
   };
 
-  const handleCheckboxChange = (id: number) => {
+  const handleCheckboxChange = (id: string) => {
     if (checkedRows.includes(id)) {
       setCheckedRows(checkedRows.filter((rowId) => rowId !== id));
     } else {

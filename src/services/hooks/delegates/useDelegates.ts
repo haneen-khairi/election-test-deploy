@@ -29,7 +29,7 @@ export const useGetDelegates = (filter?: FilterType) => {
   });
 };
 
-export const useGetDelegate = (id: number, isEnabled: boolean) => {
+export const useGetDelegate = (id: string, isEnabled: boolean) => {
   const api = new APIClient<GetDelegate>(`${manadeebURL}/${id}`);
   return useQuery({
     queryKey: ["GetOneDelegate", id],
@@ -59,7 +59,7 @@ export const usePostDelegate = () => {
   });
 };
 
-export const usePutDelegate = (id: number) => {
+export const usePutDelegate = (id: string) => {
   const clientQuery = useQueryClient();
   const api = new APIClient<PostDelegate>(`${manadeebURL}/${id}`);
   return useMutation<ItemResponse<string>, Error, PostDelegate>({
@@ -84,7 +84,7 @@ export const usePutDelegate = (id: number) => {
   });
 };
 
-export const useDeleteDelegate = (id: number) => {
+export const useDeleteDelegate = (id: string) => {
   const clientQuery = useQueryClient();
   const url = new APIClient(`${manadeebURL}/${id}`);
   return useMutation({

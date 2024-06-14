@@ -13,18 +13,18 @@ import {
   Popup,
   RadioButton,
 } from "@components/core";
-import { PutVoter } from "@services/hooks/voters/Voters";
+import { AssignSupporter } from "@services/hooks/voters/Voters";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { BulkEditSchema } from "./BulkEditSchema";
-import { MapModal } from "..";
+import { BulkMoveSchema } from "./BulkMoveSchema";
+import { MapModal } from "../../Voters/modals";
 import { StatusOptions } from "@constants/variables/Dashboard";
-import { useUpdateVoterInfo } from "@services/hooks/voters/useVoters";
+import { useAssignSupportersToVotes } from "@services/hooks/voters/useVoters";
 import { EToast } from "@constants/functions/toast";
 import { useResetFormModal } from "@components/content/Dashboard/hooks";
 import { InfoModal } from "@components/content/Dashboard/Modals";
 import { useGetManadeebDropDown } from "@services/hooks/dropdown/useDropDown";
-import { LocationBox } from "../EditModal/partials";
+import { LocationBox } from "../../Voters/modals/EditModal/partials";
 
 interface Props {
   isOpen: boolean;
@@ -32,7 +32,7 @@ interface Props {
   recordIDs?: string[];
 }
 
-const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
+const BulkMoveModal = ({ isOpen, onClose, recordIDs }: Props) => {
   const alert = useDisclosure();
   const { data: mainMandoob, isLoading: isMainMandoobLoading } =
     useGetManadeebDropDown("4");
@@ -41,9 +41,10 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
 
   const toast = useToast();
 
-  const updateVotser = useUpdateVoterInfo();
+  const assignSupporters = useAssignSupportersToVotes();
   // Map Popup
   const mapPopup = useDisclosure();
+  
   const {
     handleSubmit,
     control,
@@ -53,8 +54,8 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
     register,
     formState: { errors, isValid },
   } = useForm({
-    resolver: yupResolver(BulkEditSchema),
-    defaultValues: { status: 0 },
+    resolver: yupResolver(BulkMoveSchema),
+    defaultValues: { percentage: "100" },
   });
 
   const values = watch();
@@ -62,8 +63,8 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
   // Reset Form When Close
   useResetFormModal(isOpen, reset);
 
-  const onSubmit = (values: PutVoter) => {
-    updateVotser
+  const onSubmit = (values: AssignSupporter) => {
+    assignSupporters
       .mutateAsync({
         election_time: values.election_time || undefined,
         latitude: parseFloat(values.latitude?.toFixed(2) || ""),
@@ -72,8 +73,8 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
         mandoub_main: values.mandoub_main,
         mobile_number: values.mobile_number,
         note: values.note,
-        status: values.status,
-        voters: JSON.stringify(recordIDs),
+        percentage: values.percentage,
+        ids: JSON.stringify(recordIDs),
       })
       .then((res) => {
         if (res.error) {
@@ -81,7 +82,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
           EToast({
             toast: toast,
             status: "error",
-            title: "Error",
+            title: "حدث خطأ",
             description: errorMessages,
           });
         } else {
@@ -89,7 +90,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
             toast: toast,
             status: "success",
             title: "نجاح العملية",
-            description: "تم التعديل بنجاح",
+            description: "تمت الإضافة بنجاح",
           });
           alert.onClose();
           onClose();
@@ -102,11 +103,11 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
       <InfoModal
         isOpen={alert.isOpen}
         onClose={alert.onClose}
-        title="حفظ التعديلات"
-        description="هل انت متأكد من حفظ البيانات؟"
+        title="نقل المؤازرين"
+        description="هل انت متأكد من نقل المؤازرين؟"
         type="save"
         onProceed={handleSubmit(onSubmit)}
-        isLoading={updateVotser.isPending}
+        isLoading={assignSupporters.isPending}
       />
       <MapModal
         isOpen={mapPopup.isOpen}
@@ -117,15 +118,16 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
           lng: Number(values.longitude),
         }}
       />
-      <Popup title="الإجراءات" size="4xl" isOpen={isOpen} onClose={onClose}>
+      <Popup title="نقل المؤازرين" size="4xl" isOpen={isOpen} onClose={onClose}>
         <>
           <VStack align="stretch" spacing="16px">
-            <Text fontWeight="500">الحالة</Text>
+            <Text fontWeight="500">نسبة الضمان</Text>
+
             <HStack>
               {StatusOptions.map((option, index) => (
                 <Controller
                   key={index}
-                  name="status"
+                  name="percentage"
                   control={control}
                   render={({ field }) => (
                     <RadioButton
@@ -137,6 +139,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
                 />
               ))}
             </HStack>
+
             <HStack mt="16px" flexWrap="wrap">
               <Box w="40%" flexGrow="1">
                 <Controller
@@ -164,34 +167,34 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
                   )}
                 />
               </Box>
-              {values.status === 100 && (
-                <Box w="40%" flexGrow="1">
-                  <Controller
-                    control={control}
-                    name="mandoub_haraka"
-                    render={({ field: { onChange, value } }) => (
-                      <InputSelect
-                        loading={isHarakMandoobLoading}
-                        label="مندوب الحركة"
-                        options={
-                          harakMandoob?.data
-                            ? harakMandoob?.data.map((el) => ({
-                                label: el.name || "",
-                                value: el.id || 0,
-                              }))
-                            : []
-                        }
-                        multi={false}
-                        placeholder="اختر  مندوب الحركة"
-                        onChange={onChange}
-                        value={value}
-                        error={errors.mandoub_haraka?.message}
-                        size="lg"
-                      />
-                    )}
-                  />
-                </Box>
-              )}
+
+              <Box w="40%" flexGrow="1">
+                <Controller
+                  control={control}
+                  name="mandoub_haraka"
+                  render={({ field: { onChange, value } }) => (
+                    <InputSelect
+                      loading={isHarakMandoobLoading}
+                      label="مندوب الحركة"
+                      options={
+                        harakMandoob?.data
+                          ? harakMandoob?.data.map((el) => ({
+                              label: el.name || "",
+                              value: el.id || 0,
+                            }))
+                          : []
+                      }
+                      multi={false}
+                      placeholder="اختر  مندوب الحركة"
+                      onChange={onChange}
+                      value={value}
+                      error={errors.mandoub_haraka?.message}
+                      size="lg"
+                    />
+                  )}
+                />
+              </Box>
+
               <Box w="40%" flexGrow="1" overflow="hidden">
                 <LocationBox
                   label="الموقع"
@@ -201,16 +204,16 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
                   error={errors.latitude?.message}
                 />
               </Box>
-              {values.status === 100 && (
-                <Box w="40%" flexGrow="1">
-                  <Input
-                    label="وقت الإنتخاب"
-                    type="time"
-                    register={register("election_time")}
-                    error={errors.election_time?.message}
-                  />
-                </Box>
-              )}
+
+              <Box w="40%" flexGrow="1">
+                <Input
+                  label="وقت الإنتخاب"
+                  type="time"
+                  register={register("election_time")}
+                  error={errors.election_time?.message}
+                />
+              </Box>
+
               <Box w="40%" flexGrow="1">
                 <Input
                   label="رقم الجوال"
@@ -220,6 +223,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
                   error={errors.mobile_number?.message}
                 />
               </Box>
+
               <Box w="40%" flexGrow="1">
                 <Input
                   label="الملاحظات"
@@ -231,11 +235,12 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
               </Box>
             </HStack>
           </VStack>
+
           <HStack justifyContent="flex-end" mt="24px">
             <GradientButton
               onClick={isValid ? alert.onOpen : handleSubmit(onSubmit)}
             >
-              حفظ
+              نقل
             </GradientButton>
           </HStack>
         </>
@@ -244,4 +249,4 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
   );
 };
 
-export default BulkEditModal;
+export default BulkMoveModal;

@@ -5,7 +5,7 @@ interface CustomRadioBoxProps {
     value: string | number;
     onChange: (value: string | number) => void;
   };
-  option: { title: string; value: number };
+  option: { title: string; value: number | string };
   isChecked?: boolean;
 }
 

@@ -25,13 +25,13 @@ ChartJS.register(
   PointElement,
   BarController,
   BarElement,
-  LogarithmicScale
+  LogarithmicScale,
 );
 
 const FamilyPieChart = () => {
-  const { data, isLoading } = useGetTopFamilies();
+  const { data, isLoading } = useGetTopFamilies({});
   const filteredData = useFilterFamilyData(data);
-  
+
   const colors = [
     "#F765A3",
     "#81D4FA",
@@ -52,13 +52,13 @@ const FamilyPieChart = () => {
         <Pie
           data={{
             labels: filteredData.data.map(
-              (item) => item.family + ` (${item.percentage})`
+              (item) => item.family + ` (${item.percentage})`,
             ),
             datasets: [
               {
                 label: "النسبة (%)",
                 data: filteredData.data.map((item) =>
-                  parseFloat(item.percentage.replace("%", ""))
+                  parseFloat(item.percentage.replace("%", "")),
                 ),
                 backgroundColor: colors,
                 borderColor: colors,

@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ETable } from "@components/core";
-import { useDeleteVoter, useDeleteVoters, useGetVoters } from "@services/hooks/voters/useVoters";
+import {
+  useDeleteVoter,
+  useDeleteVoters,
+  useGetVoters,
+} from "@services/hooks/voters/useVoters";
 import useVostersStore from "@store/VostersSotre";
 import useColumns from "./useColumns";
 import { useMemo } from "react";
 import { GetVoters } from "@services/hooks/voters/Voters";
-import { Button, HStack, Text, VStack, useDisclosure } from "@chakra-ui/react";
-import { DownloadDB, EditPenIcon, TrashIcon } from "@assets/icons";
-import { MdDeselect, MdSelectAll } from "react-icons/md";
+import { HStack, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { BulkEditModal, EditModal } from "../../Voters/modals";
 import { InfoModal } from "../../Modals";
 
@@ -26,29 +28,29 @@ const ElectionDayVotersTable = ({ filter }: { filter: any }) => {
     [data, isLoading],
   );
 
-  const { columns, setCheckedRows, checkedRows, recordID } = useColumns({
+  const { columns, checkedRows, recordID } = useColumns({
     edit,
     remove,
   });
 
-  const handleCheckAll = () => {
-    const votersData: {
-      id: number;
-    }[] = voters as [];
+  // const handleCheckAll = () => {
+  //   const votersData: {
+  //     id: string;
+  //   }[] = voters as [];
 
-    setCheckedRows(
-      checkedRows.length === 0 ? votersData.map((voter) => voter.id) : [],
-    );
-  };
+  //   setCheckedRows(
+  //     checkedRows.length === 0 ? votersData.map((voter) => voter.id) : [],
+  //   );
+  // };
 
-  const removeVoter = useDeleteVoter(Number(recordID));
+  const removeVoter = useDeleteVoter(recordID || "");
   const removeVoters = useDeleteVoters(checkedRows);
 
   return (
     <VStack>
       <HStack w="100%" fontWeight={600} fontSize="20px" mb="20px">
         <Text ml="auto">جدول الناخبين</Text>
-
+        {/* 
         {checkedRows.length > 1 && (
           <>
             <Button
@@ -119,7 +121,7 @@ const ElectionDayVotersTable = ({ filter }: { filter: any }) => {
           <Text mr="10px" color="#318973">
             تحميل
           </Text>
-        </Button>
+        </Button> */}
       </HStack>
 
       <EditModal

@@ -1,6 +1,6 @@
 export interface Option {
   title: string;
-  value: number;
+  value: number | string;
 }
 export interface OptionString {
   title: string;
@@ -8,9 +8,12 @@ export interface OptionString {
 }
 
 export const StatusOptions: Option[] = [
-  { title: "غير مضمون", value: 0 },
-  { title: "مضمون", value: 100 },
-  { title: "متأرجح", value: 50 },
+  { title: "100%", value: "100" },
+  { title: "80%", value: "80" },
+  { title: "60%", value: "60" },
+  { title: "40%", value: "40" },
+  { title: "20%", value: "20" },
+  { title: "0%", value: "0" },
 ];
 
 export const DeliveryOptions: Option[] = [

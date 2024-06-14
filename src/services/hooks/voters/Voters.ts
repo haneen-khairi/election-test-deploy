@@ -42,7 +42,7 @@ export interface ActivityVote {
 }
 
 export type VotersResult = {
-  id: number;
+  id: string;
   first_name: string;
   second_name: string;
   third_name: string;
@@ -78,6 +78,19 @@ export interface PutVoter {
   voters?: string;
   mobile_number?: string;
   status?: number;
+  election_time?: string;
+  latitude?: number;
+  longitude?: number;
+  note?: string;
+  mandoub_main?: number;
+  mandoub_haraka?: number;
+}
+
+export interface AssignSupporter {
+  percentage?: string;
+  nationality_id?: string;
+  voters?: string;
+  mobile_number?: string;
   election_time?: string;
   latitude?: number;
   longitude?: number;

@@ -5,10 +5,10 @@ import { useGetVoterDetails } from "@services/hooks/voters/useVoters";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  recordID?: number;
+  recordID?: string;
 }
 const InfoModal = ({ isOpen, onClose, recordID }: Props) => {
-  const { data, isLoading } = useGetVoterDetails(recordID || 0, isOpen);
+  const { data, isLoading } = useGetVoterDetails(recordID || "", isOpen);
   return (
     <Popup title="معلومات الناخب" size="md" isOpen={isOpen} onClose={onClose}>
       {isLoading && <Loader />}

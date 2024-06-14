@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { InputSelect } from "@components/core";
 import { GetDropDown } from "@services/hooks/dropdown/DropDown";

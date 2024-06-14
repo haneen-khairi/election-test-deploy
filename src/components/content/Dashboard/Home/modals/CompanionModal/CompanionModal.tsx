@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { HStack, useDisclosure, useToast } from "@chakra-ui/react";
+import { HStack, useDisclosure } from "@chakra-ui/react";
 import { GradientButton, Popup } from "@components/core";
 import { PutVoter } from "@services/hooks/voters/Voters";
 import { useForm } from "react-hook-form";
@@ -14,30 +14,28 @@ interface Props {
 }
 
 const CompanionModal = ({ isOpen, onClose }: Props) => {
-  const alert = useDisclosure();
-  const toast = useToast();
+  // const { data, isLoading, isFetching } = useGetSupporters({});
+  // const { setPage, page } = useSupportersStore();
+  // const { columns, setCheckedRows, checkedRows } = useColumns();
 
-  const companion = useDisclosure();
+  const alert = useDisclosure();
+  // const toast = useToast();
+
+  // const companion = useDisclosure();
 
   const {
     handleSubmit,
-    control,
     reset,
-    setValue,
-    watch,
-    register,
-    formState: { errors, isValid },
+    formState: { isValid },
   } = useForm({
     resolver: yupResolver(CompanionSchema),
     defaultValues: { status: 0 },
   });
 
-  const values = watch();
-
   // Reset Form When Close
   useResetFormModal(isOpen, reset);
 
-  const onSubmit = (values: PutVoter) => {};
+  const onSubmit = (_values: PutVoter) => {};
 
   useEffect(() => {}, []);
 
@@ -49,7 +47,7 @@ const CompanionModal = ({ isOpen, onClose }: Props) => {
         isOpen={isOpen}
         onClose={onClose}
       >
-        <HStack mt="24px">
+        <HStack mt="24px" justifyContent="end">
           <GradientButton
             onClick={isValid ? alert.onOpen : handleSubmit(onSubmit)}
           >

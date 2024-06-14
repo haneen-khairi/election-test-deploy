@@ -153,7 +153,7 @@ export const useGetFinancialExpenseData = () => {
   });
 };
 
-export const useGetExpense = (id: number, isEnabled: boolean) => {
+export const useGetExpense = (id: string, isEnabled: boolean) => {
   const api = new APIClient<GetExpensesType>(`expense/expenses/${id}`);
   return useQuery({
     queryKey: ["Expense", id],
@@ -162,7 +162,7 @@ export const useGetExpense = (id: number, isEnabled: boolean) => {
   });
 };
 
-export const usePutExpense = (id: number) => {
+export const usePutExpense = (id: string) => {
   const clientQuery = useQueryClient();
   const api = new APIClient<PostPutExpensesType>(`expense/expenses/${id}`);
   return useMutation<ItemResponse<string>, Error, PostPutExpensesType>({
@@ -210,7 +210,7 @@ export const usePostExpense = () => {
   });
 };
 
-export const useDeleteExpense = (id: number) => {
+export const useDeleteExpense = (id: string) => {
   const clientQuery = useQueryClient();
   const url = new APIClient(`expense/expenses/${id}`);
   return useMutation({
