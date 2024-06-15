@@ -23,7 +23,7 @@ export default function TaskCardStatistics({
         borderRadius="full"
         variant="solid"
         backgroundColor={status === "received" ? "#12B76A1A" : status === "inProgress" ? "#F0FDFF" : "#FFFAEE"}
-        borderColor={status === "received" ? "#00BF6C" : status === "inProgress" ? "#14B4D2" : "#EEB72A"}
+        border={`1px solid ${status === "received" ? "#00BF6C" : status === "inProgress" ? "#14B4D2" : "#EEB72A"}`}
         mb={'12px'}
         margin={'0 auto 12px'}
         display={'block'}

@@ -24,6 +24,7 @@ import {
   usePutTask,
 } from "@services/hooks/tasks/useTasks";
 import { useGetManadeebDropDown } from "@services/hooks/dropdown/useDropDown";
+import MissionModal from "./MissonModal";
 
 interface Props {
   isOpen: boolean;
@@ -45,7 +46,11 @@ const AUTaskModal = ({ isOpen, onClose, recordID, onSuccess }: Props) => {
   } = useForm({
     resolver: yupResolver(AUTaskSchema),
   });
-
+  const {
+    isOpen: isAddNewMossion,
+    onOpen,
+    onClose: onCloseAddNewMossion
+  } = useDisclosure()
   const values = watch();
   const { data: mandobtypes, isLoading: ismandobtypesloading } =
     useGetDelegateTypes();
@@ -160,6 +165,10 @@ const AUTaskModal = ({ isOpen, onClose, recordID, onSuccess }: Props) => {
         size="2xl"
         isOpen={isOpen}
         onClose={onClose}
+        extraHeaderButton={true}
+        extraHeaderButtonOnClick={
+          onOpen
+        }
       >
         {isLoading && <Loader />}
         {!isLoading && (
@@ -285,6 +294,14 @@ const AUTaskModal = ({ isOpen, onClose, recordID, onSuccess }: Props) => {
           </>
         )}
       </Popup>
+      <MissionModal 
+      isOpen={isAddNewMossion}
+      onClose={onCloseAddNewMossion}
+      onSuccess={() => {
+        onCloseAddNewMossion
+        onClose()
+      }}
+      />
     </>
   );
 };

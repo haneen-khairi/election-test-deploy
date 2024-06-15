@@ -71,7 +71,7 @@ const TasksPage = () => {
           onSuccess={getTasks}
         />
       </Ebox>
-      <Grid templateColumns="repeat(3, 1fr)" gap={'16px'}>
+      <Grid templateColumns="repeat(4, 1fr)" gap={'16px'}>
         {/* <Box borderRadius={'16px'} boxShadow={'0px 3px 12px 0px #0000000F'} padding={'16px'} backgroundColor={'#fff'}>
           <Tag
             borderRadius='full'
@@ -94,74 +94,77 @@ const TasksPage = () => {
             </div>
           </Grid>
         </Box> */}
-        {/* <Box
+        <Box
         borderRadius={"16px"}
         boxShadow={"0px 3px 12px 0px #0000000F"}
         padding={"16px"}
         backgroundColor={"#fff"}
         >
-          <Flex>
             <Text>النسبة المئوية للمهام</Text>
+          <Flex>
+            <div className="">
             <Doughnut
-          data={{
-            labels: [
-              ` منجزة`,
-              ` قيد التنفيذ`,
-            ],
-            datasets: [
-              {
-                data: [75, 15],
-                backgroundColor: colors,
-                borderColor: colors,
-              },
-            ],
-          }}
-          height="250px"
-          width="250px"
-          options={{
-            // onClick: handleBarClick,
-            responsive: true,
-            maintainAspectRatio: false,
-            devicePixelRatio: 3,
-            plugins: {
-              legend: {
-                position: "left",
-                labels: {
-                  font: {
-                    family: "Aljazeera",
-                    weight: "normal",
-                    size: 16,
+              data={{
+                labels: [
+                  `منجزة`,
+                  `قيد التنفيذ`,
+                ],
+                datasets: [
+                  {
+                    data: [10, 15],
+                    backgroundColor: colors,
+                    borderColor: colors,
                   },
-                  pointStyleWidth: 10,
-                  boxHeight: 7,
-                  boxWidth: 9,
-                  padding: 14,
-                  color: "black",
-                  usePointStyle: true,
-                  pointStyle: "rectRounded",
+                ],
+              }}
+              height="250px"
+              // width="100px"
+              options={{
+                // onClick: handleBarClick,
+                responsive: true,
+                maintainAspectRatio: false,
+                devicePixelRatio: 3,
+                plugins: {
+                  legend: {
+                    position: "left",
+                    labels: {
+                      font: {
+                        family: "Aljazeera",
+                        weight: "normal",
+                        size: 16,
+                      },
+                      pointStyleWidth: 10,
+                      boxHeight: 7,
+                      boxWidth: 9,
+                      padding: 14,
+                      color: "black",
+                      usePointStyle: true,
+                      pointStyle: "rectRounded",
+                    },
+                  },
+                  tooltip: {
+                    bodyFont: {
+                      family: "Aljazeera",
+                    },
+                    titleFont: {
+                      family: "Aljazeera",
+                    },
+                  },
                 },
-              },
-              tooltip: {
-                bodyFont: {
-                  family: "Aljazeera",
+                scales: {
+                  x: {
+                    display: false,
+                  },
+                  y: {
+                    display: false,
+                  },
                 },
-                titleFont: {
-                  family: "Aljazeera",
-                },
-              },
-            },
-            scales: {
-              x: {
-                display: false,
-              },
-              y: {
-                display: false,
-              },
-            },
-          }}
-        />
+              }}
+            />
+
+            </div>
           </Flex>
-        </Box> */}
+        </Box>
         <TaskCardStatistics status="received" numberOfTasks={0} numberOfMondobs={4}  nameOfCard="تم الإستلام"/>
         <TaskCardStatistics status="inProgress" numberOfTasks={0} numberOfMondobs={4} nameOfCard="قيد التنفيذ" />
         <TaskCardStatistics status="done" numberOfTasks={0} numberOfMondobs={4}  nameOfCard="منجزة"/>
