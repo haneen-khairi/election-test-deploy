@@ -176,8 +176,6 @@ const TasksPage = () => {
           time={task?.time || ""}
         />)}
         </Grid>
-
-      {/* <TableSection filter={filter} /> */}
     </VStack>
   );
 };
