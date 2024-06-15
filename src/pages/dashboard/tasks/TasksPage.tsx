@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import taskCss from "./tasks.module.css"
-import { Box, Flex, Grid, Tag, TagLabel, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Grid, Text, VStack } from "@chakra-ui/react";
 import TasksFilterSection from "@components/content/Dashboard/Tasks/TasksFilterSection/TasksFilterSection";
 import { Ebox } from "@components/core";
 import { useEffect, useState } from "react";
@@ -8,7 +8,6 @@ import TasksCard from "./TasksCard";
 import axios from "axios";
 import useAuthStore from "@store/AuthStore";
 import TaskCardStatistics from "./TaskCardStatistics";
-import { ChartSkeleton } from "@components/core";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -22,8 +21,7 @@ import {
   LogarithmicScale,
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { GeneralStats } from "@services/hooks/insights/Insights";
-import { ChartEvent } from "chart.js";
+ 
 ChartJS.register(
   ArcElement,
   Tooltip,
@@ -72,28 +70,7 @@ const TasksPage = () => {
         />
       </Ebox>
       <Grid templateColumns="repeat(4, 1fr)" gap={'16px'}>
-        {/* <Box borderRadius={'16px'} boxShadow={'0px 3px 12px 0px #0000000F'} padding={'16px'} backgroundColor={'#fff'}>
-          <Tag
-            borderRadius='full'
-            variant='solid'
-            backgroundColor='#2F80ED1A'
-            borderColor={'#14B4D2'}
-          >
-            <TagLabel color={'#15B2CE'}>قيد التنفيذ</TagLabel>
-          </Tag>
-          <Grid templateColumns="repeat(2, 1fr)">
-            <div className="">
-              <Text textAlign={'center'} mb={'24px'}>عدد المهام</Text>
-              <Text textAlign={'center'}>4</Text>
-
-            </div>
-            <div className="">
-              <Text textAlign={'center'} mb={'24px'}>عدد المناديب</Text>
-              <Text textAlign={'center'}>4</Text>
-
-            </div>
-          </Grid>
-        </Box> */}
+       
         <Box
         borderRadius={"16px"}
         boxShadow={"0px 3px 12px 0px #0000000F"}

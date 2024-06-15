@@ -1,14 +1,11 @@
-import { PlusIcon } from '@assets/icons'
 import MessageBlackIcon from '@assets/icons/MessageBlackIcon'
 import {
-  Box, Button, Flex, Grid, GridItem, List, Table,
+  Box, Button, Flex, Grid, GridItem, Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer, useDisclosure,
   HStack,
   VStack,
@@ -20,12 +17,10 @@ import DeleteIcon from '@components/content/Dashboard/messages/DeleteIcon'
 import EditIcon from '@components/content/Dashboard/messages/EditIcon'
 import MessageListItem from '@components/content/Dashboard/messages/MessageListItem'
 import NewMenuFormModal from '@components/content/Dashboard/messages/NewMenuForm'
-import NewMenuForm from '@components/content/Dashboard/messages/NewMenuForm'
 import NewMessageForm from '@components/content/Dashboard/messages/NewMessageForm'
 import SentMessages from '@components/content/Dashboard/messages/SentMessages'
-import { Btn, ETable } from '@components/core'
+import { Btn } from '@components/core'
 import useAuthStore from '@store/AuthStore'
-import React from 'react'
 import { BsPlus } from 'react-icons/bs'
 
 export default function MessagesPage() {
