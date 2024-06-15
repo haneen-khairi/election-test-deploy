@@ -15,15 +15,23 @@ import useAuthStore from "@store/AuthStore";
 import Filters from "./Filters";
 import { Btn } from "@components/core";
 import { FaPlus } from "react-icons/fa";
+import TaskModal from "../modals/TaskModal";
+import { AUTaskModal } from "../modals";
 
 const TasksFilterSection = ({
   setFilter,
+  onSuccess
 }: {
   setFilter: React.Dispatch<React.SetStateAction<any | undefined>>;
+  onSuccess: () => void
 }) => {
   const { data } = useAuthStore();
   const add = useDisclosure();
-
+  const {
+    isOpen,
+    onOpen,
+    onClose
+  } = useDisclosure()
   // const companion = useDisclosure();
 
   const {
@@ -65,7 +73,10 @@ const TasksFilterSection = ({
       centers: watch("centers"),
     }));
   };
-
+  function onSuccessAdd(){
+    onClose()
+    onSuccess()
+  }
   return (
     <VStack>
       <HStack w="100%" justifyContent="space-between">
@@ -87,7 +98,8 @@ const TasksFilterSection = ({
           bg="#318973"
           color="#fff"
           fontSize="17px"
-          onClick={add.onOpen}
+          onClick={()=> onOpen()}
+          // onClick={add.onOpen}
           padding="20px 25px"
           mb="auto"
           icon={<FaPlus />}
@@ -111,7 +123,11 @@ const TasksFilterSection = ({
           isDirty={isDirty}
         />
       </Grid>
-      
+      <AUTaskModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onSuccess={()=> onSuccessAdd()}
+      />
       
     </VStack>
   );

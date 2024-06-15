@@ -7,6 +7,7 @@ import { LiaCoinsSolid } from "react-icons/lia";
 import { FaListUl } from "react-icons/fa6";
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { HiOutlineChartBar } from "react-icons/hi";
+import MessageIcon from "./MessageIcon";
 
 export const links = [
   {
@@ -48,6 +49,11 @@ export const links = [
     name: "النتائج الأولية",
     url: "/preliminary-results",
     icon: AiOutlineFileSearch,
+  },
+  {
+    name: "نظام الرسائل",
+    url: "/messages",
+    icon: MessageIcon,
   },
   {
     name: "إحصائيات الحركة",

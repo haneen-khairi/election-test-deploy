@@ -16,6 +16,7 @@ import {
 import { GlobeLayout } from "@pages/layout";
 import IsAuth from "./IsAuth";
 import { useRouteError } from "react-router-dom";
+import MessagesPage from "@pages/dashboard/messages/MessagesPage";
 
 const ErrorPage = () => {
     const error: any = useRouteError();
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
           {
             path: "/tasks",
             element: <TasksPage />,
+          },
+          {
+            path: "/messages",
+            element: <MessagesPage />,
           },
           {
             path: "/preliminary-results",

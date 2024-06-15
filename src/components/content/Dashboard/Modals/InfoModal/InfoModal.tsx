@@ -7,7 +7,7 @@ interface Props {
   title?: string;
   description?: string;
   type: "save" | "delete";
-  onProceed: () => void;
+  onProceed?: () => void;
   isLoading?: boolean;
 }
 const InfoModal = ({
