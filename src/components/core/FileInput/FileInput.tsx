@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Text, Icon, Button, Flex, Box } from "@chakra-ui/react";
-import { BsXCircle } from "react-icons/bs";
+import { BsX, BsXCircle } from "react-icons/bs";
 import { DownloadIcon } from "@assets/icons";
 
 interface FileInputProps {
@@ -37,16 +37,24 @@ function FileInput({ selectedFile, setSelectedFile }: FileInputProps) {
 
     const fileType = file.type;
     const allowedTypes = [
-      "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/vnd.ms-excel",
+      "application/msexcel",
+      "application/x-msexcel",
+      "text/csv",
+      "application/x-ms-excel",
+      "application/x-excel",
+      "application/x-dos_ms_excel",
+      "application/xls",
+      "application/x-xls",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     ];
-
+    
+    console.log("🚀 ~ handleFile ~ fileType:", fileType)
     if (allowedTypes.includes(fileType)) {
       //   setMessage(`File ${file.name} selected!`);
       setSelectedFile(file);
     } else {
-      setMessage("Please select a PDF, DOC or DOCX file.");
+      setMessage("Please select a Excel file.");
       setSelectedFile(null);
     }
   };
@@ -73,6 +81,9 @@ function FileInput({ selectedFile, setSelectedFile }: FileInputProps) {
         direction={"column"}
         cursor={"pointer"}
         gap="5px"
+        padding={'16px'}
+        borderRadius={'12px'}
+        border={'1px dashed #CACACA'}
       >
         <input
           type="file"
@@ -141,22 +152,24 @@ function FileInput({ selectedFile, setSelectedFile }: FileInputProps) {
         <Text pointerEvents={"none"}>{message}</Text>
       </Flex>
       {selectedFile && (
-        <Flex mt={2} alignItems="center">
-          <DownloadIcon />
-          <Text
-            whiteSpace={"nowrap"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            maxW={"calc(100% - 90px)"}
-            flex={1}
-            ml={2}
-          >
-            {selectedFile.name}
-          </Text>
-          <Button ml={2} variant="ghost" colorScheme="red" onClick={removeFile}>
-            <Icon as={BsXCircle} />
-          </Button>
+        <Box width={'100%'} className="">
+            <Flex mt={2}  alignItems="center" border={'1px solid #CACACA'} borderRadius={'12px'} p={2} gap={2}>  
+            <Text
+              whiteSpace={"nowrap"}
+              overflow={"hidden"}
+              textOverflow={"ellipsis"}
+              maxW={"calc(100% - 24px)"}
+              flex={1}
+              ml={2}
+            >
+              {selectedFile.name}
+            </Text>
+            <Button variant="ghost" padding={0} colorScheme="black" onClick={removeFile}>
+              <Icon as={BsX} />
+            </Button>
+
         </Flex>
+          </Box>
       )}
     </>
   );

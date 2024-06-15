@@ -9,23 +9,37 @@ import {
   Th,
   Td,
   TableCaption,
-  TableContainer, useDisclosure
+  TableContainer, useDisclosure,
+  HStack,
+  VStack,
+  Heading,
+  Text
 } from '@chakra-ui/react'
 import CreateMyselfModal from '@components/content/Dashboard/messages/CreateMyselfModal'
 import DeleteIcon from '@components/content/Dashboard/messages/DeleteIcon'
 import EditIcon from '@components/content/Dashboard/messages/EditIcon'
 import MessageListItem from '@components/content/Dashboard/messages/MessageListItem'
+import NewMenuFormModal from '@components/content/Dashboard/messages/NewMenuForm'
+import NewMenuForm from '@components/content/Dashboard/messages/NewMenuForm'
 import NewMessageForm from '@components/content/Dashboard/messages/NewMessageForm'
 import SentMessages from '@components/content/Dashboard/messages/SentMessages'
-import { ETable } from '@components/core'
+import { Btn, ETable } from '@components/core'
+import useAuthStore from '@store/AuthStore'
 import React from 'react'
 import { BsPlus } from 'react-icons/bs'
 
 export default function MessagesPage() {
+  const { data } = useAuthStore();
+
   const {
     isOpen,
     onOpen,
     onClose
+  } = useDisclosure()
+  const {
+    isOpen: isOpenMenuModal,
+    onOpen: onOpenMenuModal,
+    onClose: onCloseMenuModal
   } = useDisclosure()
   function handleOnEdit() {
     console.log("🚀 ~ handleOnEdit ~ handleOnEdit:")
@@ -36,7 +50,32 @@ export default function MessagesPage() {
 
   }
   return <>
+      <HStack padding={'16px'} bgColor={'#fff'} mb={'12px'} borderRadius={'12px'} w="100%" justifyContent="space-between">
+        <VStack alignItems="start">
+          <Heading size="md" display="flex" gap="10px">
+            <Text>مرحبا</Text>
+            <Text>{data?.user?.name || "الاسم غير معروف,"}</Text>
+          </Heading>
+          <Text fontSize="md">
+          ,هذه هي لوحة التحكم الخاصة بك حيث يمكنك عرض وإدارة جميع الرسائل المتعلقة بانتخابات عام 2024.
+          </Text>
+        </VStack>
 
+        <Btn
+          type="solid"
+          borderRadius="50px"
+          iconPlacment="right"
+          bg="#318973"
+          color="#fff"
+          fontSize="17px"
+          onClick={()=> onOpenMenuModal()}
+          // onClick={add.onOpen}
+          padding="20px 25px"
+          mb="auto"
+        >
+          <Text>إنشاء قائمة جديدة</Text>
+        </Btn>
+      </HStack>
     <Grid
       templateColumns='repeat(3, 1fr)'
       gap={4}
@@ -103,6 +142,10 @@ export default function MessagesPage() {
     <CreateMyselfModal
       isOpen={isOpen}
       onClose={onClose}
+    />
+    <NewMenuFormModal 
+      isOpen={isOpenMenuModal}
+      onClose={onCloseMenuModal}
     />
   </>
 }
