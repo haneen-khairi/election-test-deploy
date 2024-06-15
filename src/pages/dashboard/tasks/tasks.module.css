@@ -52,6 +52,9 @@
     line-height: 21.9px;
     text-align: start;
     color: #131313;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   .task_card p{
     font-family: GE SS Two;

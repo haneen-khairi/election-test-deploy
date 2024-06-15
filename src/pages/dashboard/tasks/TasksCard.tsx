@@ -1,6 +1,7 @@
 import React from 'react'
 import taskCss from "./tasks.module.css"
-import { Flex } from '@chakra-ui/react'
+import { Flex, Tag, TagLabel } from '@chakra-ui/react'
+import ArrowIcon from './ArrowIcon'
 
 export default function TasksCard({
     title,
@@ -8,6 +9,7 @@ export default function TasksCard({
     representative,
     representativeType,
     representativeMission,
+    status,
     date,
     time
 }: {
@@ -16,11 +18,19 @@ export default function TasksCard({
     representative: string,
     representativeType: string,
     representativeMission: string
+    status: string,
     date: string,
     time: string
 }) {
   return <div className={taskCss.task_card}>
-    <h4>{title}</h4>
+    <h4>{title}  {status ===  "تم الانتهاء" ? <Tag
+      borderRadius='full'
+      variant='solid'
+      backgroundColor='#2F80ED1A'
+    >
+      <TagLabel color={'#15B2CE'}>تم انجازه</TagLabel>
+      <ArrowIcon />
+    </Tag>: "" }</h4>
     <p>{text}</p>
     <Flex alignItems={'center'} justifyContent={'space-between'}>
         <p>اسم المندوب</p>
