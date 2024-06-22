@@ -17,6 +17,9 @@ import { GlobeLayout } from "@pages/layout";
 import IsAuth from "./IsAuth";
 import { useRouteError } from "react-router-dom";
 import MessagesPage from "@pages/dashboard/messages/MessagesPage";
+import MessageServiceLayout from "@pages/layout/MessageServiceLayout";
+import SentMessagesPage from "@pages/Home/SentMessagesPage";
+import Profile from "@pages/Home/Profile";
 
 const ErrorPage = () => {
     const error: any = useRouteError();
@@ -103,6 +106,24 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    element: <MessageServiceLayout />,
+    children: [
+      {
+        path: "/profile",
+        element: (
+          <Profile />
+        ),
+      },
+      {
+        path: "/sentMessages",
+        element: (
+          <SentMessagesPage />
+        ),
+      },
+
+    ]
+  }
 ]);
 
 export default router;
