@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Grid,
   HStack,
@@ -15,7 +13,6 @@ import useAuthStore from "@store/AuthStore";
 import Filters from "./Filters";
 import { Btn } from "@components/core";
 import { FaPlus } from "react-icons/fa";
-import TaskModal from "../modals/TaskModal";
 import { AUTaskModal } from "../modals";
 
 const TasksFilterSection = ({
@@ -26,13 +23,11 @@ const TasksFilterSection = ({
   onSuccess: () => void
 }) => {
   const { data } = useAuthStore();
-  const add = useDisclosure();
   const {
     isOpen,
     onOpen,
     onClose
   } = useDisclosure()
-  // const companion = useDisclosure();
 
   const {
     control,

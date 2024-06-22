@@ -1,4 +1,3 @@
-import React from 'react'
 import taskCss from "./tasks.module.css"
 import { Flex, Tag, TagLabel } from '@chakra-ui/react'
 import ArrowIcon from './ArrowIcon'

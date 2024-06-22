@@ -1,5 +1,4 @@
-import React from "react";
-import { Box, Grid, Tag, TagLabel, Text, VStack } from "@chakra-ui/react";
+import { Box, Grid, Tag, TagLabel, Text } from "@chakra-ui/react";
 
 export default function TaskCardStatistics({
     status,
