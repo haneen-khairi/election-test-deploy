@@ -4,50 +4,49 @@ import { Box, Button, Center, Flex, Grid, GridItem, HStack, Text } from '@chakra
 import NameListChecked from './NameListChecked'
 import { Controller, useForm } from 'react-hook-form';
 import { InputSelect, Input, Btn } from '@components/core';
-import { ElectionBrand } from '@assets/icons';
-import { useNavigate } from "react-router-dom";
+import Profile from './Profile';
 
 export default function SentMessagesPage() {
-    const navigate = useNavigate();
 
     const {
         handleSubmit,
         control,
         reset,
         register,
-        formState: { errors, isDirty },
+        formState: { errors },
     } = useForm({
         defaultValues: {
+            name: "",
+            father: "",
+            grandfather: "",
+            family: ""
         },
     });
-    function handleFilter(data: any){
-        if(data.success){
+    function handleFilter(data: any) {
+        if (data.success) {
             reset()
         }
     }
     return <div className='message__page--container'>
-        <HStack gridGap="16px" mb="24px" flexWrap="wrap">
-        <Box w="1%" flexGrow="1">
-        <Center onClick={() => navigate("/")} cursor="pointer">
-        <ElectionBrand />
-      </Center>
-            </Box>
-            <Box w="1%" flexGrow="1">
-                <div className="divider"></div>
-            </Box>
-            <Box w="10%" flexGrow="1">
+        <Flex  mb="24px" gap={'16px'} alignItems={'center'}>
+            
+                    <img width={'57px'} height={'57px'} src='/logo-favi.svg' />
+                <Box position={'relative'}>
+                <div className="message__page--divider"></div>
+
+                </Box>
+            {/* <Box w="1%" flexGrow="1" position={'relative'}>
+            </Box> */}
                 <Input
                     type="text"
                     placeholder="الإسم كاملاً"
                     register={register("name")}
                     error={errors.name?.message}
                 />
-            </Box>
 
-            <Box w="10%" flexGrow="1">
                 <Controller
                     control={control}
-                    name="group"
+                    name="father"
                     render={({ field: { onChange, value } }) => (
                         <InputSelect
                             // loading={isLoading}
@@ -67,16 +66,14 @@ export default function SentMessagesPage() {
                             placeholder="اسم الأب"
                             onChange={onChange}
                             value={value}
-                            error={errors.group?.message}
+                            error={errors.father?.message}
                             key={value}
                         />
                     )}
                 />
-            </Box>
-            <Box w="10%" flexGrow="1">
                 <Controller
                     control={control}
-                    name="group"
+                    name="grandfather"
                     render={({ field: { onChange, value } }) => (
                         <InputSelect
                             // loading={isLoading}
@@ -96,16 +93,14 @@ export default function SentMessagesPage() {
                             placeholder="اسم الجد"
                             onChange={onChange}
                             value={value}
-                            error={errors.group?.message}
+                            error={errors.grandfather?.message}
                             key={value}
                         />
                     )}
                 />
-            </Box>
-            <Box w="10%" flexGrow="1">
                 <Controller
                     control={control}
-                    name="group"
+                    name="family"
                     render={({ field: { onChange, value } }) => (
                         <InputSelect
                             // loading={isLoading}
@@ -125,22 +120,20 @@ export default function SentMessagesPage() {
                             placeholder="اسم الهائلة"
                             onChange={onChange}
                             value={value}
-                            error={errors.group?.message}
+                            error={errors.family?.message}
                             key={value}
                         />
                     )}
                 />
-            </Box>
-            <Box w="1%" flexGrow="1">
-            <Btn
-                w="fit-content"
-                type="solid"
-                onClick={handleSubmit(handleFilter)}
+                <Btn
+                    w="fit-content"
+                    type="solid"
+                    borderRadius={'50px'}
+                    onClick={handleSubmit(handleFilter)}
                 >
-                <Text>بحث</Text>
+                    <Text>بحث</Text>
                 </Btn>
-            </Box>
-        </HStack>
+        </Flex>
         <Box mr={'100px'}>
             <div className="alert alert__warning">
                 <p>الرسالة صالحة لمدة 24 ساعة فقط</p>
@@ -150,10 +143,15 @@ export default function SentMessagesPage() {
                 templateColumns='repeat(5, 1fr)'
                 gap={'64px'}
             >
-                <GridItem rowSpan={3} className='profile'>
-                    <img src='/profile.svg' />
+                <GridItem rowSpan={3} >
+                    {/* <img src='/profile.svg' />
                     <h3>ياسر أحمد علي</h3>
-                    <p>هنالك العديد من الأنواع المتوفرة لنصوص لوريم إيبسوم، ولكن الغالبية تم تعديلها بشكل ما عبر إدخال بعض النوادر أو الكلمات العشوائية إلى النص.</p>
+                    <p>هنالك العديد من الأنواع المتوفرة لنصوص لوريم إيبسوم، ولكن الغالبية تم تعديلها بشكل ما عبر إدخال بعض النوادر أو الكلمات العشوائية إلى النص.</p> */}
+                    <Profile 
+                    img='/profile.svg' 
+                    title='ياسر أحمد علي'
+                    description='هنالك العديد من الأنواع المتوفرة لنصوص لوريم إيبسوم، ولكن الغالبية تم تعديلها بشكل ما عبر إدخال بعض النوادر أو الكلمات العشوائية إلى النص.'
+                    />
                 </GridItem>
                 <GridItem colSpan={2} className='addNames'>
                     <Flex alignItems={'center'} justifyContent={'space-between'} padding={'12px 16px'} mb={'12px'}>

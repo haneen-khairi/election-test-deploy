@@ -19,7 +19,7 @@ import { useRouteError } from "react-router-dom";
 import MessagesPage from "@pages/dashboard/messages/MessagesPage";
 import MessageServiceLayout from "@pages/layout/MessageServiceLayout";
 import SentMessagesPage from "@pages/Home/SentMessagesPage";
-import Profile from "@pages/Home/Profile";
+import ProfilePage from "@pages/Home/ProfilePage";
 
 const ErrorPage = () => {
     const error: any = useRouteError();
@@ -112,7 +112,7 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: (
-          <Profile />
+          <ProfilePage />
         ),
       },
       {
