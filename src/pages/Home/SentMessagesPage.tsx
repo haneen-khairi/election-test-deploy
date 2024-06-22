@@ -1,27 +1,40 @@
 import React from 'react'
 import "./MessagePage.css"
-import { Box, Button, Flex, Grid, GridItem, HStack } from '@chakra-ui/react'
+import { Box, Button, Center, Flex, Grid, GridItem, HStack, Text } from '@chakra-ui/react'
 import NameListChecked from './NameListChecked'
 import { Controller, useForm } from 'react-hook-form';
-import { InputSelect, Input } from '@components/core';
+import { InputSelect, Input, Btn } from '@components/core';
+import { ElectionBrand } from '@assets/icons';
+import { useNavigate } from "react-router-dom";
 
 export default function SentMessagesPage() {
+    const navigate = useNavigate();
+
     const {
         handleSubmit,
         control,
         reset,
         register,
-        watch,
         formState: { errors, isDirty },
     } = useForm({
         defaultValues: {
-            name: "",
-            group: "",
-            mobile_number: "",
         },
     });
+    function handleFilter(data: any){
+        if(data.success){
+            reset()
+        }
+    }
     return <div className='message__page--container'>
         <HStack gridGap="16px" mb="24px" flexWrap="wrap">
+        <Box w="1%" flexGrow="1">
+        <Center onClick={() => navigate("/")} cursor="pointer">
+        <ElectionBrand />
+      </Center>
+            </Box>
+            <Box w="1%" flexGrow="1">
+                <div className="divider"></div>
+            </Box>
             <Box w="10%" flexGrow="1">
                 <Input
                     type="text"
@@ -117,6 +130,15 @@ export default function SentMessagesPage() {
                         />
                     )}
                 />
+            </Box>
+            <Box w="1%" flexGrow="1">
+            <Btn
+                w="fit-content"
+                type="solid"
+                onClick={handleSubmit(handleFilter)}
+                >
+                <Text>بحث</Text>
+                </Btn>
             </Box>
         </HStack>
         <Box mr={'100px'}>
