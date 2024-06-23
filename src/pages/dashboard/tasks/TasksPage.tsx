@@ -34,7 +34,7 @@ ChartJS.register(
   LogarithmicScale,
 );
 const TasksPage = () => {
-  const colors = ["#14B4D2", "#EEB72A"];
+  const colors = ["#EEB72A","#14B4D2"];
 
   const [_filter, setFilter] = useState(undefined);
   console.log("🚀 ~ TasksPage ~ _filter:", _filter)
@@ -108,7 +108,7 @@ const TasksPage = () => {
                 ],
                 datasets: [
                   {
-                    data: [10, 15],
+                    data: [statistics?.percentage?.done_percentage, statistics?.percentage?.in_process_percentage],
                     backgroundColor: colors,
                     borderColor: colors,
                   },
