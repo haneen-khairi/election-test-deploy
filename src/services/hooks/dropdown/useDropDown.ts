@@ -246,7 +246,33 @@ export const useGetplaceOfResidenceDropdown = (search?: string) => {
     initialPageParam: 1,
   });
 };
-
+export const useGetTypesOfTasks = (search?: string) => {
+  const { filter } = useFilterStore();
+  const api = new APIClient<GetDropDown>(`${url}/task/types`);
+  return useInfiniteQuery<ListPageinated<GetDropDown>, Error>({
+    queryKey: [
+      "type_of_tasks",
+      search,
+      filter?.first_name,
+      filter?.second_name,
+    ],
+    queryFn: ({ pageParam = 1 }) =>
+      api.getPageintaed({
+        params: {
+          page: pageParam,
+          first_name: filter?.first_name,
+          second_name: filter?.second_name,
+          typeOfTasks: search || undefined,
+        },
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.next ? allPages.length + 1 : undefined;
+    },
+    staleTime: 24 * 60 * 60 * 1000,
+    retry: false,
+    initialPageParam: 1,
+  });
+};
 export const useGetElectoralDistrictDropdown = (search?: string) => {
   const { filter } = useFilterStore();
   const api = new APIClient<GetDropDown>(`${url}/electoral_district`);

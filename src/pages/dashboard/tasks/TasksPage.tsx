@@ -37,8 +37,11 @@ const TasksPage = () => {
   const colors = ["#14B4D2", "#EEB72A"];
 
   const [_filter, setFilter] = useState(undefined);
+  console.log("🚀 ~ TasksPage ~ _filter:", _filter)
   const [tasks, setTasks] = useState([])
+  const [statistics, setStatistics] = useState<any>()
   const {data} = useAuthStore()
+  // console.log("🚀 ~ TasksPage ~ token:", data?.tokens?.access)
   async function getTasks(){
     try {
       const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/task/tasks`, {
@@ -46,16 +49,30 @@ const TasksPage = () => {
           'Authorization': `Bearer ${data?.tokens?.access}` 
         }
       })
-      console.log("🚀 ~ getTasks ~ response:", response.data.data)
+      // console.log("🚀 ~ getTasks ~ response:", response.data.data)
       setTasks(response.data.data)
     } catch (error) {
       console.log("🚀 ~ getTasks ~ error:", error)
       
     }
   }
+  async function getStatiticsData(){
+    try {
+    const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/task/summary`, {
+        headers: {
+          'Authorization': `Bearer ${data?.tokens?.access}` 
+        }
+      })
+      setStatistics(response.data.data)
+      // console.log("🚀 ~ getStatiticsData ~ response:", response.data.data)
+    } catch (error) {
+      console.log("🚀 ~ getStatiticsData ~ error:", error)
+      
+    }
+  }
   useEffect(() => {
     getTasks()
-  
+    getStatiticsData()
     return () => {
       
     }
@@ -66,7 +83,10 @@ const TasksPage = () => {
       <Ebox>
         <TasksFilterSection
           setFilter={setFilter}
-          onSuccess={getTasks}
+          onSuccess={()=> {
+            console.log("sucesss")
+            getStatiticsData()
+          }}
         />
       </Ebox>
       <Grid templateColumns="repeat(4, 1fr)" gap={'16px'}>
@@ -142,9 +162,10 @@ const TasksPage = () => {
             </div>
           </Flex>
         </Box>
-        <TaskCardStatistics status="received" numberOfTasks={0} numberOfMondobs={4}  nameOfCard="تم الإستلام"/>
-        <TaskCardStatistics status="inProgress" numberOfTasks={0} numberOfMondobs={4} nameOfCard="قيد التنفيذ" />
-        <TaskCardStatistics status="done" numberOfTasks={0} numberOfMondobs={4}  nameOfCard="منجزة"/>
+        <TaskCardStatistics status="received" numberOfTasks={statistics?.statistics?.new_tasks?.count} numberOfMondobs={statistics?.statistics?.new_tasks?.mandobs_count}  nameOfCard="تم الإستلام"/>
+        <TaskCardStatistics status="inProgress" numberOfTasks={statistics?.statistics?.in_process?.count} numberOfMondobs={statistics?.statistics?.in_process?.mandobs_count} nameOfCard="قيد التنفيذ" />
+        <TaskCardStatistics status="done" numberOfTasks={statistics?.statistics.done?.count} numberOfMondobs={statistics?.
+statistics?.done?.mandobs_count}  nameOfCard="منجزة"/>
       </Grid>
       <Grid  templateColumns="repeat(3, 1fr)" gap={'16px'}>
         <div className={`${taskCss.card} ${taskCss.election__type} ${taskCss.new}`}>
@@ -164,7 +185,46 @@ const TasksPage = () => {
         </div>
       </Grid>
       <Grid  templateColumns="repeat(3, 1fr)" gap={'16px'}>
-        {tasks?.length && tasks?.map((task: any) =><TasksCard
+        <Flex flexDirection={'column'} gap={'16px'}>
+          {statistics?.new_tasks?.count ? statistics?.new_tasks?.tasks?.map((task: any) =><TasksCard
+            key={task.id}
+            status={task?.status?.name || ""}
+            // title="مهمة 1"
+            text={task.description}
+            representative={task.mandob?.name}
+            representativeType={task?.type?.name || ""}
+            representativeMission="مهمة 1"
+            date={task?.date || ""}
+            time={task?.time || ""}
+          />): ""}
+        </Flex>
+        <Flex flexDirection={'column'} gap={'16px'}>
+          {statistics?.in_process?.count ? statistics?.in_process?.tasks?.map((task: any) =><TasksCard
+            key={task.id}
+            status={task?.status?.name || ""}
+            // title="مهمة 1"
+            text={task.description}
+            representative={task.mandob?.name || ""}
+            representativeType={task?.type?.name || ""}
+            representativeMission="مهمة 1"
+            date={task?.date || ""}
+            time={task?.time || ""}
+          />): ""}
+        </Flex>
+        <Flex flexDirection={'column'} gap={'16px'}>
+          {statistics?.done?.count ? statistics?.done?.tasks?.map((task: any) =><TasksCard
+            key={task.id}
+            status={task?.status?.name || ""}
+            // title="مهمة 1"
+            text={task.description}
+            representative={task.mandob?.name || ""}
+            representativeType={task?.type?.name || ""}
+            representativeMission="مهمة 1"
+            date={task?.date || ""}
+            time={task?.time || ""}
+          />) : ""}
+        </Flex>
+        {/* {tasks?.length && tasks?.map((task: any) =><TasksCard
           key={task.id}
           status={task?.status?.name || ""}
           title="مهمة 1"
@@ -175,6 +235,17 @@ const TasksPage = () => {
           date={task?.date || ""}
           time={task?.time || ""}
         />)}
+        {tasks?.length && tasks?.map((task: any) =><TasksCard
+          key={task.id}
+          status={task?.status?.name || ""}
+          title="مهمة 1"
+          text={task.description}
+          representative={task?.mondob?.name || ""}
+          representativeType={task?.type?.name || ""}
+          representativeMission="مهمة 1"
+          date={task?.date || ""}
+          time={task?.time || ""}
+        />)} */}
         </Grid>
     </VStack>
   );

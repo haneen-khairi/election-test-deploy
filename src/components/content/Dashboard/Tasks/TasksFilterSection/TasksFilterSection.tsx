@@ -32,40 +32,33 @@ const TasksFilterSection = ({
   const {
     control,
     reset,
+    register,
     watch,
     formState: { errors, isDirty },
   } = useForm({
-    resolver: yupResolver(filterSectionSchema),
+    // resolver: yupResolver(filterSectionSchema),
     defaultValues: {
-      district: undefined,
-      representative_name: undefined,
-      companion_name: undefined,
-      gender: "M",
-      first_name: undefined,
-      second_name: undefined,
-      third_name: undefined,
-      last_name: undefined,
-      place_of_residence: undefined,
-      electoral_district: undefined,
-      boxes: undefined,
-      centers: undefined,
+      type_of_tasks: "",
+      date: "",
+      time: ""
     },
   });
 
   const handleSearch = () => {
     setFilter((prev: any) => ({
       ...prev,
-      district: watch("district"),
-      representative_name: watch("representative_name"),
-      gender: watch("gender"),
-      first_name: watch("first_name"),
-      second_name: watch("second_name"),
-      third_name: watch("third_name"),
-      last_name: watch("last_name"),
-      place_of_residence: watch("place_of_residence"),
-      electoral_district: watch("electoral_district"),
-      boxes: watch("boxes"),
-      centers: watch("centers"),
+      // district: watch("district"),
+      // representative_name: watch("representative_name"),
+      // gender: watch("gender"),
+      // first_name: watch("first_name"),
+      // second_name: watch("second_name"),
+      // third_name: watch("third_name"),
+      // last_name: watch("last_name"),
+      // place_of_residence: watch("place_of_residence"),
+      // electoral_district: watch("electoral_district"),
+      date: watch("date"),
+      time: watch("time"),
+      type_of_tasks: watch("type_of_tasks")
     }));
   };
   function onSuccessAdd(){
@@ -115,6 +108,7 @@ const TasksFilterSection = ({
           control={control}
           errors={errors}
           reset={reset}
+          register={register}
           isDirty={isDirty}
         />
       </Grid>

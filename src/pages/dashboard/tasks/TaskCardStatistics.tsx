@@ -11,6 +11,8 @@ export default function TaskCardStatistics({
     numberOfMondobs: number,
     nameOfCard: string
 }) {
+    // console.log("🚀 ~ numberOfMondobs:", numberOfMondobs)
+    // console.log("🚀 ~ numberOfTasks:", numberOfTasks)
   return (
     <Box
       borderRadius={"16px"}

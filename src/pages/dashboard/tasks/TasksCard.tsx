@@ -3,7 +3,7 @@ import { Flex, Tag, TagLabel } from '@chakra-ui/react'
 import ArrowIcon from './ArrowIcon'
 
 export default function TasksCard({
-    title,
+    title= "إعداد قوائم الناخبين",
     text,
     representative,
     representativeType,
@@ -12,7 +12,7 @@ export default function TasksCard({
     date,
     time
 }: {
-    title: string,
+    title?: string,
     text: string,
     representative: string,
     representativeType: string,
