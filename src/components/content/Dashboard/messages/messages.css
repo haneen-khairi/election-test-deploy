@@ -1,6 +1,7 @@
 .messages__card{
     padding: 16px;
     background-color: #fff;
+    border-radius: 12px;
 }
 .messages__counter--card{
     background-color: #fff;

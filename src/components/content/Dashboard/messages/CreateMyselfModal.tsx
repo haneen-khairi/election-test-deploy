@@ -9,19 +9,23 @@ import {
 } from "@components/core";
 import { Controller, useForm } from "react-hook-form";
 import { InfoModal } from "@components/content/Dashboard/Modals";
+import axios from "axios";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess: () => void;
   recordID?: string;
+  id: string,
+  token: string
 }
 
-const CreateMyselfModal = ({ isOpen, onClose, recordID }: Props) => {
+const CreateMyselfModal = ({ isOpen, onClose, recordID, id , token, onSuccess}: Props) => {
   const alert = useDisclosure();
   const {
     handleSubmit,
     // control,
-    // reset,
+    reset,
     // setValue,
     // watch,
     register,
@@ -39,8 +43,25 @@ const CreateMyselfModal = ({ isOpen, onClose, recordID }: Props) => {
   const onSubmit = (values: any) => {
     
     console.log("🚀 ~ onSubmit ~ values:", values)
+    postMyVote(values)
   };
-
+  async function postMyVote(data: any) {
+      try {
+        const response = await axios.post(`${import.meta.env.VITE_PRIVATE_API_URL}/sms/list/items/${id}/`, data, {
+          headers: {
+            'Authorization': `Bearer ${token}` 
+          }
+        })
+          console.log("🚀 ~ sentSmsHistory ~ response:", response.data)
+          onClose()
+          onSuccess()
+          reset()
+        } catch (error) {
+          console.log("🚀 ~ sentSmsHistory ~ error:", error)
+          
+        }
+    
+  }
 
   return (
     <>

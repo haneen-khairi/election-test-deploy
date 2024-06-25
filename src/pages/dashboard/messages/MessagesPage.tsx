@@ -10,7 +10,8 @@ import {
   HStack,
   VStack,
   Heading,
-  Text
+  Text,
+  list
 } from '@chakra-ui/react'
 import CreateMyselfModal from '@components/content/Dashboard/messages/CreateMyselfModal'
 import DeleteIcon from '@components/content/Dashboard/messages/DeleteIcon'
@@ -21,11 +22,20 @@ import NewMessageForm from '@components/content/Dashboard/messages/NewMessageFor
 import SentMessages from '@components/content/Dashboard/messages/SentMessages'
 import { Btn } from '@components/core'
 import useAuthStore from '@store/AuthStore'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 import { BsPlus } from 'react-icons/bs'
 
 export default function MessagesPage() {
   const { data } = useAuthStore();
-
+  const [messagesLists, setMessagesLists] = useState([])
+  const [messagesSmsHistory, setMessagesSmsHistory] = useState([])
+  const [listInfo, setListInfo] = useState({
+    id: "",
+    name: ""
+  })
+  const [listRecords, setListRecords] = useState([])
+  const [newKeyForm, setNewKeyForm] = useState(0)
   const {
     isOpen,
     onOpen,
@@ -42,8 +52,68 @@ export default function MessagesPage() {
   }
   function handleOnDelete() {
     console.log("🚀 ~ handleOnDelete ~ handleOnDelete:")
-
   }
+  async function getLists(){
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/sms/list/`, {
+          headers: {
+            'Authorization': `Bearer ${data?.tokens?.access}` 
+          }
+        })
+        setMessagesLists(response.data.data)
+        console.log("🚀 ~ getLists ~ response:", response.data)
+      } catch (error) {
+        console.log("🚀 ~ getLists ~ error:", error)
+        
+      }
+  }
+
+  async function getListDetails(id: string , name: string){
+    setListInfo({
+      id: id,
+      name: name
+    })
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/sms/list/items/${id}/`, {
+          headers: {
+            'Authorization': `Bearer ${data?.tokens?.access}` 
+          }
+        })
+        if(response.data.data.length > 0){
+          setListRecords(response.data.data)
+        }
+        console.log("🚀 ~ getListDetails ~ response:", response.data)
+      } catch (error) {
+        console.log("🚀 ~ getListDetails ~ error:", error)
+        
+      }
+  }
+  async function getSmsHistory(){
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/sms/history/`, {
+          headers: {
+            'Authorization': `Bearer ${data?.tokens?.access}` 
+          }
+        })
+        setMessagesSmsHistory(response.data.data)
+        console.log("🚀 ~ getSmsHistory ~ response:", response.data)
+      } catch (error) {
+        console.log("🚀 ~ getSmsHistory ~ error:", error)
+        
+      }
+  }
+  function onSubmitNewSms(){
+    getSmsHistory()
+    setNewKeyForm(newKeyForm +1)
+  }
+  useEffect(() => {
+    getLists()
+    getSmsHistory()
+    return () => {
+      
+    }
+  }, [])
+  
   return <>
       <HStack padding={'16px'} bgColor={'#fff'} mb={'12px'} borderRadius={'12px'} w="100%" justifyContent="space-between">
         <VStack alignItems="start">
@@ -87,26 +157,26 @@ export default function MessagesPage() {
         </Box>
         <Box className='new__message--card' >
           <h4 className="">رسالة جديدة</h4>
-          <NewMessageForm />
+          <NewMessageForm key={newKeyForm} onSuccess={onSubmitNewSms} token={data?.tokens?.access || ""} listsArray={messagesLists} />
         </Box>
       </GridItem>
       <GridItem rowSpan={2} colSpan={1} >
-        <SentMessages />
+        <SentMessages messages={messagesSmsHistory} />
       </GridItem>
     </Grid>
     <Grid templateColumns={'repeat(2, 1fr)'} gap={'24px'}>
       <Box className='messages__card--list'>
         <h4 className="messages__card__header">القوائم</h4>
-        <Flex flexDirection={'column'} gap={'24px'}>
-          <MessageListItem id={2} title="المهام الجديدة" />
-          <MessageListItem id={1} title="المهام الجديدة" />
-          <MessageListItem id={4} title="المهام الجديدة" />
+        <Flex flexDirection={'column'}>
+          {messagesLists?.length ? messagesLists?.map((list: any) => <MessageListItem onDelete={getLists} onClick={getListDetails}  key={list.id} id={list.id} title={list.name} />) :""}
+          {/* <MessageListItem id={1} title="المهام الجديدة" />
+          <MessageListItem id={4} title="المهام الجديدة" /> */}
         </Flex>
       </Box>
-      <Box className='messages__card--list'>
+      {listInfo?.id ? <Box className='messages__card--list'>
         <Flex justifyContent={'space-between'} alignItems={'center'}>
 
-          <h4 className="messages__card__header">معلومات القائمة A</h4>
+          <h4 className="messages__card__header">معلومات {listInfo?.name}</h4>
           <Button onClick={onOpen} className='add__my-info'>
             <BsPlus size={'24px'} />
             أضافة أسم من أصواتي</Button>
@@ -121,24 +191,29 @@ export default function MessagesPage() {
               </Tr>
             </Thead>
             <Tbody>
-              <Tr>
-                <Td>inches</Td>
-                <Td>millimetres (mm)</Td>
+              {listRecords?.map((list: any) =><Tr key={list.id}>
+                <Td>{list.name}</Td>
+                <Td>{list.mobile_number}</Td>
                 <Td isNumeric>
                   <Button w={'24px'} height={'24px'} backgroundColor={'transparent'} paddingX={0} paddingY={'18px'} onClick={handleOnEdit}><EditIcon /></Button>
                   <Button w={'24px'} height={'24px'} backgroundColor={'transparent'} paddingX={0} paddingY={'18px'} onClick={handleOnDelete}><DeleteIcon /></Button>
                 </Td>
-              </Tr>
+              </Tr>)}
             </Tbody>
           </Table>
         </TableContainer>
-      </Box>
+      </Box>: ""}
     </Grid>
     <CreateMyselfModal
+      token={data?.tokens?.access || ""}
+      id={listInfo?.id}
       isOpen={isOpen}
       onClose={onClose}
+      onSuccess={()=> getListDetails(listInfo.id, listInfo.name)}
     />
     <NewMenuFormModal 
+      onSuccess={getLists}
+      token={data?.tokens?.access || ""}
       isOpen={isOpenMenuModal}
       onClose={onCloseMenuModal}
     />

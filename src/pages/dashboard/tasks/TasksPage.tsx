@@ -36,12 +36,12 @@ ChartJS.register(
 const TasksPage = () => {
   const colors = ["#EEB72A","#14B4D2"];
 
-  const [_filter, setFilter] = useState(undefined);
+  const [_filter, setFilter] = useState<any>(undefined);
   console.log("🚀 ~ TasksPage ~ _filter:", _filter)
   const [tasks, setTasks] = useState([])
   const [statistics, setStatistics] = useState<any>()
   const {data} = useAuthStore()
-  // console.log("🚀 ~ TasksPage ~ token:", data?.tokens?.access)
+  console.log("🚀 ~ TasksPage ~ token:", data?.tokens?.access)
   async function getTasks(){
     try {
       const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/task/tasks`, {
@@ -56,9 +56,9 @@ const TasksPage = () => {
       
     }
   }
-  async function getStatiticsData(){
+  async function getStatiticsData(date: string = "" , time: string = "", taskType: string = ""){
     try {
-    const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/task/summary`, {
+    const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/task/summary?task_type=${taskType}&date=${date}&time=${time}`, {
         headers: {
           'Authorization': `Bearer ${data?.tokens?.access}` 
         }
@@ -71,12 +71,17 @@ const TasksPage = () => {
     }
   }
   useEffect(() => {
-    getTasks()
-    getStatiticsData()
+    if(_filter === undefined){
+      getTasks()
+      getStatiticsData()
+    }else{
+      getStatiticsData(_filter?.date || "", _filter?.time || "", _filter?.type_of_tasks || "")
+
+    }
     return () => {
       
     }
-  }, [])
+  }, [_filter])
   
   return (
     <VStack spacing="20px" align="stretch">
@@ -84,8 +89,8 @@ const TasksPage = () => {
         <TasksFilterSection
           setFilter={setFilter}
           onSuccess={()=> {
-            console.log("sucesss")
-            getStatiticsData()
+            console.log("sucesss on filter")
+            getStatiticsData(_filter?.date || "", _filter?.time || "", _filter?.type_of_tasks || "")
           }}
         />
       </Ebox>

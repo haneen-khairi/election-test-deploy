@@ -21,6 +21,7 @@ const TypeOfTasks = ({
 }: Props) => {
 //   const [search, setSearch] = useState<string>();
   const { data: taskTypes, isLoading: istasktypesloading } = useGetTakTypes();
+  // console.log("🚀 ~ taskTypes:", taskTypes)
 
 //   const { data, fetchNextPage, hasNextPage, isFetching } =
 //   useGetTypesOfTasks(search);
