@@ -41,9 +41,11 @@ export default function NewMessageForm({
             }
           })
             console.log("🚀 ~ sentSmsHistory ~ response:", response.data)
-            reset()
-            setLists([])
-            onSuccess()
+            if(response.data.status){
+                reset()
+                setLists([])
+                onSuccess()
+            }
           } catch (error) {
             console.log("🚀 ~ sentSmsHistory ~ error:", error)
             

@@ -17,37 +17,40 @@ const Filters = ({
   errors,
   reset,
   handleSearch,
-  register
+  register,
+  onReset = () => {}
 }: {
   reset: UseFormReset<any>;
   errors: FieldErrors<any>;
   control: Control<any, any>;
   isDirty: boolean;
   handleSearch: () => void;
-  register: any
+  register: any,
+  onReset : () => void
+
 }) => {
   // const [search, setSearch] = useState("");
   // const dropDownObj = useGetVotingCentersDropdown(search);
 
   return (
     <>
-      
-        
 
-      <Box  flexGrow="1">
-                  <Input
-                    type="date"
-                    placeholder="ادخل التاريخ"
-                    register={register("date")}
-                  />
-                </Box>
-                <Box flexGrow="1">
-                  <Input
-                    type="time"
-                    placeholder="ادخل الوقت"
-                    register={register("time")}
-                  />
-                </Box>
+
+
+      <Box flexGrow="1">
+        <Input
+          type="date"
+          placeholder="ادخل التاريخ"
+          register={register("date")}
+        />
+      </Box>
+      <Box flexGrow="1">
+        <Input
+          type="time"
+          placeholder="ادخل الوقت"
+          register={register("time")}
+        />
+      </Box>
       <Box>
         <Controller
           control={control}
@@ -79,6 +82,7 @@ const Filters = ({
         }}
         onClick={() => {
           reset();
+          onReset()
         }}
       >
         <Text>مسح الكل</Text>

@@ -88,6 +88,7 @@ const TasksPage = () => {
       <Ebox>
         <TasksFilterSection
           setFilter={setFilter}
+          onReset={getStatiticsData}
           onSuccess={()=> {
             console.log("sucesss on filter")
             getStatiticsData(_filter?.date || "", _filter?.time || "", _filter?.type_of_tasks || "")

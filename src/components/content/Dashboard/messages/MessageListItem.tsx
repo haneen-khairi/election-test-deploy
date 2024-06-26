@@ -1,9 +1,10 @@
 import React from 'react'
 import EditIcon from './EditIcon'
-import { Button, Flex } from '@chakra-ui/react'
+import { Button, Flex, useToast } from '@chakra-ui/react'
 import DeleteIcon from './DeleteIcon'
 import axios from 'axios'
 import useAuthStore from '@store/AuthStore'
+import { EToast } from '@constants/functions/toast'
 
 export default function MessageListItem({
     title,
@@ -16,6 +17,8 @@ export default function MessageListItem({
     onClick: (id: string, name: string) => void,
     onDelete: () => void
 }) {
+    const toast = useToast();
+
     const {data} = useAuthStore()
     function handleOnEdit() {
         console.log("🚀 ~ handleOnEdit ~ handleOnEdit:", id)
@@ -33,6 +36,15 @@ export default function MessageListItem({
               }
             })
             console.log("🚀 ~ deleteList ~ response:", response.data)
+            if(response.data.status){
+                onDelete()
+                EToast({
+                    toast: toast,
+                    status: "success",
+                    title: "نجاح العملية",
+                    description: "تم الحذف بنجاح",
+                  });
+            }
           } catch (error) {
             console.log("🚀 ~ deleteList ~ error:", error)
     

@@ -17,10 +17,12 @@ import { AUTaskModal } from "../modals";
 
 const TasksFilterSection = ({
   setFilter,
-  onSuccess
+  onSuccess,
+  onReset = () => {}
 }: {
   setFilter: React.Dispatch<React.SetStateAction<any | undefined>>;
-  onSuccess: () => void
+  onSuccess: () => void,
+  onReset : () => void
 }) => {
   const { data } = useAuthStore();
   const {
@@ -47,15 +49,6 @@ const TasksFilterSection = ({
   const handleSearch = () => {
     setFilter((prev: any) => ({
       ...prev,
-      // district: watch("district"),
-      // representative_name: watch("representative_name"),
-      // gender: watch("gender"),
-      // first_name: watch("first_name"),
-      // second_name: watch("second_name"),
-      // third_name: watch("third_name"),
-      // last_name: watch("last_name"),
-      // place_of_residence: watch("place_of_residence"),
-      // electoral_district: watch("electoral_district"),
       date: watch("date"),
       time: watch("time"),
       type_of_tasks: watch("type_of_tasks")
@@ -105,6 +98,7 @@ const TasksFilterSection = ({
       >
         <Filters
           handleSearch={handleSearch}
+          onReset={onReset}
           control={control}
           errors={errors}
           reset={reset}
