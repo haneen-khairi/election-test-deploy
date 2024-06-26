@@ -1,5 +1,6 @@
-import { Textarea } from '@chakra-ui/react'
+import { Textarea, useToast } from '@chakra-ui/react'
 import { GradientButton } from '@components/core'
+import { EToast } from '@constants/functions/toast'
 import axios from 'axios'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -13,6 +14,7 @@ export default function NewMessageForm({
     token: string | null,
     onSuccess: () => void
 }) {
+    const toast = useToast()
     const [lists, setLists] = useState([])
     const {
         register,
@@ -45,6 +47,12 @@ export default function NewMessageForm({
                 reset()
                 setLists([])
                 onSuccess()
+                EToast({
+                    toast: toast,
+                    status: "success",
+                    title: "نجاح العملية",
+                    description: "تم الأرسال بنجاح",
+                  });
             }
           } catch (error) {
             console.log("🚀 ~ sentSmsHistory ~ error:", error)
