@@ -12,6 +12,12 @@
     box-shadow: 0px 3px 12px 0px #0000000F;
     border-radius: 16px;
 }
+.list-active{
+    background-color: #318973;
+    color: #fff ;
+}
+.list-active > * {
+}
 .messages__card--list{
     box-shadow: 0px 3px 12px 0px #0000000F;
     border-radius: 16px;

@@ -1,65 +1,93 @@
-import React from 'react'
-import EditIcon from './EditIcon'
-import { Button, Flex, useToast } from '@chakra-ui/react'
-import DeleteIcon from './DeleteIcon'
-import axios from 'axios'
-import useAuthStore from '@store/AuthStore'
-import { EToast } from '@constants/functions/toast'
+import React, { useState } from 'react';
+import EditIcon from './EditIcon';
+import { Button, Flex, useToast } from '@chakra-ui/react';
+import DeleteIcon from './DeleteIcon';
+import axios from 'axios';
+import useAuthStore from '@store/AuthStore';
+import { EToast } from '@constants/functions/toast';
 
-export default function MessageListItem({
-    title,
-    id,
-    onClick = (id: string, name: string) => { },
-    onDelete = () => {}
-}: {
-    title: string,
-    id: string,
-    onClick: (id: string, name: string) => void,
-    onDelete: () => void
-}) {
-    const toast = useToast();
+interface MessageListItemProps {
+  title: string;
+  id: string;
+  onClick: (id: string, name: string) => void;
+  onDelete: () => void;
+  onEdit: (id: string) => void;
+}
 
-    const {data} = useAuthStore()
-    function handleOnEdit() {
-        console.log("🚀 ~ handleOnEdit ~ handleOnEdit:", id)
+export default function MessageListItem({ title, id, onClick, onDelete, onEdit }: MessageListItemProps) {
+  const toast = useToast();
+  const { data } = useAuthStore();
+  const [isActive, setIsActive] = useState(false);
 
-    }
-    function handleOnDelete() {
-        console.log("🚀 ~ handleOnDelete ~ handleOnDelete:", id)
-        deleteList(id)
-    }
-    async function deleteList(id: string){
-        try {
-          const response = await axios.delete(`${import.meta.env.VITE_PRIVATE_API_URL}/sms/list/details/${id}/`, {
-              headers: {
-                'Authorization': `Bearer ${data?.tokens?.access}`
-              }
-            })
-            console.log("🚀 ~ deleteList ~ response:", response.data)
-            if(response.data.status){
-                onDelete()
-                EToast({
-                    toast: toast,
-                    status: "success",
-                    title: "نجاح العملية",
-                    description: "تم الحذف بنجاح",
-                  });
-            }
-          } catch (error) {
-            console.log("🚀 ~ deleteList ~ error:", error)
-    
-          }
+  const handleItemClick = () => {
+    setIsActive(true);
+    onClick(id, title);
+  };
+
+  const handleEditClick = (event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent click from bubbling to parent item
+    console.log("Edit:", id);
+    onEdit(id)
+  };
+
+  const handleDeleteClick = async (event: React.MouseEvent) => {
+    event.stopPropagation();
+
+    try {
+      const response = await axios.delete(`${import.meta.env.VITE_PRIVATE_API_URL}/sms/list/details/${id}/`, {
+        headers: {
+          'Authorization': `Bearer ${data?.tokens?.access}`
+        }
+      });
+      console.log("Delete response:", response.data);
+
+      if (response.data.status) {
+        onDelete();
+        EToast({
+          toast,
+          status: "success",
+          title: "نجاح العملية",
+          description: "تم الحذف بنجاح",
+        });
       }
-    return <button onClick={() => onClick(id, title)}>
-        <Flex gap={'12px'} padding={'26px 16px'} borderBottom={'1px solid #0000001F'} justifyContent={'space-between'} alignItems={'center'}>
-
-            <h6 className='list__title'>{title}</h6>
-
-
-            <div className="">
-                <Button w={'24px'} height={'24px'} backgroundColor={'transparent'} paddingX={0} paddingY={'18px'} onClick={handleOnEdit}><EditIcon /></Button>
-                <Button w={'24px'} height={'24px'} backgroundColor={'transparent'} paddingX={0} paddingY={'18px'} onClick={handleOnDelete}><DeleteIcon /></Button>
-            </div>
-        </Flex>
+    } catch (error) {
+      console.error("Delete error:", error);
+    }
+  };
+//className={isActive ? 'list-active' : ''}
+  return (
+    <button  onClick={handleItemClick}> {/* Add 'active' class conditionally */}
+      <Flex 
+        gap="12px" 
+        padding="26px 16px" 
+        borderBottom="1px solid #0000001F" 
+        justifyContent="space-between" 
+        alignItems="center"
+      >
+        <h6 className="list__title">{title}</h6>
+        <div>
+          <Button
+            w="24px"
+            height="24px"
+            backgroundColor="transparent"
+            paddingX={0}
+            paddingY="18px"
+            onClick={handleEditClick}
+          >
+            <EditIcon />
+          </Button>
+          <Button
+            w="24px"
+            height="24px"
+            backgroundColor="transparent"
+            paddingX={0}
+            paddingY="18px"
+            onClick={handleDeleteClick}
+          >
+            <DeleteIcon />
+          </Button>
+        </div>
+      </Flex>
     </button>
+  );
 }

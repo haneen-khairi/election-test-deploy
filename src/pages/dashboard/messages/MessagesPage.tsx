@@ -34,6 +34,7 @@ export default function MessagesPage() {
     id: "",
     name: ""
   })
+  const [editId, setEditId] = useState<string>("")
   const [listRecords, setListRecords] = useState([])
   const [newKeyForm, setNewKeyForm] = useState(0)
   const {
@@ -45,6 +46,11 @@ export default function MessagesPage() {
     isOpen: isOpenMenuModal,
     onOpen: onOpenMenuModal,
     onClose: onCloseMenuModal
+  } = useDisclosure()
+  const {
+    isOpen: isOpenMenuEditModal,
+    onOpen: onOpenMenuEditModal,
+    onClose: onCloseMenuEditModal
   } = useDisclosure()
   function handleOnEdit() {
     console.log("🚀 ~ handleOnEdit ~ handleOnEdit:")
@@ -152,7 +158,7 @@ export default function MessagesPage() {
               <MessageBlackIcon />
               <p>عدد الرسائل المتاحة</p>
             </div>
-            <div className='messages__count'>56</div>
+            <div className='messages__count'>{messagesSmsHistory?.length || 0}</div>
           </Flex>
         </Box>
         <Box className='new__message--card' >
@@ -168,7 +174,10 @@ export default function MessagesPage() {
       <Box className='messages__card--list'>
         <h4 className="messages__card__header">القوائم</h4>
         <Flex flexDirection={'column'}>
-          {messagesLists?.length ? messagesLists?.map((list: any) => <MessageListItem onDelete={getLists} onClick={getListDetails}  key={list.id} id={list.id} title={list.name} />) :""}
+          {messagesLists?.length ? messagesLists?.map((list: any) => <MessageListItem onDelete={getLists} onClick={getListDetails} onEdit={(id) => {
+            setEditId(id)
+            onOpenMenuEditModal()
+            }}  key={list.id} id={list.id} title={list.name} />) :""}
           {/* <MessageListItem id={1} title="المهام الجديدة" />
           <MessageListItem id={4} title="المهام الجديدة" /> */}
         </Flex>
@@ -216,6 +225,13 @@ export default function MessagesPage() {
       token={data?.tokens?.access || ""}
       isOpen={isOpenMenuModal}
       onClose={onCloseMenuModal}
+    />
+    <NewMenuFormModal 
+      onSuccess={getLists}
+      recordID={editId}
+      token={data?.tokens?.access || ""}
+      isOpen={isOpenMenuEditModal}
+      onClose={onCloseMenuEditModal}
     />
   </>
 }

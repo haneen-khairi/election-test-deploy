@@ -8,7 +8,7 @@ import {
 } from "@components/core";
 import {  Controller, useForm } from "react-hook-form";
 import { InfoModal } from "@components/content/Dashboard/Modals";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useGetVoters
 } from "@services/hooks/voters/useVoters"
@@ -28,6 +28,7 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess,token}: Props) 
   const alert = useDisclosure();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [votersLists, setVotersLists] = useState<any[]>([]);
+  const [details, setDetails] = useState()
   const { data: voters } = useGetVoters()
     console.log("🚀 ~ NewMenuFormModal ~ voters:", voters)
     
@@ -45,8 +46,28 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess,token}: Props) 
     setVotersLists(e)
   }
 
-
- 
+  async function getListDetails(id: string){
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/sms/list/details/${id}/`, {
+        headers: {
+          'Authorization': `Bearer ${token}` 
+        }
+      })
+        console.log("🚀 ~ getListDetails ~ response:", response.data)
+        if(response.data.status){
+          let initialValue = {
+            name: response.data.data.name
+          }
+          reset({...initialValue})
+          setDetails(response.data.data)
+        }
+        return response.data.data;
+      } catch (error) {
+        console.log("🚀 ~ handleSubmitForm ~ error:", error)
+        
+      }
+  }
+  
   const toast = useToast();
 
   // Reset Form When Close
@@ -57,7 +78,7 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess,token}: Props) 
       "votes_list": votersLists?.map((item: any) => item.value),
     }
     console.log("🚀 ~ onSubmit ~ newList:", newList)
-    if(votersLists.length === 0){
+    if(votersLists.length === 0 && !recordID){
       EToast({
         toast: toast,
         status: "error",
@@ -66,7 +87,11 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess,token}: Props) 
       });
 
     }else{
-      handleSubmitForm(newList)
+      if(recordID){
+        handleUpdateForm(recordID, newList)
+      }else{
+        handleSubmitForm(newList)
+      }
 
     }
   };
@@ -106,7 +131,55 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess,token}: Props) 
         
       }
   }
+  async function handleUpdateForm(id: string, data: any) {
+    try {
+      const response = await axios.put(`${import.meta.env.VITE_PRIVATE_API_URL}/sms/list/details/${id}/`, data, {
+        headers: {
+          'Authorization': `Bearer ${token}` 
+        }
+      })
+        console.log("🚀 ~ handleSubmitForm ~ response:", response.data)
+        if(response.data.status){
+          reset()
+          setVotersLists([])
+          onSuccess()
+          onClose()
+          reset()
+          EToast({
+            toast: toast,
+            status: "success",
+            title: "Success",
+            description: "List updated successfully",
+          });
+        }else{
+          EToast({
+            toast: toast,
+            status: "error",
+            title: "Error",
+            description: response.data.message,
+          });
+        }
+        reset()
+        setVotersLists([])
+        onSuccess()
+      } catch (error) {
+        console.log("🚀 ~ handleSubmitForm ~ error:", error)
+        
+      }
+  }
+  useEffect(() => {
+    if(recordID){
+      
+      getListDetails(recordID)
 
+      console.log("🚀 ~ useEffect ~ recordID:", recordID)
+    }
+  
+    return () => {
+      
+    }
+  }, [recordID])
+  
   return (
     <>
       <InfoModal
@@ -136,7 +209,8 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess,token}: Props) 
             // error={errors?.name?.message || ""}
             />
         </Box>
-              <Box w="100%" flexGrow="1">
+              
+              {!recordID && <Box w="100%" flexGrow="1">
               
                       <ReactSelect
         className='react-select'
@@ -175,7 +249,7 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess,token}: Props) 
           value: el?.id || 0,
         }))}
         />
-        </Box>
+        </Box>}
             
                 
               </HStack>
@@ -186,7 +260,7 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess,token}: Props) 
               borderRadius={'50px'}
               onClick={handleSubmit(onSubmit)}
               >
-                  إنشاء   
+                  {recordID ? "تعديل" : "إنشاء"}  
                 
               </GradientButton>
             </HStack>
