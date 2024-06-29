@@ -142,6 +142,8 @@
     line-height: 16px;
     text-align: right;
     margin-bottom: 12px;
+    word-break: break-word;
+
 }
 .message__card--body span{
     font-family: Lexend;

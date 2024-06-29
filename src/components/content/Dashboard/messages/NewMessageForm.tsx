@@ -1,9 +1,9 @@
-import { Textarea, useToast } from '@chakra-ui/react'
+import { Box, Text, Textarea, useToast } from '@chakra-ui/react'
 import { GradientButton } from '@components/core'
 import { EToast } from '@constants/functions/toast'
 import axios from 'axios'
 import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import ReactSelect from 'react-select'
 export default function NewMessageForm({
     listsArray,
@@ -16,8 +16,10 @@ export default function NewMessageForm({
 }) {
     const toast = useToast()
     const [lists, setLists] = useState([])
+    const [messageLength, setMessageLength] = useState(0)
     const {
         register,
+        control,
         reset,
         handleSubmit,
         formState: { errors },
@@ -25,6 +27,13 @@ export default function NewMessageForm({
     function getForms(e: any){
         setLists(e)
     }
+    const [messages, setMessages] = useState<any[]>([]);
+
+    const calculateMessages = () => {
+      const numMessages = Math.floor(messageLength / 150);
+      const excess = messageLength % 150 >= 10 ? 1 : 0;
+      setMessages(Array.from({ length: numMessages + excess }, () => "Message"));
+    };
     function onSubmit(data: any) {
         let newMessage = {
             content: data.content,
@@ -53,8 +62,11 @@ export default function NewMessageForm({
                     title: "نجاح العملية",
                     description: "تم الأرسال بنجاح",
                   });
+                // setMessages([])
+                // setMessageLength(0)
+                // calculateMessages()
             }
-          } catch (error) {
+          } catch (error: any) {
             console.log("🚀 ~ sentSmsHistory ~ error:", error)
             
           }
@@ -63,6 +75,13 @@ export default function NewMessageForm({
             value: item.id,
             label: item.name,
     }))
+    const onCallBackChange = (onChange: any) => (event: any) => {
+        onChange(event);
+        setMessageLength(event?.target?.value?.length)
+        calculateMessages();
+        // onCallBackChangeForParent(event);
+        console.log("🚀 ~ onCallBackChange ~ event?.target?.value?.length:", event?.target?.value?.length)
+      };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
         <ReactSelect
@@ -99,14 +118,26 @@ export default function NewMessageForm({
         // {...register('form', { required: true })}
         options={listsOptions}
         />
-        <Textarea 
-        placeholder='الرسالة...' 
-        {...register('content', { required: true })}
-        borderRadius={'16px'}
-        boxShadow={' 6px 6px 54px 0px #0000000D'}
-        border={'1px solid #E5E5E5'}
-        mb={'24px'}
-        />
+                <Controller
+                    control={control}
+                    name="content"
+                    rules={{required: true}}
+                    render={({ field: { onChange, value } }) => (
+                        <Textarea 
+                        onChange={onCallBackChange(onChange)}
+                        value={value}
+                        placeholder='الرسالة...' 
+                        // {...register('content', { required: true })}
+                        borderRadius={'16px'}
+                        boxShadow={' 6px 6px 54px 0px #0000000D'}
+                        border={'1px solid #E5E5E5'}
+                        mb={'24px'}
+                        />
+                    )}
+                    />
+                    <Box width={'100%'}>
+                        <Text>عدد الرسأل : {messages.length}</Text>
+                    </Box>
         <GradientButton mr={'auto'} type='submit' borderRadius={'50px'}>
             ارسال
         </GradientButton>
