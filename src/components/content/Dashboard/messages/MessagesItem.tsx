@@ -2,16 +2,18 @@ import { Flex } from '@chakra-ui/react'
 import React from 'react'
 
 export default function MessagesItem({
-    text
+    text,
+    lists
 }: {
-    text: string
+    text: string,
+    lists: string[]
 }) {
   return <div className="message__card--body">
     <p>{text}</p>
-    <Flex gap={'12px'}>
-        <span>القائمة <strong>A</strong></span>
-        <span>القائمة <strong>B</strong></span>
-        <span>القائمة <strong>C</strong></span>
-    </Flex>
+    {lists?.length ? <Flex gap={'12px'}>
+    {lists.map((item, index) => (
+        <span key={index}>{item} {lists} ,</span>
+      ))}
+      </Flex>: ""}
   </div>
 }

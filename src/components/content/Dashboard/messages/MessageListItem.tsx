@@ -12,14 +12,16 @@ interface MessageListItemProps {
   onClick: (id: string, name: string) => void;
   onDelete: () => void;
   onEdit: (id: string) => void;
+  isStatic?: boolean
 }
 
-export default function MessageListItem({ title, id, onClick, onDelete, onEdit }: MessageListItemProps) {
+export default function MessageListItem({ title, id, onClick, onDelete, onEdit, isStatic }: MessageListItemProps) {
   const toast = useToast();
   const { data } = useAuthStore();
   const [isActive, setIsActive] = useState(false);
 
   const handleItemClick = () => {
+    if(isStatic) return;
     setIsActive(true);
     onClick(id, title);
   };
@@ -65,7 +67,7 @@ export default function MessageListItem({ title, id, onClick, onDelete, onEdit }
         alignItems="center"
       >
         <h6 className="list__title">{title}</h6>
-        <div>
+        {!isStatic &&<div>
           <Button
             w="24px"
             height="24px"
@@ -86,7 +88,7 @@ export default function MessageListItem({ title, id, onClick, onDelete, onEdit }
           >
             <DeleteIcon />
           </Button>
-        </div>
+        </div>}
       </Flex>
     </button>
   );

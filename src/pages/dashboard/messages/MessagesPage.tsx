@@ -177,7 +177,7 @@ export default function MessagesPage() {
           {messagesLists?.length ? messagesLists?.map((list: any) => <MessageListItem onDelete={getLists} onClick={getListDetails} onEdit={(id) => {
             setEditId(id)
             onOpenMenuEditModal()
-            }}  key={list.id} id={list.id} title={list.name} />) :""}
+            }}  key={list.id} isStatic={list.is_static} id={list.id} title={list.name} />) :""}
           {/* <MessageListItem id={1} title="المهام الجديدة" />
           <MessageListItem id={4} title="المهام الجديدة" /> */}
         </Flex>

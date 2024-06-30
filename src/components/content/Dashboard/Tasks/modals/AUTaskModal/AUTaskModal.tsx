@@ -47,9 +47,9 @@ const AUTaskModal = ({ isOpen, onClose, recordID, onSuccess }: Props) => {
     resolver: yupResolver(AUTaskSchema),
   });
   const {
-    isOpen: isAddNewMossion,
+    isOpen: isAddNewMission,
     onOpen,
-    onClose: onCloseAddNewMossion
+    onClose: onCloseAddNewMission
   } = useDisclosure()
   const values = watch();
   const { data: mandobtypes, isLoading: ismandobtypesloading } =
@@ -295,11 +295,12 @@ const AUTaskModal = ({ isOpen, onClose, recordID, onSuccess }: Props) => {
         )}
       </Popup>
       <MissionModal 
-      isOpen={isAddNewMossion}
-      onClose={onCloseAddNewMossion}
+      isOpen={isAddNewMission}
+      onClose={onCloseAddNewMission}
       onSuccess={() => {
-        onCloseAddNewMossion
+        onCloseAddNewMission()
         onClose()
+        // onClose()
       }}
       />
     </>

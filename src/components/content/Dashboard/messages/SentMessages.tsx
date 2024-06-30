@@ -10,7 +10,7 @@ export default function SentMessages({
   return <div className="messages__card">
     <h5>الرسائل المرسلة</h5>
     <Grid flexDirection={'column'} maxHeight={'300px'} overflow={'auto'} gap={'24px'}>
-        {messages?.length ? messages.map((message:any) =><MessagesItem key={message.id} text={message.content} />): ""}
+        {messages?.length ? messages.map((message:any) =><MessagesItem key={message.id} lists={message.lists} text={message.content} />): ""}
 
     </Grid>
   </div>

@@ -12,6 +12,7 @@ import { InfoModal } from "@components/content/Dashboard/Modals";
 import { BsPlus } from "react-icons/bs";
 import axios from "axios";
 import useAuthStore from "@store/AuthStore";
+import { EToast } from "@constants/functions/toast";
 
 interface Props {
   isOpen: boolean;
@@ -22,7 +23,8 @@ interface Props {
 
 const MissionModal = ({ isOpen, onClose, recordID, onSuccess }: Props) => {
   const alert = useDisclosure();
-  const {data} = useAuthStore()
+  const {data} = useAuthStore();
+  const toast = useToast();
   const {
     handleSubmit,
     register,
@@ -39,8 +41,14 @@ const MissionModal = ({ isOpen, onClose, recordID, onSuccess }: Props) => {
           'Authorization': `Bearer ${data?.tokens?.access}`
         }
       })
-      if(response.data.status === 200){
+      if(response.data.status){
         console.log("🚀 ~ apiMissionType ~ response:", response)
+        EToast({
+          toast: toast,
+          status: "success",
+          title: "نجاح العملية",
+          description: "تم الأضافة بنجاح",
+        });
         onSuccess()
       }
     } catch (error) {

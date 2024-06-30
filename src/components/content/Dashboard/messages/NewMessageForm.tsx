@@ -1,4 +1,4 @@
-import { Box, Text, Textarea, useToast } from '@chakra-ui/react'
+import { Box, Checkbox, Text, Textarea, useToast } from '@chakra-ui/react'
 import { GradientButton } from '@components/core'
 import { EToast } from '@constants/functions/toast'
 import axios from 'axios'
@@ -16,6 +16,7 @@ export default function NewMessageForm({
 }) {
     const toast = useToast()
     const [lists, setLists] = useState([])
+    const [qrCode, setQrCode] = useState<false>(false)
     const [messageLength, setMessageLength] = useState(0)
     const {
         register,
@@ -38,7 +39,7 @@ export default function NewMessageForm({
         let newMessage = {
             content: data.content,
             segments: lists?.map((item: any) => item.value),
-            is_qr_code: lists.length ? false : true
+            is_qr_code: qrCode
         }
         sentSmsHistory(newMessage)
         console.log("🚀 ~ onSubmit ~ newMessage:", newMessage)
@@ -77,7 +78,11 @@ export default function NewMessageForm({
     }))
     const onCallBackChange = (onChange: any) => (event: any) => {
         onChange(event);
-        setMessageLength(event?.target?.value?.length)
+        if(qrCode){
+            setMessageLength(event?.target?.value?.length + 42)
+        }else{
+            setMessageLength(event?.target?.value?.length)
+        }
         calculateMessages();
         // onCallBackChangeForParent(event);
         console.log("🚀 ~ onCallBackChange ~ event?.target?.value?.length:", event?.target?.value?.length)
@@ -135,7 +140,18 @@ export default function NewMessageForm({
                         />
                     )}
                     />
+                    <label htmlFor="">
+                        <Checkbox onChange={(e: any) => {
+                            if(e.target.checked){
+                                setMessageLength(messageLength + 42)
+                            }else{
+                                setMessageLength(messageLength - 42)
+                            }
+                            setQrCode(e.target.checked)}} >Qr code</Checkbox>
+
+                    </label>
                     <Box width={'100%'}>
+                        <Text>عدد كلمات الرسأل : {messageLength}</Text>
                         <Text>عدد الرسأل : {messages.length}</Text>
                     </Box>
         <GradientButton mr={'auto'} type='submit' borderRadius={'50px'}>
