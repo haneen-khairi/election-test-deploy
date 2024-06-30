@@ -22,8 +22,10 @@ import PlaceBasedVotesTable from "../PlaceBasedVotesTable/PlaceBasedVotesTable";
 
 const MyVotesWindow = ({
   filter,
+  homePage = false,
 }: {
   filter: any;
+  homePage: boolean,
   setFilter: any;
 }) => {
   const {
@@ -63,7 +65,7 @@ const MyVotesWindow = ({
 
   return (
     <VStack gap="16px">
-      <Grid
+      {homePage && <Grid
         templateColumns="auto 350px"
         gridAutoRows="max-content"
         w="100%"
@@ -110,9 +112,9 @@ const MyVotesWindow = ({
             </VStack>
           </Ebox>
         </VStack>
-      </Grid>
+      </Grid>}
 
-      <Grid
+      {homePage && <Grid
         templateColumns="30% auto"
         gridAutoRows="max-content"
         w="100%"
@@ -173,7 +175,7 @@ const MyVotesWindow = ({
             />
           </VStack>
         </Ebox>
-      </Grid>
+      </Grid>}
 
       <Ebox>
         <VotersTable filter={filter} />

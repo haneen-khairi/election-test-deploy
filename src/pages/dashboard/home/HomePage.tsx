@@ -19,7 +19,7 @@ const HomePage = () => {
       return <VotersCountWindow filter={filter} setFilter={setFilter} />;
 
     if (activeTabIndex === 1)
-      return <MyVotesWindow filter={filter} setFilter={setFilter} />;
+      return <MyVotesWindow homePage={true} filter={filter} setFilter={setFilter} />;
 
     if (activeTabIndex === 2) return <MyListsWindow />;
 
