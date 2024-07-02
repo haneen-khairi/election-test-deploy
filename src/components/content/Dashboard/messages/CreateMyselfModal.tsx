@@ -25,6 +25,7 @@ interface Props {
 const CreateMyselfModal = ({ isOpen, onClose, recordID, id , token, onSuccess}: Props) => {
   const alert = useDisclosure();
   const [filter, setFilter] = useState<any>({});
+  const [votersLists, setVotersLists] = useState<any[]>([]);
 
   const {
     handleSubmit,
@@ -41,12 +42,18 @@ const CreateMyselfModal = ({ isOpen, onClose, recordID, id , token, onSuccess}: 
 
  
   const toast = useToast();
-
+  function getVoters(e: any) {
+    console.log("🚀 ~ getVoters ~ e:", e)
+    setVotersLists(e)
+  }
   // Reset Form When Close
 
   const onSubmit = (values: any) => {
     
     console.log("🚀 ~ onSubmit ~ values:", values)
+    let dataObject = {
+      "votes_list": votersLists,
+    }
     postMyVote(values)
   };
   async function postMyVote(data: any) {
@@ -84,7 +91,7 @@ const CreateMyselfModal = ({ isOpen, onClose, recordID, id , token, onSuccess}: 
         onClose={onClose}
       >
         
-        <MyVotesWindow homePage={false} filter={filter} setFilter={setFilter} />;
+        <MyVotesWindow getCheckboxList={getVoters} homePage={false} filter={filter} setFilter={setFilter} />;
 
             <HStack justifyContent="flex-end" mt="24px">
               <GradientButton

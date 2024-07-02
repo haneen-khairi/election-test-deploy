@@ -23,10 +23,12 @@ import PlaceBasedVotesTable from "../PlaceBasedVotesTable/PlaceBasedVotesTable";
 const MyVotesWindow = ({
   filter,
   homePage = false,
+  getCheckboxList =(data: any[]) => {}
 }: {
   filter: any;
   homePage: boolean,
   setFilter: any;
+  getCheckboxList?:(data: any[]) => void
 }) => {
   const {
     control,
@@ -178,7 +180,7 @@ const MyVotesWindow = ({
       </Grid>}
 
       <Ebox>
-        <VotersTable filter={filter} />
+        <VotersTable getCheckboxList={getCheckboxList} filter={filter} />
       </Ebox>
     </VStack>
   );

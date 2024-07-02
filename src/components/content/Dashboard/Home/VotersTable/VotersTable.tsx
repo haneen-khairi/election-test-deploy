@@ -8,7 +8,7 @@ import {
 } from "@services/hooks/voters/useVoters";
 import useVostersStore from "@store/VostersSotre";
 import useColumns from "./useColumns";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { GetVoters } from "@services/hooks/voters/Voters";
 import { Button, HStack, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { DownloadDB, EditPenIcon, TrashIcon } from "@assets/icons";
@@ -16,7 +16,7 @@ import { MdDeselect, MdSelectAll } from "react-icons/md";
 import { BulkEditModal, EditModal } from "../../Voters/modals";
 import { InfoModal } from "../../Modals";
 
-const VotersTable = ({ filter }: { filter: any }) => {
+const VotersTable = ({ filter , getCheckboxList =(data: any[]) => {}}: { filter: any, getCheckboxList?: (data: any[]) => void }) => {
   const { setPage, page } = useVostersStore();
   const { data, isLoading, isFetching } = useGetVoters(filter);
 
@@ -47,7 +47,15 @@ const VotersTable = ({ filter }: { filter: any }) => {
 
   const removeVoter = useDeleteVoter(recordID || "");
   const removeVoters = useDeleteVoters(checkedRows);
+  useEffect(() => {
 
+    getCheckboxList(checkedRows);
+
+    return () => {
+      
+    }
+  }, [checkedRows])
+  
   return (
     <VStack>
       <HStack w="100%" fontWeight={600} fontSize="20px" mb="20px">

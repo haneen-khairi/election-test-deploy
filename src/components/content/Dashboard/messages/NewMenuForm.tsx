@@ -46,6 +46,7 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess, token }: Props
   } = useForm({
   });
   function getVoters(e: any) {
+    console.log("🚀 ~ getVoters ~ e:", e)
     setVotersLists(e)
   }
 
@@ -78,7 +79,7 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess, token }: Props
   const onSubmit = (values: any) => {
     let newList = {
       name: values.name,
-      "votes_list": votersLists?.map((item: any) => item.value),
+      "votes_list": votersLists,
     }
     console.log("🚀 ~ onSubmit ~ newList:", newList)
     if (votersLists.length === 0 && !recordID) {
@@ -213,7 +214,7 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess, token }: Props
               />
             </Box>
 
-            {!recordID && <Box w="100%" flexGrow="1">
+            {/* {!recordID && <Box w="100%" flexGrow="1">
 
               <ReactSelect
                 className='react-select'
@@ -252,9 +253,8 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess, token }: Props
                   value: el?.id || 0,
                 }))}
               />
-            </Box>}
-            <MyVotesWindow homePage={false} filter={filter} setFilter={setFilter} />;
-
+            </Box>} */}
+            <MyVotesWindow getCheckboxList={getVoters} homePage={false} filter={filter} setFilter={setFilter} />
           </HStack>
         </VStack>
         <HStack justifyContent="flex-end" mt="24px">

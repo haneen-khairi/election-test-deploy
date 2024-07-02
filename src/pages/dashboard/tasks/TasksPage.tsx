@@ -198,8 +198,8 @@ statistics?.done?.mandobs_count}  nameOfCard="منجزة"/>
             // title="مهمة 1"
             text={task.description}
             representative={task.mandob?.name}
-            representativeType={task?.type?.name || ""}
-            representativeMission="مهمة 1"
+            representativeType={task?.mandob?.group || ""}
+            representativeMission={task?.type?.name || ""}
             date={task?.date || ""}
             time={task?.time || ""}
           />): ""}
@@ -211,8 +211,8 @@ statistics?.done?.mandobs_count}  nameOfCard="منجزة"/>
             // title="مهمة 1"
             text={task.description}
             representative={task.mandob?.name || ""}
-            representativeType={task?.type?.name || ""}
-            representativeMission="مهمة 1"
+            representativeType={task?.mandob?.group || ""}
+            representativeMission={task?.type?.name || ""}
             date={task?.date || ""}
             time={task?.time || ""}
           />): ""}
@@ -224,8 +224,8 @@ statistics?.done?.mandobs_count}  nameOfCard="منجزة"/>
             // title="مهمة 1"
             text={task.description}
             representative={task.mandob?.name || ""}
-            representativeType={task?.type?.name || ""}
-            representativeMission="مهمة 1"
+            representativeType={task?.mandob?.group || ""}
+            representativeMission={task?.type?.name || ""}
             date={task?.date || ""}
             time={task?.time || ""}
           />) : ""}
