@@ -34,6 +34,7 @@ export default function MessagesPage() {
     id: "",
     name: ""
   })
+  const [smsLength, setSmsLength] = useState<number>(0)
   const [editId, setEditId] = useState<string>("")
   const [listRecords, setListRecords] = useState([])
   const [newKeyForm, setNewKeyForm] = useState(0)
@@ -70,6 +71,20 @@ export default function MessagesPage() {
         console.log("🚀 ~ getLists ~ response:", response.data)
       } catch (error) {
         console.log("🚀 ~ getLists ~ error:", error)
+        
+      }
+  }
+  async function smsCredits(){
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/sms/credits/`, {
+          headers: {
+            'Authorization': `Bearer ${data?.tokens?.access}` 
+          }
+        })
+        setSmsLength(response.data.data.available_credits)
+        console.log("🚀 ~ setSmsLength ~ response:", response.data)
+      } catch (error) {
+        console.log("🚀 ~ setSmsLength ~ error:", error)
         
       }
   }
@@ -115,6 +130,7 @@ export default function MessagesPage() {
   useEffect(() => {
     getLists()
     getSmsHistory()
+    smsCredits()
     return () => {
       
     }
@@ -158,7 +174,7 @@ export default function MessagesPage() {
               <MessageBlackIcon />
               <p>عدد الرسائل المتاحة</p>
             </div>
-            <div className='messages__count'>{messagesSmsHistory?.length || 0}</div>
+            <div className='messages__count'>{smsLength}</div>
           </Flex>
         </Box>
         <Box className='new__message--card' >
