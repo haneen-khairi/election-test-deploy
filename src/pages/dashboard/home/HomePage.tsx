@@ -39,6 +39,8 @@ const HomePage = () => {
     <VStack spacing="20px" align="stretch">
       <Ebox>
         <HomeFilterSection
+        onResetTable={() => console.log("reset")}
+          homePage={true}
           setFilter={setFilter}
           activeTabIndex={activeTabIndex}
           setActiveTabIndex={setActiveTabIndex}

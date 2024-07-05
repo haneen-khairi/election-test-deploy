@@ -31,12 +31,16 @@ const Filters = ({
   reset,
   activeTabIndex,
   handleSearch,
+  onResetSearch = () => {},
+  forMessagePage = false
 }: {
+  forMessagePage: boolean,
   reset: UseFormReset<any>;
   errors: FieldErrors<any>;
   control: Control<any, any>;
   isDirty: boolean;
   activeTabIndex: number;
+  onResetSearch?: () => void;
   handleSearch: () => void;
 }) => {
   const [search, setSearch] = useState<string>();
@@ -46,7 +50,7 @@ const Filters = ({
     <>
       {activeTabIndex !== 4 ? (
         <>
-          <RadioCardGroup
+          {!forMessagePage &&<RadioCardGroup
             options={[
               {
                 label: "ذكر",
@@ -61,7 +65,7 @@ const Filters = ({
             ]}
             name="gender"
             control={control}
-          />
+          />}
 
           <Box>
             <Controller
@@ -160,6 +164,7 @@ const Filters = ({
           color: "white",
         }}
         onClick={() => {
+          onResetSearch()
           reset();
         }}
       >

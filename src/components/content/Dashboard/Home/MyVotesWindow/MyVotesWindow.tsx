@@ -16,20 +16,23 @@ import {
   useGetActivitiesVotes,
   useGetMyVotesStats,
 } from "@services/hooks/voters/useVoters";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import VotersTable from "../VotersTable/VotersTable";
 import PlaceBasedVotesTable from "../PlaceBasedVotesTable/PlaceBasedVotesTable";
+import HomeFilterSection from "../FilterSection/FilterSection";
 
 const MyVotesWindow = ({
   filter,
+  setFilter,
   homePage = false,
   getCheckboxList =(data: any[]) => {}
 }: {
   filter: any;
   homePage: boolean,
-  setFilter: any;
+  setFilter?: any,
   getCheckboxList?:(data: any[]) => void
 }) => {
+  const [key, setKey] = useState(0)
   const {
     control,
     formState: { errors },
@@ -41,6 +44,11 @@ const MyVotesWindow = ({
       period: undefined,
     },
   });
+  function handleReset(){
+    console.log("==== handle reset ====");
+    setFilter(undefined);
+    setKey(key => key+1)
+  }
   const { data: myVoters } = useGetMyVotesStats(filter);
   const sortedData = ((myVoters?.data || []) as VotesStats[]).sort(
     (a, b) => b.status - a.status,
@@ -178,9 +186,16 @@ const MyVotesWindow = ({
           </VStack>
         </Ebox>
       </Grid>}
-
+      {!homePage && <Ebox>
+        <HomeFilterSection
+          onResetTable={handleReset}
+          homePage={false}
+          setFilter={setFilter}
+          activeTabIndex={1}
+        />
+      </Ebox>}
       <Ebox>
-        <VotersTable getCheckboxList={getCheckboxList} filter={filter} />
+        <VotersTable key={key} getCheckboxList={getCheckboxList} filter={filter} />
       </Ebox>
     </VStack>
   );

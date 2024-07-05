@@ -34,10 +34,14 @@ const HomeFilterSection = ({
   activeTabIndex,
   setActiveTabIndex,
   setFilter,
+  onResetTable= () => {},
+  homePage = true,
 }: {
   activeTabIndex: number;
   setFilter: React.Dispatch<React.SetStateAction<any | undefined>>;
-  setActiveTabIndex: React.Dispatch<React.SetStateAction<number>>;
+  setActiveTabIndex?: React.Dispatch<React.SetStateAction<number>>;
+  homePage?: boolean,
+  onResetTable: () => void
 }) => {
   const { data } = useAuthStore();
   const companion = useDisclosure();
@@ -111,7 +115,7 @@ const HomeFilterSection = ({
   }, [place_of_residence, district]);
 
   return (
-    <VStack w="100%" alignItems="start">
+    homePage ? <VStack w="100%" alignItems="start">
       <HStack w="100%" justifyContent="space-between">
         <VStack alignItems="start" w="50%">
           <Heading size="md" display="flex" gap="10px">
@@ -271,6 +275,7 @@ const HomeFilterSection = ({
           w="100%"
         >
           <Filters
+            forMessagePage={!homePage}
             handleSearch={handleSearch}
             control={control}
             errors={errors}
@@ -280,7 +285,30 @@ const HomeFilterSection = ({
           />
         </Grid>
       )}
-    </VStack>
+    </VStack> : 
+        <Grid
+          templateColumns={
+            activeTabIndex !== 4
+              ? "repeat(4, 1fr) 150px"
+              : "repeat(2, 1fr) 150px"
+          }
+          templateRows="repeat(2, 1fr)"
+          mt="20px"
+          gap="16px"
+          w="100%"
+        >
+          <Filters
+            forMessagePage={!homePage}
+            handleSearch={handleSearch}
+            control={control}
+            errors={errors}
+            reset={reset}
+            isDirty={isDirty}
+            activeTabIndex={activeTabIndex}
+            onResetSearch={onResetTable}
+          />
+        </Grid>
+      
   );
 };
 
