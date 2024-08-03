@@ -13,7 +13,7 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FilterSchema } from "./FilterSchema";
 import ElectoralDistrictSelect from "@components/content/DropDown/ElectoralDistrictSelect";
-import MultiSelect from "@components/core/multiSelect/MultiSelect";
+// import MultiSelect from "@components/core/multiSelect/MultiSelect";
 import {
   useGetLastNameDropdown,
   useGetplaceOfResidenceDropdown,
@@ -84,6 +84,7 @@ const FilterSection = ({ filter, setFilter }: Props) => {
       <HStack spacing="2%" gridGap="16px" mb="24px" flexWrap="wrap">
         
         <Box w="100%" color={'#000'} flexGrow="1">
+          {/*
           <MultiSelect
             name="last_name"
             placeholder="إسم العائلة"
@@ -91,6 +92,7 @@ const FilterSection = ({ filter, setFilter }: Props) => {
             control={control}
             fetchFunction={useGetLastNameDropdown}
           />
+          */}
         </Box>
 
        
