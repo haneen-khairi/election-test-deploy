@@ -39,7 +39,7 @@ const FamilyMenu = ({ families, onClick }: Props) => {
                 </SimpleGrid>
                 <HStack mt={5} justifyContent="space-between">
                 <Button onClick={handlePrevPage} isDisabled={currentPage === 1}>السابق</Button>
-                    <Text>الضفحة {currentPage} of {totalPages}</Text>
+                    <Text> {currentPage} of {totalPages}</Text>
                     <Button onClick={handleNextPage} isDisabled={currentPage === totalPages}>التالي</Button>
                 </HStack>
             </Box>
