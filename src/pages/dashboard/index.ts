@@ -8,3 +8,4 @@ export { default as TasksPage } from "./tasks/TasksPage";
 export { default as CentersPage } from "./centers/CentersPage";
 export { default as PreliminaryResultsPage } from "./preliminaryResults/PreliminaryResultsPage";
 export { default as TransportationStatistics } from "./transportationStatistics/TransportationStatistics";
+export { default as FamilyTree } from "./FamilyTree/FamilyTree";

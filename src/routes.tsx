@@ -12,6 +12,7 @@ import {
   TransportationStatistics,
   VotersPage,
   VotesPage,
+  FamilyTree,
 } from "@pages/dashboard";
 import { GlobeLayout } from "@pages/layout";
 import IsAuth from "./IsAuth";
@@ -86,6 +87,10 @@ const router = createBrowserRouter([
             path: "/transportation-statistics",
             element: <TransportationStatistics />,
           },
+          {
+            path: "/family-tree",
+            element: <FamilyTree />,
+          }
         ],
       },
       {
