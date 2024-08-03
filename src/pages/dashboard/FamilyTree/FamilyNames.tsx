@@ -1,18 +1,16 @@
 import { Box, Heading, SimpleGrid, Button, HStack, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import { FamilyList } from "./FamilyList";
 
 type Props = {
     families: Family[],
-    onClick: (id: string) => void
 }
 
 type Family = {
-    name: string,
+    first_name: string,
     id: string
 }
 
-const FamilyMenu = ({ families, onClick }: Props) => {
+const FamilyNames = ({ families }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
 
@@ -30,15 +28,14 @@ const FamilyMenu = ({ families, onClick }: Props) => {
 
     return (
         <>
-            <Box background={'#fff'} p={10} boxShadow={'1px 1px 10px #c1c1c1'} borderRadius={'10px'}>
-                <Heading size='md' color={'#000'}>شجرة العائلة</Heading>
+            <Box background={'#fff'} p={10} borderRadius={'10px'}>
                 <SimpleGrid columns={1} spacing={5} minW={'250px'}>
                     {currentData.length ? currentData.map((family: Family) => (
-                        <FamilyList key={family.id} family={family} onClick={onClick} />
+                        <Box borderBottom={'1px solid #c2c2c2'} w={'100%'} mt={5} height='30px' color={'#000'}>{family.first_name}</Box> 
                     )) : ""}
                 </SimpleGrid>
                 <HStack mt={5} justifyContent="space-between">
-                <Button onClick={handlePrevPage} isDisabled={currentPage === 1}>السابق</Button>
+                    <Button onClick={handlePrevPage} isDisabled={currentPage === 1}>السابق</Button>
                     <Text>الضفحة {currentPage} of {totalPages}</Text>
                     <Button onClick={handleNextPage} isDisabled={currentPage === totalPages}>التالي</Button>
                 </HStack>
@@ -47,4 +44,4 @@ const FamilyMenu = ({ families, onClick }: Props) => {
     );
 };
 
-export default FamilyMenu;
+export default FamilyNames;

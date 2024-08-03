@@ -38,24 +38,24 @@ const TasksPage = () => {
 
   const [_filter, setFilter] = useState<any>(undefined);
   console.log("🚀 ~ TasksPage ~ _filter:", _filter)
-  const [tasks, setTasks] = useState([])
+  // const [tasks, setTasks] = useState([])
   const [statistics, setStatistics] = useState<any>()
   const {data} = useAuthStore()
   console.log("🚀 ~ TasksPage ~ token:", data?.tokens?.access)
-  async function getTasks(){
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/task/tasks`, {
-        headers: {
-          'Authorization': `Bearer ${data?.tokens?.access}` 
-        }
-      })
-      // console.log("🚀 ~ getTasks ~ response:", response.data.data)
-      setTasks(response.data.data)
-    } catch (error) {
-      console.log("🚀 ~ getTasks ~ error:", error)
+  // async function getTasks(){
+  //   try {
+  //     const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/task/tasks`, {
+  //       headers: {
+  //         'Authorization': `Bearer ${data?.tokens?.access}` 
+  //       }
+  //     })
+  //     // console.log("🚀 ~ getTasks ~ response:", response.data.data)
+  //     setTasks(response.data.data)
+  //   } catch (error) {
+  //     console.log("🚀 ~ getTasks ~ error:", error)
       
-    }
-  }
+  //   }
+  // }
   async function getStatiticsData(date: string = "" , time: string = "", taskType: string = ""){
     try {
     const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/task/summary?task_type=${taskType}&date=${date}&time=${time}`, {
@@ -72,11 +72,9 @@ const TasksPage = () => {
   }
   useEffect(() => {
     if(_filter === undefined){
-      getTasks()
       getStatiticsData()
     }else{
       getStatiticsData(_filter?.date || "", _filter?.time || "", _filter?.type_of_tasks || "")
-
     }
     return () => {
       

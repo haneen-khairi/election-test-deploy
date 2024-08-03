@@ -25,7 +25,7 @@ const MyVotesWindow = ({
   filter,
   setFilter,
   homePage = false,
-  getCheckboxList =(data: any[]) => {}
+  getCheckboxList =(data?: any[]) => {}
 }: {
   filter: any;
   homePage: boolean,

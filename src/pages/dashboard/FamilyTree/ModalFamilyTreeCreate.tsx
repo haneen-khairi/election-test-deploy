@@ -3,11 +3,11 @@ import { Box, HStack, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import {
   GradientButton,
   Input,
-  InputSelect,
-  Loader,
+//   InputSelect,
+//   Loader,
   Popup,
 } from "@components/core";
-import { Controller, useForm } from "react-hook-form";
+import {  useForm } from "react-hook-form";
 import { InfoModal } from "@components/content/Dashboard/Modals";
 import { BsPlus } from "react-icons/bs";
 import axios from "axios";
@@ -21,14 +21,14 @@ interface Props {
   recordID?: string;
 }
 
-const FamilyTreeCreateModal = ({ isOpen, onClose, recordID, onSuccess }: Props) => {
+const FamilyTreeCreateModal = ({ isOpen, onClose, onSuccess }: Props) => {
   const alert = useDisclosure();
   const {data} = useAuthStore();
   const toast = useToast();
   const {
     handleSubmit,
     register,
-    formState: { errors, isValid, isDirty },
+    formState: { isValid },
   } = useForm({
   });
   async function apiMissionType(values: any){
@@ -102,7 +102,7 @@ const FamilyTreeCreateModal = ({ isOpen, onClose, recordID, onSuccess }: Props) 
               <GradientButton
               disabled={!isValid ? true : false}
                 onClick={
-                  handleSubmit(onSubmit)
+                 () => alert.onOpen()
                 }
               >
                 <BsPlus /> أضافة

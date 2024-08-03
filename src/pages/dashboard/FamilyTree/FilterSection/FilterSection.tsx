@@ -1,41 +1,43 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, HStack, Text, Radio, RadioGroup, Stack } from "@chakra-ui/react";
-import {
-  FirstNameSelect,
-  MiddleNameSelect,
-  SecondNameSelect,
-} from "@components/content/DropDown";
+import { Box, HStack, Text,
+  //  Radio, RadioGroup, Stack 
+  } from "@chakra-ui/react";
+// import {
+//   FirstNameSelect,
+//   MiddleNameSelect,
+//   SecondNameSelect,
+// } from "@components/content/DropDown";
 import { Btn } from "@components/core";
 import { CiSearch } from "react-icons/ci";
 import { SlRefresh } from "react-icons/sl";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FilterSchema } from "./FilterSchema";
-import ElectoralDistrictSelect from "@components/content/DropDown/ElectoralDistrictSelect";
+// import ElectoralDistrictSelect from "@components/content/DropDown/ElectoralDistrictSelect";
 // import MultiSelect from "@components/core/multiSelect/MultiSelect";
 import {
-  useGetLastNameDropdown,
-  useGetplaceOfResidenceDropdown,
+  // useGetLastNameDropdown,
+  // useGetplaceOfResidenceDropdown,
   useGetVotingCentersDropdown,
 } from "@services/hooks/dropdown/useDropDown";
 import { useState } from "react";
-import CentersSelect from "@components/content/DropDown/CentersSelect";
+// import CentersSelect from "@components/content/DropDown/CentersSelect";
 
 interface Props {
   setFilter: (data: any) => void;
-  filter: any;
+  filter?: any;
 }
-const FilterSection = ({ filter, setFilter }: Props) => {
-  const [search, setSearch] = useState<string>();
-  const dropDownObj = useGetVotingCentersDropdown(search);
+const FilterSection = ({ setFilter }: Props) => {
+  // const [search, setSearch] = useState<string>();
+  // const dropDownObj = useGetVotingCentersDropdown(search);
 
   const {
-    control,
+    // control,
     reset,
-    setValue,
+    // setValue,
     watch,
-    formState: { errors },
+    // formState: { errors },
   } = useForm({
     resolver: yupResolver(FilterSchema),
     defaultValues: {

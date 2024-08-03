@@ -11,7 +11,6 @@ import {
   VStack,
   Heading,
   Text,
-  list
 } from '@chakra-ui/react'
 import CreateMyselfModal from '@components/content/Dashboard/messages/CreateMyselfModal'
 import DeleteIcon from '@components/content/Dashboard/messages/DeleteIcon'

@@ -1,13 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Box, HStack, VStack, useDisclosure, useToast } from "@chakra-ui/react";
+import { 
+  // Box, 
+  HStack, 
+  // VStack, 
+  useDisclosure } from "@chakra-ui/react";
 import {
   GradientButton,
-  Input,
-  InputSelect,
-  Loader,
+  // Input,
+  // InputSelect,
+  // Loader,
   Popup,
 } from "@components/core";
-import { Controller, useForm } from "react-hook-form";
+import { 
+  // Controller, 
+  
+  useForm } from "react-hook-form";
 import { InfoModal } from "@components/content/Dashboard/Modals";
 import axios from "axios";
 import { useState } from "react";
@@ -22,7 +29,7 @@ interface Props {
   token: string
 }
 
-const CreateMyselfModal = ({ isOpen, onClose, recordID, id , token, onSuccess}: Props) => {
+const CreateMyselfModal = ({ isOpen, onClose, id , token, onSuccess}: Props) => {
   const alert = useDisclosure();
   const [filter, setFilter] = useState<any>({});
   const [votersLists, setVotersLists] = useState<any[]>([]);
@@ -33,7 +40,7 @@ const CreateMyselfModal = ({ isOpen, onClose, recordID, id , token, onSuccess}: 
     reset,
     // setValue,
     // watch,
-    register,
+    // register,
     // formState: { errors, isValid },
   } = useForm({
   });
@@ -41,7 +48,7 @@ const CreateMyselfModal = ({ isOpen, onClose, recordID, id , token, onSuccess}: 
 
 
  
-  const toast = useToast();
+  // const toast = useToast();
   function getVoters(e: any) {
     console.log("🚀 ~ getVoters ~ e:", e)
     setVotersLists(e)
