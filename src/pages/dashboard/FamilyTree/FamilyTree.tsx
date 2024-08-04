@@ -1,12 +1,10 @@
 import { Box, Button, Flex, Heading, Spacer, ButtonGroup, useDisclosure } from "@chakra-ui/react";
-import FamilyMenu from "./familyMenu";
-import { FamilyFilter } from "./FamilyFilter"; 
+import FamilyMenu from "./familyMenu"; 
 import useAuthStore from "@store/AuthStore";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import FamilyTreeCreateModal from "./ModalFamilyTreeCreate";
-import FamilyNames from "./FamilyNames";
-import NewMenuFormModal from "@components/content/Dashboard/messages/NewMenuForm";
+import FamilyNames from "./FamilyNames"; 
 import AddNewMemberFamilyTreeModal from "./AddNewMemberFamilyTreeModal";
 
 
@@ -74,16 +72,13 @@ const FamilyTree = () => {
                 </Box>
                 <Spacer />
                 <Button colorScheme='primary' color={'#fff'} borderRadius={'30px'} onClick={onOpen}>إنشاء قائمة جديدة</Button>
-            </Flex>
-            {/* <FamilyFilter /> */}
+            </Flex> 
             <Flex minWidth='max-content' gap='2' mt={'30px'}>
                 <FamilyMenu onClick={getFamilyNameById}  families={treeName} />
-                <Spacer />
-                {/* <AddFamilyMember /> */}
+                <Spacer /> 
                 <Box background={'#fff'} p={10} boxShadow={'1px 1px 10px #c1c1c1'} borderRadius={'10px'} w={'fit-content'}>
                     <ButtonGroup gap='5'>
-                        {/* <Button colorScheme='primary' color={'#fff'} borderRadius={'30px'}>اضافة عائلة
-                        </Button> */}
+             
                         <Button onClick={onOpenMenuModal} colorScheme='primary' color={'#fff'} borderRadius={'30px'}>اضافة اسماء
                         </Button>
                         {familyNamesDetails.length ? <FamilyNames  families={familyNamesDetails} />: ""}
