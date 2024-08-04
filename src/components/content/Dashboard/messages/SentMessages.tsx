@@ -1,4 +1,3 @@
-import React from 'react'
 import "./messages.css"
 import { Grid } from '@chakra-ui/react'
 import MessagesItem from './MessagesItem'

@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Text, Icon, Button, Flex, Box } from "@chakra-ui/react";
-import { BsX, BsXCircle } from "react-icons/bs";
+import { BsX } from "react-icons/bs";
 import { DownloadIcon } from "@assets/icons";
 
 interface FileInputProps {

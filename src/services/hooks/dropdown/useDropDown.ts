@@ -308,23 +308,7 @@ export const useGetElectoralDistrictDropdown = (search?: string) => {
     initialPageParam: 1,
   });
 };
-
-// todo: to be removed
-// export const useGetMainManadeebDropdown = () => {
-//   const api = new APIClient<GetDropDown>("account/manadeeb/dropdown/main");
-//   return useQuery({
-//     queryKey: ["GetMainMandoobDropdown"],
-//     queryFn: () => api.getList(),
-//   });
-// };
-
-// export const useGetHarakaManadeebDropdown = () => {
-//   const api = new APIClient<GetDropDown>("account/manadeeb/dropdown/haraka");
-//   return useQuery({
-//     queryKey: ["GetHarakaMandoobDropdown"],
-//     queryFn: () => api.getList(),
-//   });
-// };
+ 
 
 export const useGetVotingCenterDropDown = () => {
   const api = new APIClient<GetDropDown>("data/voting_center");
@@ -333,8 +317,7 @@ export const useGetVotingCenterDropDown = () => {
     queryFn: () => api.getList(),
   });
 };
-
-// Filter on Multi Center Id
+ 
 export const useGetBoxesDropDown = (votingCenters?: number[]) => {
   const api = new APIClient<GetDropDown>("data/voting_center/boxes");
   return useQuery({

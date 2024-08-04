@@ -2,7 +2,7 @@ import { Box, Checkbox, Text, Textarea, useToast } from '@chakra-ui/react'
 import { GradientButton } from '@components/core'
 import { EToast } from '@constants/functions/toast'
 import axios from 'axios'
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import ReactSelect from 'react-select'
 export default function NewMessageForm({

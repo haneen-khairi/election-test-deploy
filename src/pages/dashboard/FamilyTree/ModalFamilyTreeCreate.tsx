@@ -77,7 +77,7 @@ const FamilyTreeCreateModal = ({ isOpen, onClose, onSuccess }: Props) => {
         onProceed={handleSubmit(onSubmit)}
       />
       <Popup
-        title={"أضافة اسم عائلة جديدة"}
+        title={"أضافة اسم شجرة عائلة جديدة"}
         size="2xl"
         isOpen={isOpen}
         onClose={onClose}

@@ -78,7 +78,9 @@ const FamilyTree = () => {
                 <Spacer /> 
                 <Box background={'#fff'} p={10} boxShadow={'1px 1px 10px #c1c1c1'} borderRadius={'10px'} w={'fit-content'}>
                     <ButtonGroup gap='5'>
-             
+                    <Button  colorScheme='primary' color={'#fff'} borderRadius={'30px'}>اضافة عائلة
+                    </Button>
+                
                         <Button onClick={onOpenMenuModal} colorScheme='primary' color={'#fff'} borderRadius={'30px'}>اضافة اسماء
                         </Button>
                         {familyNamesDetails.length ? <FamilyNames  families={familyNamesDetails} />: ""}
