@@ -34,7 +34,7 @@ const FamilyTreeCreateModal = ({ isOpen, onClose, onSuccess }: Props) => {
   async function apiMissionType(values: any){
     console.log("🚀 ~ apiMissionType ~ values:", values)
     try {
-      const response = await axios.post(`${import.meta.env.VITE_PRIVATE_API_URL}/family_tree/trees`, {
+      const response = await axios.post(`${import.meta.env.VITE_PRIVATE_API_URL}/family_tree/trees/`, {
         name: values.newFamilyName
       }, {
         headers: {

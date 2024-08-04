@@ -29,7 +29,7 @@ const FamilyTree = () => {
     async function getTreeNames() { 
         
         try{
-            const res = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/family_tree/trees`, {
+            const res = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/family_tree/trees/`, {
                 headers: {
                     Authorization: `Bearer ${data?.tokens?.access}`
                 }
@@ -45,7 +45,7 @@ const FamilyTree = () => {
         
         try{
             setFamilyId(id)
-            const res = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/candidate/voters?family_tree_id=${id}`, {
+            const res = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/candidate/voters?family_tree_id=${id}/`, {
                 headers: {
                     Authorization: `Bearer ${data?.tokens?.access}`
                 }

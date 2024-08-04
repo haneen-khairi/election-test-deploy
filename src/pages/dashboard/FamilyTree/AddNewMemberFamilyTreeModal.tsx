@@ -1,23 +1,18 @@
 
-import { Box, HStack, VStack, list, useDisclosure, useToast } from "@chakra-ui/react";
+import { HStack, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import {
   GradientButton,
-  Input,
-  InputSelect,
   Popup,
 } from "@components/core";
-import { Controller, useForm } from "react-hook-form";
+import {  useForm } from "react-hook-form";
 import { InfoModal } from "@components/content/Dashboard/Modals";
 import { useEffect, useState } from "react";
 import {
   useGetVoters
 } from "@services/hooks/voters/useVoters"
-import FileInput from "@components/core/FileInput/FileInput";
 import { EToast } from "@constants/functions/toast";
-import ReactSelect from 'react-select'
 import axios from "axios";
 import MyVotesWindow from "@components/content/Dashboard/Home/MyVotesWindow/MyVotesWindow";
-// import MyVotesWindow from "../Home/MyVotesWindow/MyVotesWindow";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -39,11 +34,7 @@ const AddNewMemberFamilyTreeModal = ({ isOpen, onClose, recordID, onSuccess, tok
 
   const {
     handleSubmit,
-    control,
     reset,
-    // setValue,
-    // watch,
-    register,
     formState: { errors, isValid },
   } = useForm({
   });
@@ -206,47 +197,6 @@ const AddNewMemberFamilyTreeModal = ({ isOpen, onClose, recordID, onSuccess, tok
         <VStack align="stretch" spacing="16px">
           <HStack mt="16px" flexWrap="wrap">
 
-
-            {/* {!recordID && <Box w="100%" flexGrow="1">
-
-              <ReactSelect
-                className='react-select'
-                placeholder='الناخبيين'
-                onChange={getVoters}
-                isMulti
-                styles={{
-                  control: (baseStyles: any, state: any) => ({
-                    ...baseStyles,
-                    minHeight: '48px',
-                    display: 'flex',
-                    border: "1px solid #E5E5E5",
-                    borderRadius: '12px',
-                  }),
-                  menu: (baseStyles: any) => ({
-                    ...baseStyles,
-                    zIndex: 99999999999,
-                  }),
-                  option: (baseStyles: any, state: any) => ({
-                    ...baseStyles,
-                    padding: "10px 12px 10px 24px",
-                    backgroundColor: state.isSelected ? "#318973" : "",
-                    ":hover": {
-                      backgroundColor: "var(--neutral-200)",
-                    },
-                  }),
-                }}
-                classNames={{
-                  multiValue: (state: any) =>
-                    !state.isSelected ? 'react-select__multiple--selected' : '',
-                  multiValueLabel: (state: any) => !state.isSelected ? 'react-select__multiple--selected-label' : '',
-                }}
-                // {...register('form', { required: true })}
-                options={voters?.data?.map((el: any) => ({
-                  label: el?.first_name || "",
-                  value: el?.id || 0,
-                }))}
-              />
-            </Box>} */}
             <MyVotesWindow getCheckboxList={getVoters} homePage={false} filter={filter} setFilter={setFilter} />
           </HStack>
         </VStack>
