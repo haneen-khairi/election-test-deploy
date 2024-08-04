@@ -4,16 +4,29 @@ import { ETable } from "@components/core";
 import { useGetVoters } from "@services/hooks/voters/useVoters";
 import useVostersStore from "@store/VostersSotre";
 import useColumns from "./useColumns";
-import { useMemo } from "react";
-import { Button, HStack, Text, VStack, useDisclosure } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
+import {
+  Button,
+  Checkbox,
+  HStack,
+  Text,
+  VStack,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { EditPenIcon } from "@assets/icons";
 import { MdDeselect, MdSelectAll } from "react-icons/md";
 import { BulkEditModal, EditModal } from "../../Voters/modals";
 import DownloadButton from "@components/core/downloadButton/DownloadButton";
 
-const VotersTable = ({ filter , getCheckboxList =(data: any[]) => {}}: { filter: any, getCheckboxList?: (data: any[]) => void }) => {
+const VotersTable = ({
+  filter,
+}: {
+  filter: any;
+  getCheckboxList?: (data: any[]) => void;
+}) => {
   const { setPage, page } = useVostersStore();
   const { data, isLoading, isFetching } = useGetVoters(filter, undefined, true);
+  const [isAll, setIsAll] = useState(false);
 
   const remove = useDisclosure();
   const edit = useDisclosure();
@@ -35,7 +48,7 @@ const VotersTable = ({ filter , getCheckboxList =(data: any[]) => {}}: { filter:
     }[] = voters as [];
 
     setCheckedRows(
-      checkedRows.length === 0 ? votersData.map((voter) => voter.id) : [],
+      checkedRows?.length === 0 ? votersData.map((voter) => voter.id) : [],
     );
   };
 
@@ -44,7 +57,7 @@ const VotersTable = ({ filter , getCheckboxList =(data: any[]) => {}}: { filter:
       <HStack w="100%" fontWeight={600} fontSize="20px" mb="20px">
         <Text ml="auto">جدول الناخبين</Text>
 
-        {checkedRows.length > 1 && (
+        {checkedRows?.length > 1 && (
           <Button
             rounded="full"
             p="10px 15px"
@@ -66,12 +79,14 @@ const VotersTable = ({ filter , getCheckboxList =(data: any[]) => {}}: { filter:
           p="10px 15px"
           variant="ghost"
           colorScheme="green"
-          fontSize="20px"
+          fontSize="18px"
           size="sm"
           onClick={handleCheckAll}
+          display="flex"
+          justifyContent="center"
         >
-          {checkedRows.length !== 0 ? <MdDeselect /> : <MdSelectAll />}
-          {checkedRows.length !== 0 ? (
+          {checkedRows?.length !== 0 ? <MdDeselect /> : <MdSelectAll />}
+          {checkedRows?.length !== 0 ? (
             <Text mr="10px" color="#318973">
               إلغاء التحديد
             </Text>
@@ -82,7 +97,31 @@ const VotersTable = ({ filter , getCheckboxList =(data: any[]) => {}}: { filter:
           )}
         </Button>
 
-        <DownloadButton url="candidate/voters" fileName="content.xlsx" />
+        {checkedRows?.length !== 0 && (
+          <HStack
+            color="green"
+            fontSize="18px"
+            gap="10px"
+            justifyContent="center"
+            ml="15px"
+          >
+            <Text textAlign="left" color="#318973">
+              تحديد كل الصفحات
+            </Text>
+            <Checkbox
+              onChange={(e) => {
+                setIsAll(e.target.checked);
+              }}
+              isChecked={isAll}
+            />
+          </HStack>
+        )}
+
+        <DownloadButton
+          url="candidate/voters"
+          fileName="content.xlsx"
+          filter={filter}
+        />
       </HStack>
 
       <EditModal
@@ -95,6 +134,8 @@ const VotersTable = ({ filter , getCheckboxList =(data: any[]) => {}}: { filter:
         isOpen={bulkEdit.isOpen}
         onClose={bulkEdit.onClose}
         recordIDs={checkedRows}
+        filter={filter}
+        isAll={isAll}
       />
 
       <ETable

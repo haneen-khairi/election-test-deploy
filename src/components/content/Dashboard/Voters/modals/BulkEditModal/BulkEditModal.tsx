@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   HStack,
@@ -30,9 +31,17 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   recordIDs?: string[];
+  isAll?: boolean;
+  filter?: any;
 }
 
-const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
+const BulkEditModal = ({
+  isOpen,
+  onClose,
+  recordIDs,
+  isAll,
+  filter,
+}: Props) => {
   const alert = useDisclosure();
   const { data: mainMandoob, isLoading: isMainMandoobLoading } =
     useGetManadeebDropDown("4");
@@ -41,7 +50,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
 
   const toast = useToast();
 
-  const updateVotser = useUpdateVoterInfo();
+  const updateVoter = useUpdateVoterInfo();
   // Map Popup
   const mapPopup = useDisclosure();
   const {
@@ -54,7 +63,6 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
     formState: { errors, isValid },
   } = useForm({
     resolver: yupResolver(BulkEditSchema),
-    defaultValues: { status: 0 },
   });
 
   const values = watch();
@@ -63,37 +71,41 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
   useResetFormModal(isOpen, reset);
 
   const onSubmit = (values: PutVoter) => {
-    updateVotser
-      .mutateAsync({
-        latitude: parseFloat(values.latitude?.toFixed(2) || ""),
-        longitude: parseFloat(values.longitude?.toFixed(2) || ""),
-        mandoub_haraka: values.mandoub_haraka || undefined,
-        mandoub_main: values.mandoub_main,
-        mobile_number: values.mobile_number,
-        note: values.note,
-        status: values.status,
-        voters: JSON.stringify(recordIDs),
-      })
-      .then((res) => {
-        if (res.error) {
-          const errorMessages = Object.values(res.error).join("; ");
-          EToast({
-            toast: toast,
-            status: "error",
-            title: "Error",
-            description: errorMessages,
-          });
-        } else {
-          EToast({
-            toast: toast,
-            status: "success",
-            title: "نجاح العملية",
-            description: "تم التعديل بنجاح",
-          });
-          alert.onClose();
-          onClose();
-        }
-      });
+    const obj: any = {
+      ...(isAll
+        ? {
+            select_all: true,
+            ...filter,
+          }
+        : { voters: JSON.stringify(recordIDs) }),
+    };
+
+    Object.entries(values).forEach(([key, value]) => {
+      if (["latitude", "longitude"].includes(value))
+        obj[key] = parseFloat(value?.toString() || "");
+      else if (value || value === 0) obj[key] = value;
+    });
+
+    updateVoter.mutateAsync(obj).then((res) => {
+      if (res.error) {
+        const errorMessages = Object.values(res.error).join("; ");
+        EToast({
+          toast: toast,
+          status: "error",
+          title: "Error",
+          description: errorMessages,
+        });
+      } else {
+        EToast({
+          toast: toast,
+          status: "success",
+          title: "نجاح العملية",
+          description: "تم التعديل بنجاح",
+        });
+        alert.onClose();
+        onClose();
+      }
+    });
   };
 
   return (
@@ -105,8 +117,9 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
         description="هل انت متأكد من حفظ البيانات؟"
         type="save"
         onProceed={handleSubmit(onSubmit)}
-        isLoading={updateVotser.isPending}
+        isLoading={updateVoter.isPending}
       />
+
       <MapModal
         isOpen={mapPopup.isOpen}
         onClose={mapPopup.onClose}
@@ -116,6 +129,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
           lng: Number(values.longitude),
         }}
       />
+
       <Popup title="الإجراءات" size="4xl" isOpen={isOpen} onClose={onClose}>
         <>
           <VStack align="stretch" spacing="16px">
@@ -128,7 +142,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
                   control={control}
                   render={({ field }) => (
                     <RadioButton
-                      field={field}
+                      field={field as any}
                       option={option}
                       isChecked={field.value === option.value}
                     />
@@ -136,6 +150,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
                 />
               ))}
             </HStack>
+
             <HStack mt="16px" flexWrap="wrap">
               <Box w="40%" flexGrow="1">
                 <Controller
@@ -196,7 +211,10 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
                   label="الموقع"
                   onOpen={mapPopup.onOpen}
                   placeholder="حدد الموقع من الخريطة"
-                  value={values}
+                  value={{
+                    latitude: values?.latitude || 0,
+                    longitude: values?.longitude || 0,
+                  }}
                   error={errors.latitude?.message}
                 />
               </Box>
@@ -210,6 +228,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
                   error={errors.mobile_number?.message}
                 />
               </Box>
+
               <Box w="40%" flexGrow="1">
                 <Input
                   label="الملاحظات"
@@ -221,6 +240,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
               </Box>
             </HStack>
           </VStack>
+
           <HStack justifyContent="flex-end" mt="24px">
             <GradientButton
               onClick={isValid ? alert.onOpen : handleSubmit(onSubmit)}

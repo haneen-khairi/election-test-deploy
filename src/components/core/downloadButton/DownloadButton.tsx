@@ -11,21 +11,37 @@ import Btn from "../btn/Btn";
 const DownloadButton = ({
   url,
   fileName,
+  filter = {},
+  myvote = true,
+  body = {},
 }: {
   url: string;
   fileName: string;
+  filter?: any;
+  myvote?: boolean;
+  body?: any;
 }) => {
   const [isDownloading, setIsDownloading] = useState(false);
-
-  const downloadContent = useDownloadContent(url);
+  const downloadContent = useDownloadContent({
+    url,
+    filter,
+    myvote,
+    isExport: true,
+  });
 
   const handleExport = async () => {
     setIsDownloading(true);
 
-    downloadContent.mutateAsync({}).then((res) => {
-      saveXLSXFile(res, fileName);
-      setIsDownloading(false);
-    });
+    downloadContent
+      .mutateAsync({
+        body,
+      })
+      .then((res: any) => {
+        saveXLSXFile(res, fileName);
+      })
+      .finally(() => {
+        setIsDownloading(false);
+      });
   };
 
   return (
@@ -46,7 +62,7 @@ const DownloadButton = ({
       }}
       disabled={isDownloading}
     >
-      {isDownloading ? <></> : <Text mr="10px">تحميل</Text>}
+      {isDownloading ? <></> : <Text mr="10px">تحميل csv</Text>}
     </Btn>
   );
 };

@@ -7,7 +7,6 @@ import {
   Text,
   UseDisclosureReturn,
 } from "@chakra-ui/react";
-import { truncateText } from "@constants/functions/TruncateText";
 import { CellValue } from "react-table";
 import { CheckBox } from "@components/core";
 import { TrashIcon } from "@assets/icons";
@@ -66,11 +65,8 @@ const useColumns = ({ remove }: Props) => {
                 borderRadius="100%"
                 bg={getDotColor(cell.row.original.persentage)}
               />
-              <Text color="mPrimary" fontWeight="600" noOfLines={1}>
-                {truncateText(
-                  `${cell.row.original.voter.first_name} ${cell.row.original.voter.second_name} ${cell.row.original.voter.third_name} ${cell.row.original.voter.last_name}`,
-                  150,
-                )}
+              <Text fontWeight="600">
+                {`${cell.row.original.voter.first_name} ${cell.row.original.voter.second_name} ${cell.row.original.voter.third_name} ${cell.row.original.voter.last_name}`}{" "}
               </Text>
             </HStack>
           );
@@ -81,8 +77,10 @@ const useColumns = ({ remove }: Props) => {
         accessor: "name_almoazer",
       },
       {
-        Header: "مكان الإنتخاب",
-        accessor: "voter.electoral_district_name",
+        Header: "الدائرة",
+        Cell: ({ cell }: CellValue) => {
+          return <Text>{cell.row.original.voter.electoral_district_name}</Text>;
+        },
       },
       {
         Header: "صندوق رقم",

@@ -43,6 +43,7 @@ export const useGetDelegate = (id: string, isEnabled: boolean) => {
 export const usePostDelegate = () => {
   const clientQuery = useQueryClient();
   const api = new APIClient<PostDelegate>("account/register/");
+
   return useMutation<ItemResponse<string>, Error, PostDelegate>({
     mutationFn: async (data: PostDelegate) => {
       const response = (await api.post(data)) as ItemResponse<string>;
@@ -135,7 +136,6 @@ export const useAddSupporter = () => {
       await clientQuery.invalidateQueries({
         queryKey: ["SupporterNames"],
       });
-     
     },
     onError: (error: Error) => {
       if (error) return error;

@@ -53,7 +53,7 @@ function FileInput({ selectedFile, setSelectedFile, type }: FileInputProps) {
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     ];
 
-    const imageTypes = ["image/png"];
+    const imageTypes = ["image/png", "image/jpg", "image/jpeg"];
 
     const allowedTypes: string[] = [];
 
@@ -81,8 +81,8 @@ function FileInput({ selectedFile, setSelectedFile, type }: FileInputProps) {
     type === "excel"
       ? ".csv,.xlsx"
       : type === "image"
-        ? ".png"
-        : ".csv,.xlsx,.png";
+        ? ".png,.jpg,.jpeg"
+        : ".csv,.xlsx,.png,.jpg,.jpeg";
 
   const fileText =
     type === "excel"

@@ -136,7 +136,7 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
     if (data?.data && !isLoading) {
       setValue("mobile_number", data?.data.mobile_number || "");
       setValue("name", data?.data.name || "");
-      setValue("group", data?.data.group.id || "");
+      setValue("group", Number(data?.data.group.id));
       setValue(
         "place_of_residence",
         data?.data.place_of_residence?.map((item) => item.id.toString()),
@@ -227,7 +227,8 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                     error={errors.password?.message}
                   />
                 </Box>
-                {(values.group == "4" || values.group == "3") && (
+                {(Number(values?.group || 0) == 4 ||
+                  Number(values?.group || 0) == 3) && (
                   <Box w="40%" flexGrow="1">
                     <Controller
                       control={control}
@@ -245,7 +246,7 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                     />
                   </Box>
                 )}
-                {values.group == "2" && (
+                {Number(values?.group || 0) == 2 && (
                   <>
                     <Box w="100%" flexGrow="1">
                       <Controller

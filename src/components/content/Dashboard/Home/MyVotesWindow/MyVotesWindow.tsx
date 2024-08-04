@@ -16,23 +16,20 @@ import {
   useGetActivitiesVotes,
   useGetMyVotesStats,
 } from "@services/hooks/voters/useVoters";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import VotersTable from "../VotersTable/VotersTable";
 import PlaceBasedVotesTable from "../PlaceBasedVotesTable/PlaceBasedVotesTable";
 import DownloadButton from "@components/core/downloadButton/DownloadButton";
 
 const MyVotesWindow = ({
   filter,
-  setFilter,
   homePage = false,
   setFilter,
 }: {
   filter: any;
   homePage: boolean,
-  setFilter?: any,
-  getCheckboxList?:(data: any[]) => void
+  setFilter: any;
 }) => {
-  const [key, setKey] = useState(0)
   const {
     control,
     formState: { errors },
@@ -44,6 +41,7 @@ const MyVotesWindow = ({
       period: undefined,
     },
   });
+
   const { data: myVoters } = useGetMyVotesStats(filter);
   const sortedData = ((myVoters?.data || []) as VotesStats[]).sort(
     (a, b) => b.status - a.status,
@@ -72,7 +70,7 @@ const MyVotesWindow = ({
   return (
     <VStack gap="16px">
       {homePage && <Grid
-        templateColumns="auto 350px"
+        templateColumns="auto 40%"
         gridAutoRows="max-content"
         w="100%"
         gap="15px"
@@ -112,7 +110,7 @@ const MyVotesWindow = ({
       </Grid>}
 
       {homePage && <Grid
-        templateColumns="30% auto"
+        templateColumns="45% auto"
         gridAutoRows="max-content"
         w="100%"
         gap="15px"
@@ -168,16 +166,9 @@ const MyVotesWindow = ({
           </VStack>
         </Ebox>
       </Grid>}
-      {!homePage && <Ebox>
-        <HomeFilterSection
-          onResetTable={handleReset}
-          homePage={false}
-          setFilter={setFilter}
-          activeTabIndex={1}
-        />
-      </Ebox>}
+
       <Ebox>
-        <VotersTable key={key} getCheckboxList={getCheckboxList} filter={filter} />
+        <VotersTable filter={filter} />
       </Ebox>
     </VStack>
   );

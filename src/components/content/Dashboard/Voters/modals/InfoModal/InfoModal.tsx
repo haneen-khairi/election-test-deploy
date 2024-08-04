@@ -9,6 +9,7 @@ interface Props {
 }
 const InfoModal = ({ isOpen, onClose, recordID }: Props) => {
   const { data, isLoading } = useGetVoterDetails(recordID || "", isOpen);
+
   return (
     <Popup title="معلومات الناخب" size="md" isOpen={isOpen} onClose={onClose}>
       {isLoading && <Loader />}
@@ -16,7 +17,7 @@ const InfoModal = ({ isOpen, onClose, recordID }: Props) => {
         <HStack p="2" flexWrap="wrap">
           <Box flexGrow="1" w="40%">
             <Text color="Egray">مكان الناخب</Text>
-            <Text>{data?.data.place_of_election || "لا يوجد"}</Text>
+            <Text>{data?.data.place_of_residence || "لا يوجد"}</Text>
           </Box>
           <Box flexGrow="1" w="40%">
             <Text color="Egray">مكان الإقامة</Text>

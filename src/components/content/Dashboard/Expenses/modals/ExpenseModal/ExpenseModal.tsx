@@ -9,12 +9,12 @@ import { useResetFormModal } from "@components/content/Dashboard/hooks";
 import {
   useAddExpense,
   useGetAddExpensesTypes,
-  useGetAddIncomeAccounts,
 } from "@services/hooks/expenses/useExpenses";
 import { EToast } from "@constants/functions/toast";
 import FileInput from "@components/core/FileInput/FileInput";
 import { useState } from "react";
 import ExpensesTypeModal from "../ExpensesTypeModal/ExpensesTypeModal";
+import AccountsSelect from "@components/content/DropDown/AccountsSelect";
 
 interface Props {
   isOpen: boolean;
@@ -23,9 +23,6 @@ interface Props {
 
 const ExpenseModal = ({ isOpen, onClose }: Props) => {
   const { data: types, isLoading: isTypeLoading } = useGetAddExpensesTypes();
-  const { data: accounts, isLoading: isAccountLoading } =
-    useGetAddIncomeAccounts() as any;
-
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const addExpenseType = useDisclosure();
@@ -46,10 +43,8 @@ const ExpenseModal = ({ isOpen, onClose }: Props) => {
   useResetFormModal(isOpen, reset);
 
   const onSubmit = (values: any) => {
-    if (!selectedImage) return;
-
     const formData = new FormData();
-    formData.append("image", selectedImage);
+    selectedImage && formData.append("image", selectedImage);
     formData.append("from_account", values?.from_account);
     formData.append("amount", values?.amount);
     formData.append("type", values?.type);
@@ -58,7 +53,7 @@ const ExpenseModal = ({ isOpen, onClose }: Props) => {
     formData.append("notes", values?.notes);
 
     addExpense.mutateAsync(formData).then((res: any) => {
-      if (res.error && Object.keys(res.error).length > 0) {
+      if (res.error && Object.keys(res.error)?.length > 0) {
         onClose();
         EToast({
           toast: toast,
@@ -113,6 +108,22 @@ const ExpenseModal = ({ isOpen, onClose }: Props) => {
               control={control}
               name="from_account"
               render={({ field: { onChange, value } }) => (
+                <AccountsSelect
+                  onChange={onChange}
+                  value={value}
+                  error={errors?.from_account?.message as string}
+                  key={value}
+                  label="من حساب"
+                  placeholder="اختر الحساب"
+                  isName={false}
+                />
+              )}
+            />
+
+            {/* <Controller
+              control={control}
+              name="from_account"
+              render={({ field: { onChange, value } }) => (
                 <InputSelect
                   loading={isAccountLoading}
                   label="من حساب"
@@ -132,7 +143,7 @@ const ExpenseModal = ({ isOpen, onClose }: Props) => {
                   size="lg"
                 />
               )}
-            />
+            /> */}
           </Box>
 
           <Box>

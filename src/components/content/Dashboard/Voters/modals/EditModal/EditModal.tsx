@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
@@ -75,8 +76,8 @@ const EditModal = ({ isOpen, onClose, recordID }: Props) => {
   const onSubmit = (values: PutVoter) => {
     updateVotser
       .mutateAsync({
-        latitude: parseFloat(values.latitude?.toFixed(2) || ""),
-        longitude: parseFloat(values.longitude?.toFixed(2) || ""),
+        latitude: parseFloat(values?.latitude?.toString() || ""),
+        longitude: parseFloat(values?.longitude?.toString() || ""),
         mandoub_haraka: values.mandoub_haraka || undefined,
         mandoub_main: values.mandoub_main,
         mobile_number: values.mobile_number,
@@ -114,9 +115,10 @@ const EditModal = ({ isOpen, onClose, recordID }: Props) => {
         setValue("mandoub_haraka", info?.data.mandoub_haraka?.id || "");
       info?.data.latitude && setValue("latitude", info?.data.latitude || 0);
       info?.data.longitude && setValue("longitude", info?.data.longitude || 0);
+      info?.data.status &&
+        setValue("status", (info?.data?.status as any).toString() || "0");
       setValue("mobile_number", info?.data.mobile_number || "");
       setValue("note", info?.data.note || "");
-      setValue("status", info?.data.status || 0);
     }
   }, [info]);
 

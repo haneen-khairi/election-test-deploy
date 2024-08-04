@@ -48,7 +48,7 @@ const FamilyDonutChart = ({
     _event: ChartEvent,
     chartElement: CustomChartElement[],
   ) => {
-    if (chartElement.length > 0) {
+    if (chartElement?.length > 0) {
       const index = chartElement[0].index;
       setFilter((prev: any) => ({ ...prev, gender: index === 0 ? "M" : "F" }));
     }

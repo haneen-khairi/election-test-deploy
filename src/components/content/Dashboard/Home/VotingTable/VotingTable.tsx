@@ -18,11 +18,6 @@ const VotingTable = ({
   const { setPage, page } = useVostersStore();
   const { data, isFetching } = useGetDelegatesVotes(filter);
 
-  // const voters: DelegatesVotes[] = useMemo(
-  //   () => (isLoading ? [] : data?.data || []),
-  //   [data, isLoading],
-  // );
-
   const { columns } = useColumns({ filter, setFilter });
 
   return (

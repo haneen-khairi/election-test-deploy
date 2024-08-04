@@ -61,7 +61,7 @@ const useColumns = ({ edit }: Props) => {
         Cell: ({ cell }: CellValue) => {
           return (
             <Text color="mPrimary" fontWeight="600" noOfLines={1}>
-              {cell.row.original.delivery_status === 0
+              {cell.row.original.delivery_status === "1"
                 ? "تم التوصيل"
                 : "لم يتم التوصيل"}
             </Text>
@@ -87,11 +87,11 @@ const useColumns = ({ edit }: Props) => {
         accessor: "mandoub_haraka",
       },
       {
-        Header: "مركز الأقتراء",
+        Header: "مركز الأقتراع",
         Cell: ({ cell }: CellValue) => {
           return (
             <Text color="mPrimary" noOfLines={1}>
-              {truncateText(cell.row.original.school, 150)}
+              {truncateText(cell.row.original.school || "", 150)}
             </Text>
           );
         },

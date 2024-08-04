@@ -28,19 +28,18 @@ import SupporterModal from "../modals/CompanionModal/SupporterModal";
 import { useEffect, useState } from "react";
 import { useDownloadMyLists } from "@services/hooks/excel/useExcel";
 import { saveXLSXFile } from "@constants/functions/SaveXLSX";
+import { Link } from "react-router-dom";
 
 const HomeFilterSection = ({
   activeTabIndex,
   setActiveTabIndex,
   setFilter,
-  onResetTable= () => {},
-  homePage = true,
+  filter,
 }: {
   activeTabIndex: number;
+  filter: any;
   setFilter: React.Dispatch<React.SetStateAction<any | undefined>>;
   setActiveTabIndex?: React.Dispatch<React.SetStateAction<number>>;
-  homePage?: boolean,
-  onResetTable: () => void
 }) => {
   const { data } = useAuthStore();
   const companion = useDisclosure();
@@ -62,8 +61,8 @@ const HomeFilterSection = ({
       last_name: undefined,
       place_of_residence: undefined,
       electoral_district: undefined,
-      boxes: undefined,
-      centers: undefined,
+      box: undefined,
+      voting_center: undefined,
       supporter_name: undefined,
       status: undefined,
     },
@@ -71,7 +70,6 @@ const HomeFilterSection = ({
 
   const handleSearch = () => {
     const newFilter: any = {};
-    const multiFilter: any = {};
 
     [
       "gender",
@@ -79,25 +77,22 @@ const HomeFilterSection = ({
       "second_name",
       "third_name",
       "mandoub_main",
+      "supporter_name",
       "electoral_district",
       "status",
+      "place_of_residence",
+      "last_name",
       // ---
       "boxes",
-      "centers",
+      "voting_center",
     ].forEach((field) => {
       const item = watch(field as any);
       if (item) newFilter[field] = item;
     });
 
-    ["place_of_residence", "last_name"].forEach((field) => {
-      const item = watch(field as any) as string[];
-      if (item) newFilter[field] = item.join(",");
-    });
-
     setFilter((prev: any) => ({
       ...prev,
       ...newFilter,
-      ...multiFilter,
     }));
   };
 
@@ -123,9 +118,16 @@ const HomeFilterSection = ({
   };
 
   const handleExport = async () => {
-    downloadMyLists.mutateAsync({}).then((res) => {
-      saveXLSXFile(res, "candidates.xlsx");
-    });
+    setIsFetching(true);
+
+    downloadMyLists
+      .mutateAsync({})
+      .then((res) => {
+        saveXLSXFile(res, "candidates.xlsx");
+      })
+      .finally(() => {
+        setIsFetching(false);
+      });
   };
 
   useEffect(() => {
@@ -134,7 +136,7 @@ const HomeFilterSection = ({
   }, [activeTabIndex]);
 
   return (
-    homePage ? <VStack w="100%" alignItems="start">
+    <VStack w="100%" alignItems="start">
       <HStack w="100%" justifyContent="space-between">
         <VStack alignItems="start" w="50%">
           <Heading size="md" display="flex" gap="10px">
@@ -181,16 +183,28 @@ const HomeFilterSection = ({
               color="#fff"
               disabled={isFetching}
               fontSize="17px"
-              onClick={async () => {
-                setIsFetching(true);
-
-                await handleExport();
-              }}
+              onClick={handleExport}
               padding="20px 25px"
               mb="auto"
             >
               <Text>{isFetching ? "جاري التنزيل ..." : "تحميل ملف Excel"}</Text>
             </Btn>
+
+            <HStack
+              as={Link}
+              to="/names-with-others"
+              cursor="pointer"
+              p="12px"
+              rounded="8px"
+              fontSize="16px"
+              fontWeight="600"
+              transition="0.3s ease"
+              _hover={{
+                textDecoration: "underline",
+              }}
+            >
+              <Text>أسامي مع مناديب آخرين</Text>
+            </HStack>
           </VStack>
         )}
       </HStack>
@@ -247,7 +261,6 @@ const HomeFilterSection = ({
           w="100%"
         >
           <Filters
-            forMessagePage={!homePage}
             handleSearch={handleSearch}
             control={control}
             errors={errors}
@@ -255,33 +268,12 @@ const HomeFilterSection = ({
             isDirty={isDirty}
             activeTabIndex={activeTabIndex}
             setFilter={setFilter}
+            filter={filter}
+            watch={watch}
           />
         </Grid>
       )}
-    </VStack> : 
-        <Grid
-          templateColumns={
-            activeTabIndex !== 4
-              ? "repeat(4, 1fr) 150px"
-              : "repeat(2, 1fr) 150px"
-          }
-          templateRows="repeat(2, 1fr)"
-          mt="20px"
-          gap="16px"
-          w="100%"
-        >
-          <Filters
-            forMessagePage={!homePage}
-            handleSearch={handleSearch}
-            control={control}
-            errors={errors}
-            reset={reset}
-            isDirty={isDirty}
-            activeTabIndex={activeTabIndex}
-            onResetSearch={onResetTable}
-          />
-        </Grid>
-      
+    </VStack>
   );
 };
 

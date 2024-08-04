@@ -13,6 +13,7 @@ import useDashboardFilter from "@store/DashboardFilter";
 import { FilterType } from "@components/content/Dashboard/PreliminaryResults/FilterSection/FilterType";
 import usePreliminaryStore from "@store/PreliminaryStore";
 import useTransportationStore from "@store/TransportationStore";
+import filterSelections from "@services/utils/filterSelecttions";
 
 export const useGetVotersPercentage = () => {
   const { filter } = useDashboardFilter();
@@ -39,7 +40,7 @@ export const useGetTopFamilies = (filter: any) => {
     queryFn: () =>
       api.getList({
         params: {
-          ...rest,
+          ...filterSelections(rest),
         },
       }),
   });

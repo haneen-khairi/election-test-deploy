@@ -7,12 +7,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { IncomeSchema } from "./IncomeSchema";
 import {
   useAddIncome,
-  useGetAddIncomeAccounts,
   useGetAddIncomeTypes,
 } from "@services/hooks/expenses/useExpenses";
 import { EToast } from "@constants/functions/toast";
 import { useResetFormModal } from "@components/content/Dashboard/hooks";
 import IncomeTypeModal from "../IncomeTypeModal/IncomeTypeModal";
+import AccountsSelect from "@components/content/DropDown/AccountsSelect";
 
 interface Props {
   isOpen: boolean;
@@ -21,9 +21,6 @@ interface Props {
 
 const IncomeModal = ({ isOpen, onClose }: Props) => {
   const { data: types, isLoading: isTypeLoading } = useGetAddIncomeTypes();
-  const { data: accounts, isLoading: isAccountLoading } =
-    useGetAddIncomeAccounts() as any;
-
   const addIncomeType = useDisclosure();
   const addIncome = useAddIncome();
   const toast = useToast();
@@ -51,7 +48,7 @@ const IncomeModal = ({ isOpen, onClose }: Props) => {
             toast: toast,
             status: "error",
             title: "Error",
-            description: res.error,
+            description: Object.values(res.error)[0][0],
           });
         } else {
           EToast({
@@ -98,23 +95,14 @@ const IncomeModal = ({ isOpen, onClose }: Props) => {
               control={control}
               name="to_account"
               render={({ field: { onChange, value } }) => (
-                <InputSelect
-                  loading={isAccountLoading}
-                  label="إلى حساب"
-                  options={
-                    accounts?.data?.data
-                      ? accounts?.data?.data.map((el: any) => ({
-                          label: el.name || "",
-                          value: el.id || 0,
-                        }))
-                      : []
-                  }
-                  multi={false}
-                  placeholder="اختر نوع الحساب"
+                <AccountsSelect
                   onChange={onChange}
                   value={value}
-                  error={errors.to_account?.message}
-                  size="lg"
+                  error={errors?.to_account?.message as string}
+                  key={value}
+                  label="إلى حساب"
+                  placeholder="اختر نوع الحساب"
+                  isName={false}
                 />
               )}
             />

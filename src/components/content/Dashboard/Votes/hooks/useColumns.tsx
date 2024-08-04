@@ -88,7 +88,7 @@ const useColumns = ({ edit, info }: Props) => {
           const id = cell.row.original.id;
           return (
             <HStack justifyContent="flex-end">
-              {checkedRows.includes(id) && checkedRows.length <= 1 && (
+              {checkedRows.includes(id) && checkedRows?.length <= 1 && (
                 <Box
                   as={Button}
                   size="xs"

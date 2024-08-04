@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import APIClient from "@services/api";
-import { ItemResponse } from "@services/structure";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import useListsStore from "@store/ListsStore";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 export const useGetCosts = () => {
   const api = new APIClient<any>("expense/costs");
@@ -11,33 +12,44 @@ export const useGetCosts = () => {
   });
 };
 
-export const useProcessMyLists = ({
-  page = 1,
-  key = "found_in_voters",
+export const useGetProcessedLists = ({
+  key,
+  selectedFile,
+  isAll = false,
 }: {
-  page: number;
   key: "found_in_voters" | "not_found" | "found_with_mandoub_main";
+  selectedFile: File | null;
+  isAll?: boolean;
 }) => {
-  const clientQuery = useQueryClient();
-  const api = new APIClient<any>(
-    `candidate/my_lists/upload-excel/?page=${page}&key=${key}`,
-  );
+  const api = new APIClient<any>("candidate/my_lists/upload-excel/", true);
+  const { page1, page2, page3 } = useListsStore();
 
-  return useMutation<ItemResponse<string>, Error, any>({
-    mutationFn: async (data: any) => { 
-      const response = (await api.post(data)) as ItemResponse<string>;
-      return response;
-    },
-    onSuccess: async () => {
-      clientQuery.resetQueries({
-        queryKey: ["ProcessMyLists"],
-      });
-      clientQuery.invalidateQueries({
-        queryKey: [],
-      });
-    },
-    onError: (error: Error) => {
-      if (error) return error;
-    },
+  const pageData = useMemo(() => {
+    if (key === "found_in_voters") return page1;
+    else if (key === "not_found") return page2;
+    return page3;
+  }, [key, page1, page2, page3]);
+
+  const formData = new FormData();
+  selectedFile && formData.append("file", selectedFile);
+
+  const extra = isAll
+    ? {
+        return: "all",
+      }
+    : {};
+
+  return useQuery({
+    queryKey: ["Supporters", pageData, key, isAll],
+    queryFn: () =>
+      api.postPageintaed(formData, {
+        params: {
+          key,
+          page: pageData,
+          page_size: 6,
+          ...extra,
+        },
+      }),
+    placeholderData: keepPreviousData,
   });
 };

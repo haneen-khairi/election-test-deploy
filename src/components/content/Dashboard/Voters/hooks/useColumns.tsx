@@ -77,10 +77,6 @@ const useColumns = ({ edit, info }: Props) => {
         },
       },
       {
-        Header: "الحالة",
-        accessor: "status",
-      },
-      {
         Header: "المندوب الرئيسي",
         accessor: "mandoub_main",
       },
@@ -89,20 +85,21 @@ const useColumns = ({ edit, info }: Props) => {
         accessor: "mandoub_haraka",
       },
       {
-        Header: "مكان الإنتخاب",
+        Header: "مكان الإقامة",
         accessor: "place_of_residence",
       },
       {
-        Header: "صندوق رقم",
-        accessor: "box",
-      },
+        Header: "اسم المدرسة",
+        Cell: ({ cell }: CellValue) => {
+          return `${cell.row.original.school || ""} (${cell.row.original.box || "0"})`;
+        },      },
       {
         Header: "اجراءات",
         Cell: ({ cell }: CellValue) => {
           const id = cell.row.original.id;
           return (
             <HStack justifyContent="flex-end">
-              {checkedRows.includes(id) && checkedRows.length <= 1 && (
+              {checkedRows.includes(id) && checkedRows?.length <= 1 && (
                 <Box
                   as={Button}
                   size="xs"

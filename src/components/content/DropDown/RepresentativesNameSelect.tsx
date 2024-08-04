@@ -12,35 +12,7 @@ interface Props {
 const RepresentativesNameSelect = ({ value, onChange, error }: Props) => {
   const [_search, setSearch] = useState<string>();
   const { data, isFetching } = useGetManadeebDropDown("4");
-  // const [isFetchingNextPage, setIsFetchingNextPage] = useState<boolean>(false);
-  // const sentinelRef = useRef(null);
-
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver(
-  //     (entries) => {
-  //       if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-  //         setIsFetchingNextPage(true);
-  //         fetchNextPage().then(() => {
-  //           setIsFetchingNextPage(false);
-  //         });
-  //       }
-  //     },
-  //     { threshold: 1.0 },
-  //   );
-
-  //   if (sentinelRef.current) {
-  //     observer.observe(sentinelRef.current);
-  //   }
-
-  //   return () => {
-  //     if (sentinelRef.current) {
-  //       observer.unobserve(sentinelRef.current);
-  //     }
-  //   };
-  // }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
-
-  // const options = data?.pages.flatMap((page) => page.data);
-
+ 
   return (
     <InputSelect
       loading={isFetching}
@@ -50,16 +22,8 @@ const RepresentativesNameSelect = ({ value, onChange, error }: Props) => {
           value: item.id,
         })) || []
       }
-      // options={
-      //   options
-      //     ? options?.map((el) => ({
-      //         label: el.name || "",
-      //         value: el.name?.toString() || "",
-      //       }))
-      //     : []
-      // }
       multi={false}
-      placeholder="اسم المندوب"
+      placeholder="اسم المندوب الرئيسي"
       value={value}
       error={error}
       onChange={onChange}

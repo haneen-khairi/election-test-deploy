@@ -86,12 +86,14 @@ const useColumns = ({ edit }: Props) => {
         accessor: "mandoub_haraka",
       },
       {
-        Header: "مكان الإنتخاب",
+        Header: "مكان الإقامة",
         accessor: "place_of_residence",
       },
       {
-        Header: "صندوق رقم",
-        accessor: "box",
+        Header: "اسم المدرسة",
+        Cell: ({ cell }: CellValue) => {
+          return `${cell.row.original.school || ""} (${cell.row.original.box || "0"})`;
+        },
       },
       {
         Header: "  ",

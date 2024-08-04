@@ -25,7 +25,7 @@ const RadioCardGroup: any = ({
 
   const getBorderRadius = (index: number) => {
     if (index === 0) return "0px 12px 12px 0px";
-    if (index === options.length - 1) return "12px 0px 0px 12px";
+    if (index === options?.length - 1) return "12px 0px 0px 12px";
     else return "0px";
   };
 

@@ -27,12 +27,12 @@ const useColumns = ({ filter, setFilter }: { filter: any; setFilter: any }) => {
           return (
             <Box
               cursor="pointer"
-              color={getColor(cell?.row?.original?.id)}
+              color={getColor(cell?.row?.original?.mandoub_id)}
               onClick={() => {
                 setFilter((prev: any) => ({
                   ...prev,
                   mandoub_main: cell?.row?.original?.mandoub_id,
-                  mainMandoubId: cell?.row?.original?.id,
+                  mainMandoubId: cell?.row?.original?.mandoub_id,
                 }));
               }}
             >
@@ -48,7 +48,7 @@ const useColumns = ({ filter, setFilter }: { filter: any; setFilter: any }) => {
         Cell: ({ cell }: CellValue) => {
           return (
             <Text
-              color={getColor(cell?.row?.original?.id)}
+              color={getColor(cell?.row?.original?.mandoub_id)}
               fontWeight="600"
               noOfLines={1}
             >

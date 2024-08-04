@@ -11,7 +11,7 @@ const useColumns = () => {
         Cell: ({ cell }: CellValue) => {
           return (
             <Text fontWeight="600" noOfLines={1}>
-              {cell.row.original.from_account?.name}
+              {cell.row.original.from_account?.name || "---"}
             </Text>
           );
         },

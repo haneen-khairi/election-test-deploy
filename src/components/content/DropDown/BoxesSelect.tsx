@@ -8,14 +8,12 @@ interface Props {
   value: unknown;
   onChange: (value: unknown) => void;
   error?: string;
-  circlesData: any;
+  voting_center?: any;
 }
-const BoxesSelect = ({ value, onChange, error, circlesData }: Props) => {
+const BoxesSelect = ({ value, onChange, error, voting_center }: Props) => {
   const [search, setSearch] = useState<string>();
   const { data, fetchNextPage, hasNextPage, isFetching } = useGetBoxesDropdown(
-    circlesData?.pages
-      ? circlesData?.pages[0]?.data?.map((item: any) => item.id) || []
-      : [],
+    voting_center,
     search,
   );
   const [isFetchingNextPage, setIsFetchingNextPage] = useState<boolean>(false);
@@ -53,7 +51,7 @@ const BoxesSelect = ({ value, onChange, error, circlesData }: Props) => {
         options
           ? options?.map((el) => ({
               label: el.name || "",
-              value: el.name?.toString() || "",
+              value: el.id?.toString() || "",
             }))
           : []
       }

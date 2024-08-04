@@ -91,6 +91,7 @@ const FilterSection = ({ SFilter }: Props) => {
             name="first_name"
             render={({ field: { onChange, value } }) => (
               <FirstNameSelect
+                filter={{}}
                 onChange={onChange}
                 value={value}
                 error={errors.first_name?.message}
@@ -105,6 +106,7 @@ const FilterSection = ({ SFilter }: Props) => {
             name="second_name"
             render={({ field: { onChange, value } }) => (
               <SecondNameSelect
+                filter={{}}
                 onChange={onChange}
                 value={value}
                 error={errors.second_name?.message}
@@ -119,6 +121,7 @@ const FilterSection = ({ SFilter }: Props) => {
             name="third_name"
             render={({ field: { onChange, value } }) => (
               <MiddleNameSelect
+                filter={{}}
                 onChange={onChange}
                 value={value}
                 error={errors.third_name?.message}
@@ -133,6 +136,7 @@ const FilterSection = ({ SFilter }: Props) => {
             name="last_name"
             render={({ field: { onChange, value } }) => (
               <LastNameSelect
+                filter={{}}
                 onChange={onChange}
                 value={value}
                 error={errors.last_name?.message}

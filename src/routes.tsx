@@ -12,6 +12,7 @@ import {
   TasksPage,
   TransportationStatistics,
   VotersPage,
+  FamilyTree,
 } from "@pages/dashboard";
 import { GlobeLayout } from "@pages/layout";
 import IsAuth from "./IsAuth";
@@ -20,25 +21,27 @@ import MessagesPage from "@pages/dashboard/messages/MessagesPage";
 import MessageServiceLayout from "@pages/layout/MessageServiceLayout";
 import SentMessagesPage from "@pages/Home/SentMessagesPage";
 import ProfilePage from "@pages/Home/ProfilePage";
-
+import QRPage from "@pages/public/QRPage";
+import SupportersPage from "@pages/public/SupportersPage";
+import NamesWithOthersPage from "@pages/dashboard/namesWithOthers/CentersPage";
 
 const ErrorPage = () => {
-    const error: any = useRouteError();
+  const error: any = useRouteError();
 
-    return (
-        <div>
-            <p>an unexpected error has occurred.</p>
-            <p>
-                <i>{error.statusText || error.message}</i>
-            </p>
-        </div>
-    );
+  return (
+    <div>
+      <p>an unexpected error has occurred.</p>
+      <p>
+        <i>{error.statusText || error.message}</i>
+      </p>
+    </div>
+  );
 };
 
 const router = createBrowserRouter([
   {
     element: <GlobeLayout />,
-    errorElement: <ErrorPage />, 
+    errorElement: <ErrorPage />,
     children: [
       {
         element: (
@@ -83,6 +86,14 @@ const router = createBrowserRouter([
             path: "/transportation-statistics",
             element: <TransportationStatistics />,
           },
+          {
+            path: "/family-tree",
+            element: <FamilyTree />,
+          },
+          {
+            path: "/names-with-others",
+            element: <NamesWithOthersPage />,
+          },
         ],
       },
       {
@@ -124,19 +135,14 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/profile",
-        element: (
-          <ProfilePage />
-        ),
+        element: <ProfilePage />,
       },
       {
         path: "/sentMessages",
-        element: (
-          <SentMessagesPage />
-        ),
+        element: <SentMessagesPage />,
       },
-
-    ]
-  }
+    ],
+  },
 ]);
 
 export default router;

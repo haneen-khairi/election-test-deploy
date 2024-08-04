@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { ItemResponse, ListPageinated, ListResponse } from "./structure";
 import CryptoStorage from "@constants/functions/storage";
 // import CryptoStorage from "@constants/functions/storage";
@@ -72,34 +72,40 @@ axiosDownloadInstance.interceptors.response.use(
 
 class APIClient<T> {
   endpoint: string;
-  isDownload: boolean;
+  axios: AxiosInstance;
 
   constructor(endpoint: string, isDownload?: boolean) {
     this.endpoint = endpoint;
-    this.isDownload = isDownload || false;
+    this.axios = isDownload ? axiosDownloadInstance : axiosInstance;
   }
 
   getList = (config?: AxiosRequestConfig) => {
-    return axiosInstance
+    return this.axios
       .get<ListResponse<T>>(this.endpoint, config)
       .then((res) => res.data);
   };
   getItem = (config?: AxiosRequestConfig) => {
-    return this.isDownload
-      ? axiosDownloadInstance
-          .get<ItemResponse<T>>(this.endpoint, config)
-          .then((res) => res.data)
-      : axiosInstance
-          .get<ItemResponse<T>>(this.endpoint, config)
-          .then((res) => res.data);
+    return this.axios
+      .get<ItemResponse<T>>(this.endpoint, config)
+      .then((res) => res.data);
   };
   getPageintaed = (config?: AxiosRequestConfig) => {
-    return axiosInstance
+    return this.axios
       .get<ListPageinated<T>>(this.endpoint, config)
       .then((res) => res.data);
   };
+  getPageintaedNoToken = (config?: AxiosRequestConfig) => {
+    return axiosNoTokenInstance
+      .get<ListPageinated<T>>(this.endpoint, config)
+      .then((res) => res.data);
+  };
+  postPageintaed = (data?: any, config?: AxiosRequestConfig) => {
+    return this.axios
+      .post<ListPageinated<T>>(this.endpoint, data, config)
+      .then((res) => res.data);
+  };
   post = (data?: T | FormData, headers?: Record<string, string>) => {
-    return axiosInstance
+    return this.axios
       .post<T>(this.endpoint, data, headers)
       .then((res) => res.data);
   };
@@ -108,28 +114,32 @@ class APIClient<T> {
       .post<T>(this.endpoint, data, headers)
       .then((res) => res.data);
   };
-  export = (_data?: T | FormData) => {
-    const headers = {
-      "Content-Type":
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    };
-    // const queryParams = new URLSearchParams(data as never).toString();
-    // const url = queryParams ? `${this.endpoint}?${queryParams}` : this.endpoint;
-
-    return axiosInstance
+  export = (config?: AxiosRequestConfig) =>
+    this.axios
       .get(this.endpoint, {
-        headers,
+        headers: {
+          "Content-Type":
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        },
         responseType: "arraybuffer",
         params: {
           myvote: true,
           export: "excel",
         },
+        ...config,
       })
       .then((res) => res.data);
-  };
+
+  exportPost = (config?: AxiosRequestConfig, data?: any) =>
+    this.axios
+      .post<T>(this.endpoint, data, {
+        responseType: "arraybuffer",
+        ...config,
+      })
+      .then((res) => res.data);
 
   put = (data?: T | FormData, headers?: Record<string, string>) => {
-    return axiosInstance
+    return this.axios
       .put<T>(this.endpoint, data, headers)
       .then((res) => res.data);
   };
@@ -138,7 +148,7 @@ class APIClient<T> {
       data: data,
     };
 
-    return await axiosInstance
+    return await this.axios
       .delete(this.endpoint, config)
       .then((res) => res.data);
   };

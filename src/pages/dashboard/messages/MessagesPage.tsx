@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import MessageBlackIcon from '@assets/icons/MessageBlackIcon'
 import {
   Box, Button, Flex, Grid, GridItem, Table,
@@ -11,7 +13,6 @@ import {
   VStack,
   Heading,
   Text,
-  list
 } from '@chakra-ui/react'
 import CreateMyselfModal from '@components/content/Dashboard/messages/CreateMyselfModal'
 import DeleteIcon from '@components/content/Dashboard/messages/DeleteIcon'
@@ -57,7 +58,6 @@ export default function MessagesPage() {
 
   }
   function handleOnDelete() {
-    console.log("🚀 ~ handleOnDelete ~ handleOnDelete:")
   }
   async function getLists(){
     try {
@@ -67,9 +67,8 @@ export default function MessagesPage() {
           }
         })
         setMessagesLists(response.data.data)
-        console.log("🚀 ~ getLists ~ response:", response.data)
       } catch (error) {
-        console.log("🚀 ~ getLists ~ error:", error)
+        console.error("🚀 ~ getLists ~ error:", error)
         
       }
   }
@@ -99,12 +98,11 @@ export default function MessagesPage() {
             'Authorization': `Bearer ${data?.tokens?.access}` 
           }
         })
-        if(response.data.data.length > 0){
+        if(response.data.data?.length > 0){
           setListRecords(response.data.data)
         }
-        console.log("🚀 ~ getListDetails ~ response:", response.data)
       } catch (error) {
-        console.log("🚀 ~ getListDetails ~ error:", error)
+        console.error("🚀 ~ getListDetails ~ error:", error)
         
       }
   }
@@ -116,9 +114,8 @@ export default function MessagesPage() {
           }
         })
         setMessagesSmsHistory(response.data.data)
-        console.log("🚀 ~ getSmsHistory ~ response:", response.data)
       } catch (error) {
-        console.log("🚀 ~ getSmsHistory ~ error:", error)
+        console.error("🚀 ~ getSmsHistory ~ error:", error)
         
       }
   }

@@ -68,11 +68,6 @@ const ExpensesBarChart = ({
                 barThickness: 17,
                 borderRadius: 50,
               },
-              // {
-              //   data: Array(amounts.length).fill(maxCount + maxCount * 0.2),
-              //   backgroundColor: tab === 1 ? "#ECFFF5" : "#ffecec",
-              //   barThickness: 17,
-              // },
             ],
           }}
           height="450px"

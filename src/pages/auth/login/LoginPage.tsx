@@ -37,7 +37,6 @@ const LoginPage = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onSuccess: (res: any) => {
       if (res.status) {
-        // CryptoStorage.setItem("token", res.data.access);
         login(res.data);
         toast({
           title: `تسجيل الدخول`,

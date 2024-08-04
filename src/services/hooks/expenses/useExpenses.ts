@@ -2,6 +2,7 @@
 import APIClient from "@services/api";
 import {
   keepPreviousData,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
@@ -16,13 +17,13 @@ import {
   GetExpensesType,
   IncomeAccountsData,
   IncomeSummary,
-  PostPutExpensesType,
   ExpensesChart,
   FinancialIncomeData,
   FinancialExpenseData,
 } from "./Expenses";
 import useExpensesStore from "@store/ExpensesStore";
-import { ItemResponse } from "@services/structure";
+import { ItemResponse, ListPageinated } from "@services/structure";
+import { GetDropDown } from "../dropdown/DropDown";
 
 export const useGetCosts = () => {
   const api = new APIClient<CostType>("expense/costs");
@@ -68,10 +69,22 @@ export const useGetExpensesTable = () => {
 };
 
 export const useGetAddIncomeAccounts = () => {
-  const api = new APIClient<any>("expense/accounts");
-  return useQuery({
-    queryKey: ["AddIncomeAccounts", "GetAddIncomeTypes"],
-    queryFn: () => api.getList(),
+  const api = new APIClient<GetDropDown>(`expense/accounts`);
+
+  return useInfiniteQuery<ListPageinated<GetDropDown>, Error>({
+    queryKey: ["AddIncomeAccounts"],
+    queryFn: ({ pageParam = 1 }) =>
+      api.getPageintaed({
+        params: {
+          page: pageParam,
+        },
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.next ? allPages?.length + 1 : undefined;
+    },
+    staleTime: 24 * 60 * 60 * 1000,
+    retry: false,
+    initialPageParam: 1,
   });
 };
 
@@ -176,63 +189,6 @@ export const useGetFinancialExpenseData = () => {
   return useQuery({
     queryKey: ["FinancialExpenseData"],
     queryFn: () => api.getList(),
-  });
-};
-
-export const useGetExpense = (id: string, isEnabled: boolean) => {
-  const api = new APIClient<GetExpensesType>(`expense/expenses/${id}`);
-  return useQuery({
-    queryKey: ["Expense", id],
-    queryFn: () => api.getItem(),
-    enabled: !!isEnabled,
-  });
-};
-
-export const usePutExpense = (id: string) => {
-  const clientQuery = useQueryClient();
-  const api = new APIClient<PostPutExpensesType>(`expense/expenses/${id}`);
-  return useMutation<ItemResponse<string>, Error, PostPutExpensesType>({
-    mutationFn: async (data: PostPutExpensesType) => {
-      const response = (await api.put(data)) as ItemResponse<string>;
-      return response;
-    },
-    onSuccess: async () => {
-      clientQuery.resetQueries({
-        queryKey: ["Expenses"],
-      });
-      clientQuery.resetQueries({
-        queryKey: ["Expense"],
-        type: "active",
-      });
-      return "Added";
-    },
-    onError: (error: Error) => {
-      if (error) return error;
-    },
-  });
-};
-
-export const usePostExpense = () => {
-  const clientQuery = useQueryClient();
-  const api = new APIClient<PostPutExpensesType>(`expense/expenses`);
-  return useMutation<ItemResponse<string>, Error, PostPutExpensesType>({
-    mutationFn: async (data: PostPutExpensesType) => {
-      const response = (await api.post(data)) as ItemResponse<string>;
-      return response;
-    },
-    onSuccess: async () => {
-      clientQuery.resetQueries({
-        queryKey: ["Expenses"],
-      });
-      clientQuery.resetQueries({
-        queryKey: ["Expense"],
-        type: "active",
-      });
-      return "Added";
-    },
-    onError: (error: Error) => {
-      if (error) return error;
-    },
   });
 };
 
@@ -342,27 +298,6 @@ export const useTransBetweenAccounts = () => {
       clientQuery.resetQueries({
         queryKey: ["TransBetweenAccounts"],
       });
-    },
-    onError: (error: Error) => {
-      if (error) return error;
-    },
-  });
-};
-
-export const useDeleteExpense = (id: string) => {
-  const clientQuery = useQueryClient();
-  const url = new APIClient(`expense/expenses/${id}`);
-  return useMutation({
-    mutationFn: async () => {
-      const response = await url.delete();
-      return response;
-    },
-    onSuccess: async () => {
-      clientQuery.resetQueries({
-        queryKey: ["Expenses"],
-      });
-
-      return "Deleted";
     },
     onError: (error: Error) => {
       if (error) return error;

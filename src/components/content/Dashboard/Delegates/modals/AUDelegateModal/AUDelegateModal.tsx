@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Box, HStack, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import {
+  CheckBox,
   GradientButton,
   Input,
   InputSelect,
@@ -40,8 +42,8 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
     control,
     reset,
     setValue,
-    watch,
     register,
+    watch,
     formState: { errors, isValid },
   } = useForm({
     resolver: yupResolver(AUDelegateSchema),
@@ -66,6 +68,7 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
   // Reset Form When Close
   useResetFormModal(isOpen, reset);
 
+  // 0799520999
   const onSubmit = (values: PutDelegate | PostDelegate) => {
     if (recordID) {
       updateDelegate
@@ -80,12 +83,11 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
         .then((res) => {
           if (res.error) {
             alert.onClose();
-            const errorMessages = Object.values(res.error).join("; ");
             EToast({
               toast: toast,
               status: "error",
               title: "Error",
-              description: errorMessages,
+              description: res.error,
             });
           } else {
             EToast({
@@ -105,18 +107,19 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
           mobile_number: values.mobile_number,
           group: values.group,
           password: values.password,
-          place_of_residence: values?.place_of_residence,
+          place_of_residence: (values as any)?.place_of_residence_is_all
+            ? ("select_all" as any)
+            : values?.place_of_residence,
           electoral_boxes: values.electoral_boxes,
         })
         .then((res) => {
           if (res.error) {
             alert.onClose();
-            const errorMessages = Object.values(res.error).join("; ");
             EToast({
               toast: toast,
               status: "error",
               title: "Error",
-              description: errorMessages,
+              description: res.error,
             });
           } else {
             EToast({
@@ -135,12 +138,8 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
   useEffect(() => {
     if (data?.data && !isLoading) {
       setValue("mobile_number", data?.data.mobile_number || "");
-      setValue("name", data?.data.name || "");
-      setValue("group", data?.data.group.id || "");
-      setValue(
-        "place_of_residence",
-        data?.data.place_of_residence?.map((item) => item.id.toString()),
-      );
+      setValue("name", data?.data?.name || "");
+      setValue("group", Number(data?.data?.group?.id));
       setValue(
         "school",
         data?.data.voting_center?.map((item) => item.id),
@@ -149,6 +148,18 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
         "electoral_boxes",
         data?.data?.electoral_boxes?.map((item) => item.id),
       );
+
+      if (data?.data?.place_of_residence) {
+        if (typeof data?.data?.place_of_residence === "string") {
+          setValue("place_of_residence", []);
+        } else {
+          setValue(
+            "place_of_residence",
+            data?.data?.place_of_residence?.map((item) => item.id.toString()) ||
+              [],
+          );
+        }
+      }
     }
   }, [data, isLoading, isOpen]);
 
@@ -183,12 +194,10 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                         loading={istypesloading}
                         label="نوع المندوب"
                         options={
-                          types?.data
-                            ? types?.data?.map((el) => ({
-                                label: el.name || "",
-                                value: el.id || 0,
-                              }))
-                            : []
+                          types?.data?.map((el) => ({
+                            label: el.name,
+                            value: el.id,
+                          })) || []
                         }
                         multi={false}
                         placeholder="اختر نوع المندوب"
@@ -227,8 +236,9 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                     error={errors.password?.message}
                   />
                 </Box>
-                {(values.group == "4" || values.group == "3") && (
-                  <Box w="40%" flexGrow="1">
+                {(Number(values?.group || 0) == 4 ||
+                  Number(values?.group || 0) == 3) && (
+                  <VStack alignItems="start" w="40%" flexGrow="1" gap="20px">
                     <Controller
                       control={control}
                       name="place_of_residence"
@@ -240,12 +250,24 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                           error={errors.place_of_residence?.message}
                           label="المنطقة"
                           placeholder="المنطقة"
+                          isDisabled={!!values?.place_of_residence_is_all}
                         />
                       )}
                     />
-                  </Box>
+
+                    <CheckBox
+                      checked={values?.place_of_residence_is_all}
+                      onChange={() =>
+                        setValue(
+                          "place_of_residence_is_all",
+                          !values?.place_of_residence_is_all,
+                        )
+                      }
+                      name="اختيار جميع المناطق"
+                    />
+                  </VStack>
                 )}
-                {values.group == "2" && (
+                {Number(values?.group || 0) === 2 && (
                   <>
                     <Box w="100%" flexGrow="1">
                       <Controller
@@ -298,6 +320,31 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                       />
                     </Box>
                   </>
+                )}
+
+                {Number(values?.group || 0) === 6 && (
+                  <Box w="100%" flexGrow="1">
+                    <Controller
+                      control={control}
+                      name="voting_center"
+                      render={({ field: { onChange, value } }) => (
+                        <InputSelect
+                          loading={isVotingCenterLoading}
+                          label="المدرسة"
+                          options={
+                            VotingCenter?.data?.map((el) => ({
+                              label: el.name || "",
+                              value: el.id || 0,
+                            })) || []
+                          }
+                          placeholder="اختر المدرسة"
+                          onChange={onChange}
+                          value={value}
+                          error={errors.school?.message}
+                        />
+                      )}
+                    />
+                  </Box>
                 )}
               </HStack>
             </VStack>

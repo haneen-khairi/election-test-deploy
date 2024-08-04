@@ -39,11 +39,9 @@ const TasksPage = () => {
   const colors = ["#EEB72A","#14B4D2"];
 
   const [_filter, setFilter] = useState<any>(undefined);
-  console.log("🚀 ~ TasksPage ~ _filter:", _filter)
-  const [tasks, setTasks] = useState([])
+  const [_tasks, setTasks] = useState([])
   const [statistics, setStatistics] = useState<any>()
   const {data} = useAuthStore()
-  console.log("🚀 ~ TasksPage ~ token:", data?.tokens?.access)
   async function getTasks(){
     try {
       const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/task/tasks`, {
@@ -51,7 +49,6 @@ const TasksPage = () => {
           'Authorization': `Bearer ${data?.tokens?.access}` 
         }
       })
-      // console.log("🚀 ~ getTasks ~ response:", response.data.data)
       setTasks(response.data.data)
     } catch (error) {
       console.error("🚀 ~ getTasks ~ error:", error)
@@ -66,9 +63,8 @@ const TasksPage = () => {
         }
       })
       setStatistics(response.data.data)
-      // console.log("🚀 ~ getStatiticsData ~ response:", response.data.data)
     } catch (error) {
-      console.log("🚀 ~ getStatiticsData ~ error:", error)
+      console.error("🚀 ~ getStatiticsData ~ error:", error)
       
     }
   }
@@ -92,7 +88,6 @@ const TasksPage = () => {
           setFilter={setFilter}
           onReset={getStatiticsData}
           onSuccess={()=> {
-            console.log("sucesss on filter")
             getStatiticsData(_filter?.date || "", _filter?.time || "", _filter?.type_of_tasks || "")
           }}
         />
@@ -232,28 +227,6 @@ statistics?.done?.mandobs_count}  nameOfCard="منجزة"/>
             time={task?.time || ""}
           />) : ""}
         </Flex>
-        {/* {tasks?.length && tasks?.map((task: any) =><TasksCard
-          key={task.id}
-          status={task?.status?.name || ""}
-          title="مهمة 1"
-          text={task.description}
-          representative={task?.mondob?.name || ""}
-          representativeType={task?.type?.name || ""}
-          representativeMission="مهمة 1"
-          date={task?.date || ""}
-          time={task?.time || ""}
-        />)}
-        {tasks?.length && tasks?.map((task: any) =><TasksCard
-          key={task.id}
-          status={task?.status?.name || ""}
-          title="مهمة 1"
-          text={task.description}
-          representative={task?.mondob?.name || ""}
-          representativeType={task?.type?.name || ""}
-          representativeMission="مهمة 1"
-          date={task?.date || ""}
-          time={task?.time || ""}
-        />)} */}
         </Grid>
     </VStack>
   );

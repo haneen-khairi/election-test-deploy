@@ -17,30 +17,37 @@ export const useDownloadMyLists = () => {
   });
 };
 
-// export const useDownloadContent = (url: string) => {
-//   const downloadUrl = new APIClient<any>(url, true);
+export const useDownloadContent = ({
+  url,
+  filter,
+  myvote = false,
+  isExport
+}: {
+  url: string;
+  filter: any;
+  myvote?: boolean;
+  isExport?: boolean;
+}) => {
+  const api = new APIClient<any>(url, true);
+  const extra: any = {};
 
-//   return useMutation({
-//     mutationFn: async () => {
-//       const response = await downloadUrl.export({
-//         params: {
-//           myvote: true,
-//           export: "excel",
-//         },
-//       });
-//       return response;
-//     },
-//     onError: (error: Error) => {
-//       if (error) return error;
-//     },
-//   });
-// };
-
-export const useDownloadContent = (url: string) => {
-  const api = new APIClient<any>(`${url}?myvote=true&export=excel`, true);
+  myvote && (extra.myvote = true);
+  isExport && (extra.export = "excel");
 
   return useMutation({
-    mutationFn: api.export,
+    mutationFn: async ({ body }: { body?: any[] }) => {
+      const res =
+        body?.length && body?.length > 0
+          ? api.exportPost({}, body)
+          : api.export({
+              params: {
+                ...extra,
+                ...filter,
+              },
+            });
+
+      return res;
+    },
     onSuccess: () => {
       return "Exported";
     },

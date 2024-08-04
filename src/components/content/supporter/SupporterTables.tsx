@@ -4,78 +4,70 @@
 import {
   Avatar,
   Box,
+  Spinner,
   Text,
   VStack,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import { Btn, ETable } from "@components/core";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import useColumns from "./useColumns";
 import useSupportersStore from "@store/SupportersStore";
-import { InfoModal } from "../Dashboard/Modals";
 import {
-  useGetVoterProfile,
-  useSendSupporters,
+  useGetSupportersByToken,
+  useGetVoterProfileById,
 } from "@services/hooks/voters/useVoters";
 import { useParams } from "react-router-dom";
-import { EToast } from "@constants/functions/toast";
+import SendModal from "./SendModal/SendModal";
 
-const SupporterTables = ({
-  isFetching,
-  isLoading,
-  supporters,
-}: {
-  supporters: any;
-  isLoading: any;
-  isFetching: any;
-}) => {
+const SupporterTables = React.memo(() => {
   const { id } = useParams<{ id: string }>();
   const [addedVoters, setAddedVoters] = useState<any[]>([]);
   const { setPage, page, setAddedPage, addedPage } = useSupportersStore();
-
-  const { code } = useParams<{ code: string }>();
-  const { data: profileData } = useGetVoterProfile(code || "");
+  const { data: profileData } = useGetVoterProfileById(id || "");
+  const { filter } = useSupportersStore();
+  const {
+    data: supporters,
+    isLoading,
+    isFetching,
+  } = useGetSupportersByToken(id || "", filter);
 
   const send = useDisclosure();
-  const toast = useToast();
-  const sendSupporters = useSendSupporters(
-    id || "",
-    addedVoters.map((item) => item.id),
-  );
 
   const { columns, checkedRows, setCheckedRows } = useColumns({
     isLeft: false,
   });
   const { columns: addedColumns } = useColumns({ isLeft: true });
 
-  const filteredVoters = useMemo(
+  const filteredVoters: any[] = useMemo(
     () =>
-      isLoading
-        ? []
-        : supporters?.data?.filter(
+      !isLoading && supporters
+        ? supporters?.data?.filter(
             (item: any) =>
               !addedVoters.map((item) => item.id).includes(item.id),
-          ),
+          )
+        : [],
     [addedVoters, supporters, isLoading],
   );
 
-  // const filterSupporters = (supporters: any) =>
-  //   isLoading || !supporters
-  //     ? []
-  //     : supporters.filter(
-  //         (item: any) => !addedVoters.map((item) => item.id).includes(item.id),
-  //       );
-
-  // const handleCheckAll = () => {
-  //   const votersData: {
-  //     id: string;
-  //   }[] = voters as [];
-
-  //   setCheckedRows(
-  //     checkedRows.length === 0 ? votersData.map((voter) => voter.id) : [],
-  //   );
-  // };
+  if (!supporters?.status)
+    return (
+      <VStack
+        gridColumn="span 9"
+        w="100%"
+        h="100vh"
+        justifyContent="center"
+        alignItems="center"
+      >
+        {isLoading || isFetching ? (
+          <Spinner />
+        ) : (
+          <Text fontWeight="bold" fontSize="24px" textAlign="center" w="100%">
+            المؤازر غير موجود
+          </Text>
+        )}
+      </VStack>
+    );
 
   const handleAddVoters = () => {
     const checkedVoters = filteredVoters.filter((item: any) =>
@@ -105,7 +97,12 @@ const SupporterTables = ({
         </Text>
       </Box>
 
-      <VStack p="20px" alignItems="center" gap="20px" gridColumn="span 3">
+      <VStack
+        p="20px"
+        alignItems="center"
+        gap="20px"
+        gridColumn={{ base: "span 9", lg: "span 3" }}
+      >
         <Avatar w="100px" h="100px" src={profileData?.data?.image} />
 
         <Text fontWeight="bold" fontSize="22px">
@@ -117,41 +114,11 @@ const SupporterTables = ({
         </Text>
       </VStack>
 
-      {/* <SendModal
+      <SendModal
         isOpen={send.isOpen}
         onClose={send.onClose}
         addedVoters={addedVoters}
         setAddedVoters={setAddedVoters}
-      /> */}
-
-      <InfoModal
-        isOpen={send.isOpen}
-        onClose={send.onClose}
-        title="إرسال الأسماء"
-        description="هل أنت متأكد من إرسال الأسماء؟"
-        type="save"
-        onProceed={() => {
-          sendSupporters.mutateAsync().then((res) => {
-            if (res.error) {
-              const errorMessages = Object.values(res.error).join("; ");
-              EToast({
-                toast: toast,
-                status: "error",
-                title: "Error",
-                description: errorMessages,
-              });
-            } else {
-              EToast({
-                toast,
-                status: "success",
-                title: "تم الإرسال",
-              });
-              setAddedVoters([]);
-            }
-            send.onClose();
-          });
-        }}
-        isLoading={sendSupporters.isPending}
       />
 
       <Box
@@ -159,31 +126,44 @@ const SupporterTables = ({
         gridTemplateColumns="repeat(8, 1fr)"
         gridTemplateRows="50px auto"
         gap="30px"
-        gridColumn="span 6"
+        gridColumn={{ base: "span 9", lg: "span 6" }}
         p="20px 50px"
       >
-        <Text fontSize="18px" fontWeight="bold" my="auto" gridColumn="span 5">
+        <Text
+          fontSize="18px"
+          fontWeight="bold"
+          my="auto"
+          gridColumn={{ base: "span 9", lg: "span 5" }}
+          gridRow={{ base: "1", lg: "1" }}
+        >
           الأسماء
         </Text>
 
-        <Text fontSize="18px" fontWeight="bold" my="auto" gridColumn="span 3">
+        <Text
+          fontSize="18px"
+          fontWeight="bold"
+          my="auto"
+          gridColumn={{ base: "span 9", lg: "span 3" }}
+          gridRow={{ base: "4", lg: "1" }}
+        >
           الأسماء المضافة
         </Text>
 
         <Btn
           h="fit-content"
-          gridColumn="span 5"
+          gridColumn={{ base: "span 9", lg: "span 5" }}
+          gridRow={{ base: "2", lg: "2" }}
           py="10px"
           px="50px"
           ml="auto"
           type="outlined"
           fontSize="17px"
-          color={checkedRows.length === 0 ? "#7878786a" : "#318973"}
+          color={checkedRows?.length === 0 ? "#7878786a" : "#318973"}
           border="1px solid #318973"
-          borderColor={checkedRows.length === 0 ? "#7878786a" : "#318973"}
+          borderColor={checkedRows?.length === 0 ? "#7878786a" : "#318973"}
           borderRadius="50px"
           iconPlacment="right"
-          disabled={checkedRows.length === 0}
+          disabled={checkedRows?.length === 0}
           _hover={{
             backgroundColor: "#318973",
             color: "white",
@@ -194,7 +174,8 @@ const SupporterTables = ({
         </Btn>
 
         <Btn
-          gridColumn="span 3"
+          gridColumn={{ base: "span 9", lg: "span 3" }}
+          gridRow={{ base: "5", lg: "2" }}
           h="fit-content"
           py="10px"
           px="50px"
@@ -202,17 +183,20 @@ const SupporterTables = ({
           type="solid"
           borderRadius="50px"
           iconPlacment="right"
-          bg={addedVoters.length === 0 ? "#7878786a" : "#318973"}
-          color={addedVoters.length === 0 ? "#7878786a" : "#fff"}
-          borderColor={addedVoters.length === 0 ? "#7878786a" : "#318973"}
+          bg={addedVoters?.length === 0 ? "#7878786a" : "#318973"}
+          color={addedVoters?.length === 0 ? "#7878786a" : "#fff"}
+          borderColor={addedVoters?.length === 0 ? "#7878786a" : "#318973"}
           fontSize="17px"
-          disabled={addedVoters.length === 0}
+          disabled={addedVoters?.length === 0}
           onClick={handleSendVoters}
         >
           <Text>إرسال الأسماء</Text>
         </Btn>
 
-        <VStack gridColumn="span 5">
+        <VStack
+          gridColumn={{ base: "span 9", lg: "span 5" }}
+          gridRow={{ base: "3", lg: "3" }}
+        >
           <ETable
             columns={columns}
             data={filteredVoters}
@@ -225,11 +209,14 @@ const SupporterTables = ({
           />
         </VStack>
 
-        <VStack gridColumn="span 3">
+        <VStack
+          gridColumn={{ base: "span 9", lg: "span 3" }}
+          gridRow={{ base: "6", lg: "3" }}
+        >
           <ETable
             columns={addedColumns}
             data={addedVoters}
-            count={addedVoters.length}
+            count={addedVoters?.length}
             setPage={setAddedPage}
             page={addedPage}
             withPagination
@@ -239,6 +226,6 @@ const SupporterTables = ({
       </Box>
     </>
   );
-};
+});
 
 export default SupporterTables;

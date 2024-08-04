@@ -33,7 +33,7 @@ const useColumns = ({ filter, setFilter }: { setFilter: any; filter: any }) => {
   const columns = useMemo(
     () => [
       {
-        Header: "إسم مندوب الحركة",
+        Header: "إسم المندوب الرئيسي",
         Cell: ({ cell }: CellValue) => {
           return (
             <Box

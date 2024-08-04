@@ -19,7 +19,9 @@ const HomePage = () => {
       return <VotersCountWindow filter={filter} setFilter={setFilter} />;
 
     if (activeTabIndex === 1)
-      return <MyVotesWindow homePage={true} filter={filter} setFilter={setFilter} />;
+      return (
+        <MyVotesWindow homePage={true} filter={filter} setFilter={setFilter} />
+      );
 
     if (activeTabIndex === 2) return <MyListsWindow />;
 
@@ -38,9 +40,8 @@ const HomePage = () => {
     <VStack spacing="20px" align="stretch">
       <Ebox>
         <HomeFilterSection
-        onResetTable={() => console.log("reset")}
-          homePage={true}
           setFilter={setFilter}
+          filter={filter}
           activeTabIndex={activeTabIndex}
           setActiveTabIndex={setActiveTabIndex}
         />

@@ -76,8 +76,8 @@ const EditModal = ({ isOpen, onClose, recordID }: Props) => {
   const onSubmit = (values: PutVoter) => {
     updateVotser
       .mutateAsync({
-        latitude: parseFloat(values.latitude?.toFixed(2) || ""),
-        longitude: parseFloat(values.longitude?.toFixed(2) || ""),
+        latitude: parseFloat(values.latitude?.toString() || ""),
+        longitude: parseFloat(values.longitude?.toString() || ""),
         mandoub_haraka: values.mandoub_haraka || undefined,
         mandoub_main: values.mandoub_main,
         mobile_number: values.mobile_number,
@@ -227,7 +227,7 @@ const EditModal = ({ isOpen, onClose, recordID }: Props) => {
                     error={errors.latitude?.message}
                   />
                 </Box>
-               
+
                 <Box w="40%" flexGrow="1">
                   <Input
                     label="رقم الجوال"

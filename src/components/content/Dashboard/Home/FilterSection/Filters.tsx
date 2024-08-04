@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FilerIcon } from "@assets/icons";
-import { Box, Text } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import {
   FirstNameSelect,
-  LastNameSelect,
   MiddleNameSelect,
-  PlaceOfResidenceSelect,
   SecondNameSelect,
 } from "@components/content/DropDown";
 import BoxesSelect from "@components/content/DropDown/BoxesSelect";
@@ -15,7 +13,11 @@ import ElectoralDistrictSelect from "@components/content/DropDown/ElectoralDistr
 import RepresentativesNameSelect from "@components/content/DropDown/RepresentativesNameSelect";
 import { Btn } from "@components/core";
 import RadioCardGroup from "@components/core/RadioCardButton/RadioCardButton";
-import { useGetVotingCentersDropdown } from "@services/hooks/dropdown/useDropDown";
+import {
+  useGetLastNameDropdown,
+  useGetplaceOfResidenceDropdown,
+  useGetVotingCentersDropdown,
+} from "@services/hooks/dropdown/useDropDown";
 import { useState } from "react";
 import {
   Control,
@@ -26,44 +28,51 @@ import {
 import { SlRefresh } from "react-icons/sl";
 import StatusSelect from "@components/content/DropDown/StatusSelect";
 import FilterBox from "./FilterBox";
+import MultiSelect from "@components/core/multiSelect/MultiSelect";
 
 const Filters = ({
   control,
   errors,
   activeTabIndex,
   handleSearch,
+  reset,
+  setFilter,
+  filter,
+  watch,
 }: {
+  setFilter: any;
   reset: UseFormReset<any>;
   errors: FieldErrors<any>;
   control: Control<any, any>;
   isDirty: boolean;
   activeTabIndex: number;
-  onResetSearch?: () => void;
   handleSearch: () => void;
+  filter: any;
+  watch: any;
 }) => {
   const [search, setSearch] = useState<string>();
   const dropDownObj = useGetVotingCentersDropdown(search);
 
   return (
     <>
-      {activeTabIndex !== 4 ? (
-        <>
-          <RadioCardGroup
-            options={[
-              {
-                label: "ذكر",
-                value: "M",
-                color: "#2a8a6e",
-              },
-              {
-                label: "أنثى",
-                value: "F",
-                color: "#ac37ac",
-              },
-            ]}
-            name="gender"
-            control={control}
-          />
+      <FilterBox name="gender" tab={activeTabIndex}>
+        <RadioCardGroup
+          options={[
+            {
+              label: "ذكر",
+              value: "M",
+              color: "#2a8a6e",
+            },
+            {
+              label: "أنثى",
+              value: "F",
+              color: "#ac37ac",
+            },
+          ]}
+          name="gender"
+          control={control}
+        />
+      </FilterBox>
 
       <FilterBox name="first_name" tab={activeTabIndex}>
         <Controller
@@ -71,6 +80,7 @@ const Filters = ({
           name="first_name"
           render={({ field: { onChange, value } }) => (
             <FirstNameSelect
+              filter={filter}
               onChange={onChange}
               value={value}
               error={errors?.first_name?.message as string}
@@ -86,6 +96,7 @@ const Filters = ({
           name="second_name"
           render={({ field: { onChange, value } }) => (
             <SecondNameSelect
+              filter={filter}
               onChange={onChange}
               value={value}
               error={errors?.second_name?.message as string}
@@ -101,6 +112,7 @@ const Filters = ({
           name="third_name"
           render={({ field: { onChange, value } }) => (
             <MiddleNameSelect
+              filter={filter}
               onChange={onChange}
               value={value}
               error={errors?.third_name?.message as string}
@@ -111,11 +123,20 @@ const Filters = ({
       </FilterBox>
 
       <FilterBox name="last_name" tab={activeTabIndex}>
-        <Controller
+        <MultiSelect
+          name="last_name"
+          placeholder="إسم العائلة"
+          filter={filter}
+          control={control}
+          fetchFunction={useGetLastNameDropdown}
+        />
+
+        {/* <Controller
           control={control}
           name="last_name"
           render={({ field: { onChange, value } }) => (
             <LastNameSelect
+              filter={filter}
               onChange={onChange}
               value={value}
               error={errors?.last_name?.message as string}
@@ -123,7 +144,7 @@ const Filters = ({
               multi={true}
             />
           )}
-        />
+        /> */}
       </FilterBox>
 
       <FilterBox name="status" tab={activeTabIndex}>
@@ -180,126 +201,50 @@ const Filters = ({
         />
       </FilterBox>
 
-      <FilterBox name="boxes" tab={activeTabIndex}>
-        <Box>
-          <Controller
-            control={control}
-            name="boxes"
-            render={({ field: { onChange, value } }) => (
-              <BoxesSelect
-                onChange={onChange}
-                value={value}
-                error={errors?.boxes?.message as string}
-                key={value}
-                circlesData={dropDownObj?.data || {}}
-              />
-            )}
-          />
-        </Box>
-      </FilterBox>
-
-          <Box>
-            <Controller
-              control={control}
-              name="centers"
-              render={({ field: { onChange, value } }) => (
-                <CentersSelect
-                  dropDownObj={dropDownObj}
-                  setSearch={setSearch}
-                  onChange={onChange}
-                  value={value}
-                  error={errors?.centers?.message as string}
-                  key={value}
-                />
-              )}
-            />
-          </Box>
-        </>
-      )}
-
-      <Btn
-        h="100%"
-        type="outlined"
-        fontSize="17px"
-        color="red"
-        border="1px solid red"
-        borderColor="red"
-        borderRadius="50px"
-        icon={<SlRefresh />}
-        iconPlacment="right"
-        _hover={{
-          backgroundColor: "red",
-          color: "white",
-        }}
-        onClick={() => {
-          reset();
-        }}
-      >
-        <Text>مسح الكل</Text>
-      </Btn>
-
-      {activeTabIndex !== 4 && (
-        <>
-          <Box>
-            <Controller
-              control={control}
-              name="last_name"
-              render={({ field: { onChange, value } }) => (
-                <LastNameSelect
-                  onChange={onChange}
-                  value={value}
-                  error={errors?.last_name?.message as string}
-                  key={value}
-                />
-              )}
-            />
-          </Box>
-
-          <Box>
-            <Controller
-              control={control}
-              name={
-                activeTabIndex === 3 ? "supporter_name" : "representative_name"
-              }
-              render={({ field: { onChange, value } }) =>
-                activeTabIndex === 3 ? (
-                  <SupporterNameSelect
-                    onChange={onChange}
-                    value={value}
-                    error={errors?.supporter_name?.message as string}
-                    key={value}
-                  />
-                ) : (
-                  <RepresentativesNameSelect
-                    onChange={onChange}
-                    value={value}
-                    error={errors?.representative_name?.message as string}
-                    key={value}
-                  />
-                )
-              }
-            />
-          </Box>
-        </>
-      )}
-
-      <Box>
+      <FilterBox name="box" tab={activeTabIndex}>
         <Controller
           control={control}
-          name="district"
+          name="box"
           render={({ field: { onChange, value } }) => (
-            <ElectoralDistrictSelect
+            <BoxesSelect
               onChange={onChange}
               value={value}
-              error={errors.district?.message as any}
+              error={errors?.box?.message as string}
+              key={value}
+              voting_center={watch("voting_center") || null}
+            />
+          )}
+        />
+      </FilterBox>
+
+      <FilterBox name="voting_center" tab={activeTabIndex}>
+        <Controller
+          control={control}
+          name="voting_center"
+          render={({ field: { onChange, value } }) => (
+            <CentersSelect
+              dropDownObj={dropDownObj}
+              setSearch={setSearch}
+              onChange={onChange}
+              value={value}
+              error={errors?.voting_center?.message as string}
               key={value}
             />
           )}
         />
-      </Box>
+      </FilterBox>
 
-      <Box>
-        <Controller
+      <FilterBox name="place_of_residence" tab={activeTabIndex}>
+        <MultiSelect
+          name="place_of_residence"
+          placeholder="مكان الإقامة"
+          filter={filter}
+          control={control}
+          fetchFunction={useGetplaceOfResidenceDropdown}
+          isId={true}
+        />
+
+        {/* <Controller
           control={control}
           name="place_of_residence"
           render={({ field: { onChange, value } }) => (
@@ -311,7 +256,7 @@ const Filters = ({
               multi={true}
             />
           )}
-        />
+        /> */}
       </FilterBox>
 
       <FilterBox name="filter" tab={activeTabIndex}>

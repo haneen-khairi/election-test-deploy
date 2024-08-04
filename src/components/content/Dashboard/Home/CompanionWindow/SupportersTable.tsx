@@ -40,7 +40,7 @@ const SupportersTable = ({ filter }: { filter: any }) => {
     }[] = supporters as [];
 
     setCheckedRows(
-      checkedRows.length === 0
+      checkedRows?.length === 0
         ? supportersData.map((supporter) => supporter.id)
         : [],
     );
@@ -58,7 +58,7 @@ const SupportersTable = ({ filter }: { filter: any }) => {
               p="10px 15px"
               variant="ghost"
               colorScheme="green"
-              fontSize="20px"
+              fontSize="18px"
               onClick={bulkRemove.onOpen}
               size="sm"
               _hover={{
@@ -76,7 +76,7 @@ const SupportersTable = ({ filter }: { filter: any }) => {
               p="10px 15px"
               variant="ghost"
               colorScheme="green"
-              fontSize="20px"
+              fontSize="18px"
               onClick={bulkMove.onOpen}
               size="sm"
             >
@@ -91,12 +91,12 @@ const SupportersTable = ({ filter }: { filter: any }) => {
           p="10px 15px"
           variant="ghost"
           colorScheme="green"
-          fontSize="20px"
+          fontSize="18px"
           size="sm"
           onClick={handleCheckAll}
         >
-          {checkedRows.length !== 0 ? <MdDeselect /> : <MdSelectAll />}
-          {checkedRows.length !== 0 ? (
+          {checkedRows?.length !== 0 ? <MdDeselect /> : <MdSelectAll />}
+          {checkedRows?.length !== 0 ? (
             <Text mr="10px" color="#318973">
               إلغاء التحديد
             </Text>
@@ -148,7 +148,7 @@ const SupportersTable = ({ filter }: { filter: any }) => {
 
       <ETable
         columns={columns}
-        data={supporters || []}
+        data={supporters}
         isFetching={isFetching}
         count={data?.count}
         setPage={setPage}

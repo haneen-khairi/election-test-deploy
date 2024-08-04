@@ -9,6 +9,8 @@ type Tokens = {
 type User = {
   id?: number;
   name?: string;
+  image?: string;
+  group?: string;
   mobile_number?: string;
 };
 

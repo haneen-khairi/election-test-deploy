@@ -1,10 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const formatDateTime = (
-  dateString?: string,
+  dateString?: any,
   timeString?: string,
+  isDateObject?: boolean,
 ): string => {
   if (!dateString || !timeString) return "---";
+  let date;
 
-  const date = new Date(`${dateString}T${timeString}`);
+  if (isDateObject) {
+    date = dateString as any;
+  } else {
+    date = new Date(`${dateString}T${timeString}`);
+  }
 
   const year = date.getFullYear();
   const month = date.getMonth() + 1; // Months are zero-indexed

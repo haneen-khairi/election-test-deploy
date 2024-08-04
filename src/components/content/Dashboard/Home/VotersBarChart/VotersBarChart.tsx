@@ -63,7 +63,7 @@ const VotersBarChart = ({
             ({ status }: { status: number }) => status === item.status,
           );
 
-          if (curr.length > 0) {
+          if (curr?.length > 0) {
             return {
               ...item,
               ...curr[0],
@@ -89,7 +89,7 @@ const VotersBarChart = ({
     _event: ChartEvent,
     chartElement: CustomChartElement[],
   ) => {
-    if (chartElement.length > 0) {
+    if (chartElement?.length > 0) {
       const index = chartElement[0].index;
       const clickedStatus = sortedData[index].status;
 

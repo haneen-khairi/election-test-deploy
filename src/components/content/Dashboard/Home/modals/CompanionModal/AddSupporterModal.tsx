@@ -35,7 +35,7 @@ const AddSupporterModal = ({ isOpen, onClose }: Props) => {
         ...values,
       })
       .then((res: any) => {
-        if (res.error && Object.keys(res.error).length > 0) {
+        if (res.error && Object.keys(res.error)?.length > 0) {
           onClose();
           EToast({
             toast: toast,

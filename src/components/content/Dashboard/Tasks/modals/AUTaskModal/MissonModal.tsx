@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Box, HStack, VStack, useDisclosure } from "@chakra-ui/react";
+import { Box, HStack, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import { GradientButton, Input, Popup } from "@components/core";
 import { useForm } from "react-hook-form";
 import { InfoModal } from "@components/content/Dashboard/Modals";
@@ -35,7 +35,6 @@ const MissionModal = ({ isOpen, onClose, onSuccess }: Props) => {
         }
       })
       if(response.data.status){
-        console.log("🚀 ~ apiMissionType ~ response:", response)
         EToast({
           toast: toast,
           status: "success",

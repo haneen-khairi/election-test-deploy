@@ -7,6 +7,7 @@ import { FaListUl } from "react-icons/fa6";
 import { AiOutlineFileSearch } from "react-icons/ai";
 // import { HiOutlineChartBar } from "react-icons/hi";
 import MessageIcon from "./MessageIcon";
+import { FamilyCountIcon } from "@assets/icons";
 
 export const links = [
   {
@@ -53,5 +54,10 @@ export const links = [
     name: "النتائج الأولية",
     url: "/preliminary-results",
     icon: AiOutlineFileSearch,
+  },
+  {
+    name: "شجرة العائلة",
+    url: "/family-tree",
+    icon: FamilyCountIcon,
   },
 ];

@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, HStack, VStack, useToast } from "@chakra-ui/react";
-import { GradientButton, Input, InputSelect, Popup } from "@components/core";
+import { GradientButton, Input, Popup } from "@components/core";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { TransSchema } from "./TransSchema";
 import { useResetFormModal } from "@components/content/Dashboard/hooks";
-import {
-  useGetAddIncomeAccounts,
-  useTransBetweenAccounts,
-} from "@services/hooks/expenses/useExpenses";
+import { useTransBetweenAccounts } from "@services/hooks/expenses/useExpenses";
 import { EToast } from "@constants/functions/toast";
+import AccountsSelect from "@components/content/DropDown/AccountsSelect";
 
 interface Props {
   isOpen: boolean;
@@ -18,9 +16,6 @@ interface Props {
 }
 
 const TransModal = ({ isOpen, onClose }: Props) => {
-  const { data: accounts, isLoading: isAccountLoading } =
-    useGetAddIncomeAccounts() as any;
-
   const makeTransaction = useTransBetweenAccounts();
   const toast = useToast();
 
@@ -77,23 +72,13 @@ const TransModal = ({ isOpen, onClose }: Props) => {
               control={control}
               name="from_account"
               render={({ field: { onChange, value } }) => (
-                <InputSelect
-                  loading={isAccountLoading}
-                  label="من حساب"
-                  options={
-                    accounts?.data?.data
-                      ? accounts?.data?.data.map((el: any) => ({
-                          label: el.name || "",
-                          value: el.id || 0,
-                        }))
-                      : []
-                  }
-                  multi={false}
-                  placeholder="اختر الحساب"
+                <AccountsSelect
                   onChange={onChange}
                   value={value}
-                  error={errors.from_account?.message}
-                  size="lg"
+                  error={errors?.to_account?.message as string}
+                  key={value}
+                  label="من حساب"
+                  placeholder="اختر الحساب"
                 />
               )}
             />
@@ -104,23 +89,13 @@ const TransModal = ({ isOpen, onClose }: Props) => {
               control={control}
               name="to_account"
               render={({ field: { onChange, value } }) => (
-                <InputSelect
-                  loading={isAccountLoading}
-                  label="إلى حساب"
-                  options={
-                    accounts?.data?.data
-                      ? accounts?.data?.data.map((el: any) => ({
-                          label: el.name || "",
-                          value: el.id || 0,
-                        }))
-                      : []
-                  }
-                  multi={false}
-                  placeholder="اختر الحساب"
+                <AccountsSelect
                   onChange={onChange}
                   value={value}
-                  error={errors.to_account?.message}
-                  size="lg"
+                  error={errors?.to_account?.message as string}
+                  key={value}
+                  label="إلى حساب"
+                  placeholder="اختر الحساب"
                 />
               )}
             />

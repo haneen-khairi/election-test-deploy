@@ -8,11 +8,11 @@ interface Props {
 const IsAuth = ({ page, children }: Props) => {
   const { isAuthenticated } = useAuthStore();
 
-  if (isAuthenticated && page == "dashboard") {
-    return children;
-  } else if (["qr", "supporter"].includes(page)) {
-    return children;
-  } else if (!isAuthenticated && page == "login") {
+  if (
+    ["qr", "supporter"].includes(page) ||
+    (isAuthenticated && page == "dashboard") ||
+    (!isAuthenticated && page == "login")
+  ) {
     return children;
   } else if (isAuthenticated && page == "login") {
     return <Navigate to="/" />;

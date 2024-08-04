@@ -24,7 +24,6 @@ const CentersSelect = ({
   setSearch,
 }: Props) => {
   const { data, fetchNextPage, hasNextPage, isFetching } = dropDownObj;
-
   const [isFetchingNextPage, setIsFetchingNextPage] = useState<boolean>(false);
   const sentinelRef = useRef(null);
 
@@ -60,7 +59,7 @@ const CentersSelect = ({
         options
           ? options?.map((el) => ({
               label: el.name || "",
-              value: el.name?.toString() || "",
+              value: el.id || "",
             }))
           : []
       }

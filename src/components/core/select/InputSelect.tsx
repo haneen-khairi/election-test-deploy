@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { InfoError } from "@assets/icons";
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/react";
 
 import { GroupBase, OptionBase, Select } from "chakra-react-select";
-import { CSSProperties } from "react";
+import { CSSProperties, useState, useEffect } from "react";
 
 // import { UseFormRegisterReturn } from "react-hook-form";
 
@@ -17,11 +18,12 @@ interface Props {
   placeholder?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any;
-  onChange: (phone: unknown) => void;
+  onChange: (value: unknown) => void;
   onMenuScrollBottom?: () => void;
   onSearch?: (text: string | undefined) => void;
-  multi: boolean;
+  multi?: boolean;
   loading?: boolean;
+  isDisabled?: boolean;
   size?: "lg" | "sm";
 }
 
@@ -34,18 +36,44 @@ const InputSelect = ({
   onMenuScrollBottom,
   onSearch,
   error,
-  multi,
+  multi = false,
   loading,
   size = "sm",
+  isDisabled = false,
 }: Props) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined);
+  const [filteredOptions, setFilteredOptions] = useState<Options[]>(options);
+
+  useEffect(() => {
+    if (searchTerm) {
+      const lowercasedFilter = searchTerm.toLowerCase();
+      const filtered = options.filter((option) =>
+        option.label.toLowerCase().includes(lowercasedFilter),
+      );
+      setFilteredOptions(filtered);
+    } else {
+      setFilteredOptions(options);
+    }
+  }, [searchTerm, options]);
+
+  const selectedOptions = multi
+    ? options.filter((option) => value?.includes(option.value))
+    : [];
+
+  const displayedOptions = multi
+    ? [
+        ...selectedOptions,
+        ...filteredOptions.filter((option) => !value?.includes(option.value)),
+      ]
+    : filteredOptions;
+
   const chakraStyles: any = {
     control: (provided: CSSProperties) => ({
       ...provided,
       borderRadius: "8px",
-      minHight: "40px",
+      minHeight: "40px",
       padding: size === "sm" ? (multi ? "6px 0" : "8px 0") : "10px 0",
-      bg: "white",
+      background: "white",
       borderColor: "#E4E4E4",
     }),
     placeholder: (provided: CSSProperties) => ({
@@ -63,14 +91,13 @@ const InputSelect = ({
     }),
   };
 
-  let foundOption;
-
-  if (multi) {
-    foundOption = options?.filter((option) => value?.includes(option.value));
-  }
+  const nullOption = {
+    label: "إختر واحدا ...",
+    value: "إختر واحدا ...",
+  };
 
   return (
-    <FormControl isInvalid={error ? true : false}>
+    <FormControl isInvalid={!!error}>
       {label && (
         <FormLabel color="mLabelColor" fontWeight="600" fontSize="14px">
           {label}
@@ -78,29 +105,39 @@ const InputSelect = ({
       )}
 
       <Select<Options, true, GroupBase<Options>>
-        options={options ? options : []}
+        options={
+          multi
+            ? displayedOptions
+            : [...(options?.length ? [nullOption] : []), ...options]
+        }
         isMulti={multi ? true : undefined}
-        isLoading={loading ? true : false}
+        isLoading={!!loading}
         useBasicStyles
         placeholder={value ? value : placeholder}
         focusBorderColor={error ? "danger.200" : "primary.200"}
-        isInvalid={error ? true : false}
+        isInvalid={!!error}
         errorBorderColor="danger.200"
         value={
           multi
-            ? foundOption
+            ? selectedOptions
             : options.find((option) => option.value === value) || value
         }
         onChange={(data) => {
-          multi
-            ? onChange(data.map((option) => option.value))
-            : onChange((data as unknown as Options).value);
+          if (multi) {
+            onChange(data.map((option: Options) => option.value));
+          } else {
+            onChange((data as unknown as Options).value);
+          }
         }}
-        onInputChange={onSearch && ((e) => onSearch(e))}
+        onInputChange={(e) => {
+          setSearchTerm(e);
+          onSearch && onSearch(e);
+        }}
         chakraStyles={chakraStyles}
         onMenuScrollToBottom={onMenuScrollBottom}
         loadingMessage={() => "الرجاء الإنتظار"}
         noOptionsMessage={() => "لا يوجد بيانات"}
+        isDisabled={isDisabled}
       />
 
       {error && (

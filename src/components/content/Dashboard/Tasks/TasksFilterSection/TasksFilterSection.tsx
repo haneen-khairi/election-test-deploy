@@ -7,9 +7,7 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { filterSectionSchema } from "./FilterSectionSchemas";
 import useAuthStore from "@store/AuthStore";
 import Filters from "./Filters";
 import { Btn } from "@components/core";

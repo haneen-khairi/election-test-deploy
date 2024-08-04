@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ETable } from "@components/core";
 import { useGetDelegatesVotes } from "@services/hooks/voters/useVoters";
-import useVostersStore from "@store/VostersSotre";
 import useColumns from "./useColumns";
 import { useMemo } from "react";
 import { DelegatesVotes } from "@services/hooks/voters/Voters";
+import useDelegatesStore from "@store/DelegatesStore";
 
 const DelegatesTable = ({
   filter,
@@ -14,7 +14,7 @@ const DelegatesTable = ({
   filter: any;
   setFilter: any;
 }) => {
-  const { setPage, page } = useVostersStore();
+  const { setPage, page } = useDelegatesStore();
   const { data, isLoading, isFetching } = useGetDelegatesVotes(filter);
 
   const delegates: DelegatesVotes[] = useMemo(

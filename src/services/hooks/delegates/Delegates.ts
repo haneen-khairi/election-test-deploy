@@ -24,7 +24,7 @@ export interface GetDelegate {
 export interface PostDelegate {
   mobile_number?: string;
   name?: string;
-  group?: string;
+  group?: number;
   password?: string;
   place_of_residence?: string[];
   electoral_boxes?: string[];

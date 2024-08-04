@@ -77,11 +77,8 @@ const ExpensesFilterSection = ({
         </VStack>
 
         <IncomeModal isOpen={addIncome.isOpen} onClose={addIncome.onClose} />
-
         <AccountModal isOpen={addAccount.isOpen} onClose={addAccount.onClose} />
-
         <ExpenseModal isOpen={addExpense.isOpen} onClose={addExpense.onClose} />
-
         <TransModal
           isOpen={transBetweenAccounts.isOpen}
           onClose={transBetweenAccounts.onClose}

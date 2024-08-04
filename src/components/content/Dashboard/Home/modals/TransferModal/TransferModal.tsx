@@ -1,32 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, HStack, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import { GradientButton, Input, InputSelect, Popup } from "@components/core";
-import { PutVoter } from "@services/hooks/voters/Voters";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useUpdateVoterInfo } from "@services/hooks/voters/useVoters";
 import { EToast } from "@constants/functions/toast";
 import { useResetFormModal } from "@components/content/Dashboard/hooks";
-import { InfoModal } from "@components/content/Dashboard/Modals";
 import { useGetManadeebDropDown } from "@services/hooks/dropdown/useDropDown";
 import { TransferSchema } from "./TransferSchema";
 import { LocationBox } from "../CompanionModal/partials";
 import { MapModal } from "@components/content/Dashboard/Voters/modals";
+import { useTransferVoters } from "@services/hooks/voters/useVoters";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  recordIDs?: string[];
+  voters: any[];
 }
 
-const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
-  const alert = useDisclosure();
-  const { data: mainMandoob, isLoading: isMainMandoobLoading } =
-    useGetManadeebDropDown("4");
+const BulkEditModal = ({ isOpen, onClose, voters }: Props) => {
+  // const { data: mainMandoob, isLoading: isMainMandoobLoading } =
+  //   useGetManadeebDropDown("4");
   const { data: harakMandoob, isLoading: isHarakMandoobLoading } =
     useGetManadeebDropDown("3");
 
   const toast = useToast();
-  const updateVotser = useUpdateVoterInfo();
+  const transferVoters = useTransferVoters();
   const mapPopup = useDisclosure();
 
   const {
@@ -36,7 +34,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
     setValue,
     watch,
     register,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(TransferSchema),
     defaultValues: {},
@@ -45,49 +43,30 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
   const values = watch();
   useResetFormModal(isOpen, reset);
 
-  const onSubmit = (values: PutVoter) => {
-    updateVotser
-      .mutateAsync({
-        latitude: parseFloat(values.latitude?.toFixed(2) || ""),
-        longitude: parseFloat(values.longitude?.toFixed(2) || ""),
-        mandoub_haraka: values.mandoub_haraka || undefined,
-        mandoub_main: values.mandoub_main,
-        note: values.note,
-        voters: JSON.stringify(recordIDs),
-      })
-      .then((res) => {
-        if (res.error) {
-          const errorMessages = Object.values(res.error).join("; ");
-          EToast({
-            toast: toast,
-            status: "error",
-            title: "Error",
-            description: errorMessages,
-          });
-        } else {
-          EToast({
-            toast: toast,
-            status: "success",
-            title: "نجاح العملية",
-            description: "تم التعديل بنجاح",
-          });
-          alert.onClose();
-          onClose();
-        }
-      });
+  const onSubmit = async (values: any) => {
+    transferVoters.mutateAsync({ ...values, voters }).then((res) => {
+      if (res.error) {
+        const errorMessages = Object.values(res.error).join("; ");
+        EToast({
+          toast: toast,
+          status: "error",
+          title: "Error",
+          description: errorMessages,
+        });
+      } else {
+        EToast({
+          toast: toast,
+          status: "success",
+          title: "نجاح العملية",
+          description: "تم التعديل بنجاح",
+        });
+        onClose();
+      }
+    });
   };
 
   return (
     <>
-      <InfoModal
-        isOpen={alert.isOpen}
-        onClose={alert.onClose}
-        title="حفظ التعديلات"
-        description="هل انت متأكد من حفظ البيانات؟"
-        type="save"
-        onProceed={handleSubmit(onSubmit)}
-        isLoading={updateVotser.isPending}
-      />
       <MapModal
         isOpen={mapPopup.isOpen}
         onClose={mapPopup.onClose}
@@ -101,7 +80,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
         <>
           <VStack align="stretch" spacing="16px">
             <HStack mt="16px" flexWrap="wrap">
-              <Box w="40%" flexGrow="1">
+              {/* <Box w="40%" flexGrow="1">
                 <Controller
                   control={control}
                   name="mandoub_main"
@@ -126,7 +105,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
                     />
                   )}
                 />
-              </Box>
+              </Box> */}
 
               <Box w="40%" flexGrow="1">
                 <Controller
@@ -177,9 +156,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
             </HStack>
           </VStack>
           <HStack justifyContent="flex-end" mt="24px">
-            <GradientButton
-              onClick={isValid ? alert.onOpen : handleSubmit(onSubmit)}
-            >
+            <GradientButton onClick={handleSubmit(onSubmit)}>
               حفظ
             </GradientButton>
           </HStack>
