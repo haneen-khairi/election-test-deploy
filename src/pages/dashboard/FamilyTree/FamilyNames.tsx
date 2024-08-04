@@ -1,4 +1,4 @@
-import { Box, Heading, SimpleGrid, Button, HStack, Text } from "@chakra-ui/react";
+import { Box, SimpleGrid, Button, HStack, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
 type Props = {

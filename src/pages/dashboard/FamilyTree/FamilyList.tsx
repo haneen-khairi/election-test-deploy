@@ -1,4 +1,4 @@
-import { Box, SimpleGrid } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 type props = {
     family: familyObject,
@@ -6,11 +6,13 @@ type props = {
 }
 type familyObject = {
     name: string,
-    id: string
+    id: string 
 }
 export const FamilyList = ({
     family,
-    onClick = (id: string) => {}
+    onClick = (id: string) => {
+        console.log(id);  
+      },
 }: props) => {
 
     return (
