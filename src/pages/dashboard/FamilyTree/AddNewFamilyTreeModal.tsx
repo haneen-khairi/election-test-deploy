@@ -26,6 +26,7 @@ const AddNewFamilyTreeModal = ({
 }: Props) => {
   const alert = useDisclosure();
   const [votersLists, setVotersLists] = useState<any[]>([]);
+  const [filter, setFilter] = useState<any>({});
 
   const {
     handleSubmit,
@@ -115,7 +116,15 @@ const AddNewFamilyTreeModal = ({
       console.log("🚀 ~ handleSubmitForm ~ error:", error);
     }
   }
-
+  useEffect(() => {
+    console.log("======== filter =======", filter);
+    
+  
+    return () => {
+      
+    }
+  }, [filter])
+  
   async function handleUpdateForm(id: string, data: any) {
     try {
       const response = await axios.put(
@@ -177,7 +186,7 @@ const AddNewFamilyTreeModal = ({
         isOpen={isOpen}
         onClose={onClose}
       >
-        <FilterSectionFamily />
+        <FilterSectionFamily  filter={filter} setFilter={setFilter} />
         
             {/* <VStack align="stretch" spacing="16px">
           <HStack mt="16px" flexWrap="wrap">
