@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { EToast } from "@constants/functions/toast";
 import axios from "axios";
 import FilterSectionFamily from "./FilterSection/FilterSectionFamily";
+import MyVotesWindow from "@components/content/Dashboard/Home/MyVotesWindow/MyVotesWindow";
 
 interface Props {
   isOpen: boolean;
@@ -27,7 +28,10 @@ const AddNewFamilyTreeModal = ({
   const alert = useDisclosure();
   const [votersLists, setVotersLists] = useState<any[]>([]);
   const [filter, setFilter] = useState<any>({});
-
+  function getVoters(e: any) {
+    console.log("🚀 ~ getVoters ~ e:", e);
+    setVotersLists(e);
+  }
   const {
     handleSubmit,
     reset,
@@ -118,7 +122,8 @@ const AddNewFamilyTreeModal = ({
   }
   useEffect(() => {
     console.log("======== filter =======", filter);
-    
+    const wordInSearch = filter.last_name?.split(",")
+    console.log("🚀 ~ useEffect ~ wordInSearch:", wordInSearch)
   
     return () => {
       
@@ -188,7 +193,7 @@ const AddNewFamilyTreeModal = ({
       >
         <FilterSectionFamily  filter={filter} setFilter={setFilter} />
         
-            {/* <VStack align="stretch" spacing="16px">
+        {filter?.last_name?.length ? <VStack align="stretch" spacing="16px">
           <HStack mt="16px" flexWrap="wrap">
             <MyVotesWindow
               getCheckboxList={getVoters}
@@ -197,7 +202,7 @@ const AddNewFamilyTreeModal = ({
               setFilter={setFilter}
             />
           </HStack>
-        </VStack> */}
+        </VStack>: ""}
    
         <HStack justifyContent="flex-end" mt="24px">
           <GradientButton
