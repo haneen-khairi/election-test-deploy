@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import APIClient from "@services/api";
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import {
   Candidate,
-  GeneralStats,
   GuaranteedVoters,
   TopFamilies,
   TransportationInsight,
@@ -18,35 +18,9 @@ export const useGetVotersPercentage = () => {
   const { filter } = useDashboardFilter();
   const api = new APIClient<VoterPercentage>(`data/voters/percentage`);
   return useQuery({
-    queryKey: ["VotersPercentage", filter?.last_name],
+    queryKey: ["VotersPercentage", filter],
     queryFn: () =>
       api.getItem({
-        params: {
-          last_name: filter?.last_name,
-        },
-      }),
-  });
-};
-
-export const useGetGeneralStats = (filter: any) => {
-  const api = new APIClient<GeneralStats>(`data/general/stats`);
-  return useQuery({
-    queryKey: ["GeneralStats", filter?.last_name],
-    queryFn: () =>
-      api.getItem({
-        params: {
-          last_name: filter?.last_name,
-        },
-      }),
-  });
-};
-
-export const useGetTopFamilies = (filter: any) => {
-  const api = new APIClient<TopFamilies>(`data/top/families`);
-  return useQuery({
-    queryKey: ["TopFamilies", filter],
-    queryFn: () =>
-      api.getList({
         params: {
           ...filter,
         },
@@ -54,17 +28,33 @@ export const useGetTopFamilies = (filter: any) => {
   });
 };
 
-export const useGetCandidates = (filter?: FilterType) => {
-  const { page } = usePreliminaryStore();
-  const api = new APIClient<Candidate>("account/candidates/all");
+export const useGetTopFamilies = (filter: any) => {
+  const api = new APIClient<TopFamilies>(
+    `statistic/voters_number/top_families`,
+  );
+  const { last_name, ...rest } = filter;
+
   return useQuery({
-    queryKey: ["Candidates", page, filter],
+    queryKey: ["TopFamilies", rest],
+    queryFn: () =>
+      api.getList({
+        params: {
+          ...rest,
+        },
+      }),
+  });
+};
+
+export const useGetCandidates = (id: string) => {
+  const { page } = usePreliminaryStore();
+  const api = new APIClient<Candidate>(`account/candidates-by-box/${id}`);
+
+  return useQuery({
+    queryKey: ["CandidatesData", id],
     queryFn: () =>
       api.getPageintaed({
         params: {
           page: page,
-          voting_center: filter?.voting_center,
-          box_id: filter?.box_id,
         },
       }),
     placeholderData: keepPreviousData,

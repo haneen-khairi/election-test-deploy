@@ -1,5 +1,6 @@
 import { Box, Flex } from '@chakra-ui/react'
-import { CheckBox } from '@components/core' 
+import { CheckBox } from '@components/core'
+import React from 'react'
 
 export default function NameListChecked({
     onChange = () => {},

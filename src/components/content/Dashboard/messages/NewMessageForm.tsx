@@ -2,7 +2,7 @@ import { Box, Checkbox, Text, Textarea, useToast } from '@chakra-ui/react'
 import { GradientButton } from '@components/core'
 import { EToast } from '@constants/functions/toast'
 import axios from 'axios'
-import  { useState } from 'react'
+import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import ReactSelect from 'react-select'
 export default function NewMessageForm({
@@ -92,33 +92,35 @@ export default function NewMessageForm({
         <ReactSelect
         className='react-select'
         placeholder='اختار قائمة'
+
         onChange={getForms}
         isMulti
         styles={{
-            control: (baseStyles, state) => ({
-                ...baseStyles,
-                minHeight: '48px',
-                display: 'flex',
-                border: "1px solid #E5E5E5",
-                borderRadius: '12px',
-            }),
-            menu: (baseStyles: any) => ({
-                ...baseStyles,
-                zIndex: 99999999999,
-            }),
-            option: (baseStyles: any, state: any) => ({
-                ...baseStyles,
-                padding: "10px 12px 10px 24px",
-                backgroundColor: state.isSelected ? "#318973" : "",
-                ":hover": {
-                    backgroundColor: "var(--neutral-200)",
-                },
-            }),
+          control: (baseStyles) => ({
+            ...baseStyles,
+            minHeight: "48px",
+            display: "flex",
+            border: "1px solid #E5E5E5",
+            borderRadius: "12px",
+          }),
+          menu: (baseStyles: any) => ({
+            ...baseStyles,
+            zIndex: 99999999999,
+          }),
+          option: (baseStyles: any, state: any) => ({
+            ...baseStyles,
+            padding: "10px 12px 10px 24px",
+            backgroundColor: state.isSelected ? "#318973" : "",
+            ":hover": {
+              backgroundColor: "var(--neutral-200)",
+            },
+          }),
         }}
         classNames={{
-            multiValue: (state: any) =>
-                !state.isSelected ? 'react-select__multiple--selected' : '',
-            multiValueLabel: (state: any) => !state.isSelected ? 'react-select__multiple--selected-label' : '',
+          multiValue: (state: any) =>
+            !state.isSelected ? "react-select__multiple--selected" : "",
+          multiValueLabel: (state: any) =>
+            !state.isSelected ? "react-select__multiple--selected-label" : "",
         }}
         // {...register('form', { required: true })}
         options={listsOptions}
@@ -157,6 +159,7 @@ export default function NewMessageForm({
         <GradientButton mr={'auto'} type='submit' borderRadius={'50px'}>
             ارسال
         </GradientButton>
+
     </form>
-  )
+  );
 }

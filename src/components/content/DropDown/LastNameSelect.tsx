@@ -1,14 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { InputSelect } from "@components/core";
 import { useGetLastNameDropdown } from "@services/hooks/dropdown/useDropDown";
 import { useEffect, useRef, useState } from "react";
 
 interface Props {
   value: unknown;
+  multi?: boolean;
   onChange: (value: unknown) => void;
   error?: string;
 }
 
-const MiddleNameSelect = ({ value, onChange, error }: Props) => {
+const MiddleNameSelect = ({ value, onChange, error, multi = false }: Props) => {
   const [search, setSearch] = useState<string>();
   const { data, fetchNextPage, hasNextPage, isFetching } =
     useGetLastNameDropdown(search);
@@ -24,7 +26,7 @@ const MiddleNameSelect = ({ value, onChange, error }: Props) => {
           });
         }
       },
-      { threshold: 1.0 }
+      { threshold: 1.0 },
     );
 
     if (sentinelRef.current) {
@@ -50,7 +52,7 @@ const MiddleNameSelect = ({ value, onChange, error }: Props) => {
             }))
           : []
       }
-      multi={false}
+      multi={multi}
       placeholder="إسم العائلة"
       onChange={onChange}
       error={error}

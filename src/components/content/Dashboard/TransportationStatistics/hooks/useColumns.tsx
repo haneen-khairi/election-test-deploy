@@ -23,7 +23,7 @@ const useColumns = () => {
         Cell: ({ cell }: CellValue) => {
           const delivery_status = cell.row.original.delivery_status;
           return (
-            <Text color="primary.200" w="120px" mr="-60px">
+            <Text color="primary.200" w="120px" m="Auto">
               <DeliveryStatus statusID={delivery_status} />
             </Text>
           );

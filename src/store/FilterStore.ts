@@ -1,14 +1,14 @@
-import { FilterType } from "@components/content/Dashboard/Voters/FilterSection/FilterType";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from "zustand";
 
 interface FilterStore {
-  filter?: FilterType;
-  setFilter: (data: FilterType) => void;
+  filter?: any;
+  setFilter: (data: any) => void;
 }
 
 const useFilterStore = create<FilterStore>((set) => ({
   filter: undefined,
-  setFilter: (data: FilterType) => set(() => ({ filter: data })),
+  setFilter: (data: any) => set(() => ({ filter: data })),
 }));
 
 export default useFilterStore;

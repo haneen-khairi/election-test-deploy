@@ -30,10 +30,9 @@ const HomePage = () => {
         </Ebox>
       );
 
-    if (activeTabIndex === 4) return <ElectionDayWindow filter={filter} />;
+    if (activeTabIndex === 4)
+      return <ElectionDayWindow filter={filter} setFilter={setFilter} />;
   };
-
-  console.log(filter);
 
   return (
     <VStack spacing="20px" align="stretch">

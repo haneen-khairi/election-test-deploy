@@ -47,7 +47,7 @@ const EditModal = ({ isOpen, onClose, recordID }: Props) => {
 
   const { data: info, isLoading: isDetailsLoading } = useGetVoterDetails(
     recordID || "",
-    isOpen
+    isOpen,
   );
 
   const toast = useToast();
@@ -76,7 +76,6 @@ const EditModal = ({ isOpen, onClose, recordID }: Props) => {
   const onSubmit = (values: PutVoter) => {
     updateVotser
       .mutateAsync({
-        election_time: values.election_time || undefined,
         latitude: parseFloat(values.latitude?.toFixed(2) || ""),
         longitude: parseFloat(values.longitude?.toFixed(2) || ""),
         mandoub_haraka: values.mandoub_haraka || undefined,
@@ -111,15 +110,14 @@ const EditModal = ({ isOpen, onClose, recordID }: Props) => {
   useEffect(() => {
     if (info?.data && !isDetailsLoading) {
       info?.data.mandoub_main?.id &&
-        setValue("mandoub_main", info?.data.mandoub_main?.id || 0);
+        setValue("mandoub_main", info?.data.mandoub_main?.id || "");
       info?.data.mandoub_haraka?.id &&
-        setValue("mandoub_haraka", info?.data.mandoub_haraka?.id || 0);
+        setValue("mandoub_haraka", info?.data.mandoub_haraka?.id || "");
       info?.data.latitude && setValue("latitude", info?.data.latitude || 0);
       info?.data.longitude && setValue("longitude", info?.data.longitude || 0);
       setValue("mobile_number", info?.data.mobile_number || "");
       setValue("note", info?.data.note || "");
       setValue("status", info?.data.status || 0);
-      setValue("election_time", info?.data.election_time || "");
     }
   }, [info]);
 
@@ -229,16 +227,7 @@ const EditModal = ({ isOpen, onClose, recordID }: Props) => {
                     error={errors.latitude?.message}
                   />
                 </Box>
-                {values.status === 100 && (
-                  <Box w="40%" flexGrow="1">
-                    <Input
-                      label="وقت الإنتخاب"
-                      type="time"
-                      register={register("election_time")}
-                      error={errors.election_time?.message}
-                    />
-                  </Box>
-                )}
+               
                 <Box w="40%" flexGrow="1">
                   <Input
                     label="رقم الجوال"

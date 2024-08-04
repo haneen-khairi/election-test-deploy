@@ -13,6 +13,7 @@ import {
   GetVoterDetails,
   GetVoters,
   PutVoter,
+  VotersResult,
   VotersStats,
 } from "./Voters";
 import { FilterType } from "@components/content/Dashboard/Voters/FilterSection/FilterType";
@@ -20,17 +21,25 @@ import useVostersStore from "@store/VostersSotre";
 import { ItemResponse } from "@services/structure";
 import { DeliveringVote, MapVoter, VotingDelegate } from "../insights/Insights";
 import useSupportersStore from "@store/SupportersStore";
+import usePlaceVotersStore from "@store/PlaceVostersStore";
 
 const url = "candidate/voters";
-export const useGetVoters = (filter?: FilterType, status?: string) => {
+
+export const useGetVoters = (
+  filter?: FilterType,
+  status?: string,
+  myVotes?: boolean,
+) => {
   const { page } = useVostersStore();
-  const api = new APIClient<GetVoters>(url);
+  const api = new APIClient<VotersResult>(url);
+
   return useQuery({
     queryKey: ["Voters", filter, page, status],
     queryFn: () =>
       api.getPageintaed({
         params: {
           page: page,
+          myvote: myVotes || false,
           ...filter,
         },
       }),
@@ -38,19 +47,36 @@ export const useGetVoters = (filter?: FilterType, status?: string) => {
   });
 };
 
-export const useGetSupporters = (filter?: FilterType, status?: string) => {
+export const useGetSupportersByToken = (token: string, filter?: any) => {
+  const api = new APIClient<VotersResult>("supporter/voters/token");
+  const { page } = useSupportersStore();
+
+  return useQuery({
+    queryKey: ["GetSupportersByToken", filter, token, page],
+    queryFn: () =>
+      api.getPageintaed({
+        params: {
+          token,
+          page,
+          ...filter,
+        },
+      }),
+  });
+};
+
+export const useGetSupporters = (filter: any) => {
   const { page } = useSupportersStore();
   const api = new APIClient<GetVoters>(
     "supporter/assign_selected_users_to_my_votes",
   );
+
   return useQuery({
-    queryKey: ["Supporters", filter, page, status],
+    queryKey: ["Supporters", filter, page],
     queryFn: () =>
       api.getPageintaed({
         params: {
           page: page,
           page_size: 6,
-          status: status || undefined,
           ...filter,
         },
       }),
@@ -59,63 +85,9 @@ export const useGetSupporters = (filter?: FilterType, status?: string) => {
 };
 
 export const useGetVotersStats = (filter: any) => {
-  const api = new APIClient<VotersStats>(`candidate/voters/statistics`);
+  const api = new APIClient<VotersStats>(`statistic/voters_number/voters`);
   return useQuery({
-    queryKey: ["VotersStats", filter?.last_name],
-    queryFn: () =>
-      api.getItem({
-        params: {
-          last_name: filter?.last_name,
-        },
-      }),
-  });
-};
-
-export const useGetMapVoters = () => {
-  const api = new APIClient<MapVoter>(`data/map/voting_center`);
-  return useQuery({
-    queryKey: ["MapVoters"],
-    queryFn: () => api.getList(),
-  });
-};
-
-export const useGetDeliveringVoters = () => {
-  const api = new APIClient<DeliveringVote>(
-    `statistic/election_day/delivery_table`,
-  );
-  return useQuery({
-    queryKey: ["DeliveringVoters"],
-    queryFn: () => api.getItem(),
-  });
-};
-
-export const useGetVotingDelegates = () => {
-  const api = new APIClient<VotingDelegate>(
-    `statistic/election_day/main_mandoub_table`,
-  );
-  return useQuery({
-    queryKey: ["VotingDeligates"],
-    queryFn: () => api.getList(),
-  });
-};
-
-export const useGetElectionDayStats = () => {
-  const api = new APIClient<ElectionDayStats>(
-    `statistic/election_day/statistic`,
-  );
-  return useQuery({
-    queryKey: ["ElectionDayStats"],
-    queryFn: () => api.getItem(),
-  });
-};
-
-export const useGetMyVotesStats = (filter: any) => {
-  const api = new APIClient<any>(
-    `candidate/voters/statistics/my-votes-status-percentage`,
-  );
-
-  return useQuery({
-    queryKey: ["MyVotesStats", filter],
+    queryKey: ["VotersStats", filter],
     queryFn: () =>
       api.getItem({
         params: {
@@ -125,23 +97,148 @@ export const useGetMyVotesStats = (filter: any) => {
   });
 };
 
-export const useGetDelegatesVotes = () => {
-  const api = new APIClient<any>(
-    `candidate/voters/statistics/mandoub-main-vote-counts`,
-  );
+export const useGetVoterProfile = (qr_code: string) => {
+  const api = new APIClient<any>(`candidate/voters/qr`);
+
   return useQuery({
-    queryKey: ["DelegatesVotes"],
-    queryFn: () => api.getItem() as any,
+    queryKey: ["GetVoterProfile", qr_code],
+    queryFn: () =>
+      api.getItem({
+        params: {
+          qr_code,
+        },
+      }),
   });
 };
 
-export const useGetActivitiesVotes = (period: string) => {
+export const useGetMapVoters = (filter?: any) => {
+  const api = new APIClient<MapVoter>(
+    `statistic/voters_number/map/voting_center`,
+  );
+
+  return useQuery({
+    queryKey: ["MapVoters", filter],
+    queryFn: () =>
+      api.getList({
+        params: {
+          ...filter,
+        },
+      }),
+  });
+};
+
+export const useGetDeliveringVoters = (filter: any) => {
+  const api = new APIClient<DeliveringVote>(
+    `statistic/election_day/delivery_table`,
+  );
+  return useQuery({
+    queryKey: ["DeliveringVoters", filter],
+    queryFn: () =>
+      api.getItem({
+        params: { ...filter },
+      }),
+  });
+};
+
+export const useGetVotingDelegates = (filter: any) => {
+  const api = new APIClient<VotingDelegate>(
+    `statistic/election_day/main_mandoub_table`,
+  );
+  return useQuery({
+    queryKey: ["VotingDeligates", filter],
+    queryFn: () =>
+      api.getList({
+        params: filter,
+      }),
+  });
+};
+
+export const useGetPerformance = (filter: any) => {
+  const api = new APIClient<any>(`statistic/election_day/voters_by_hour`);
+  return useQuery({
+    queryKey: ["PerformanceData", filter],
+    queryFn: () => api.getList({ params: { ...filter } }),
+  });
+};
+
+export const useGetElectionDayStats = (filter: any) => {
+  const api = new APIClient<ElectionDayStats>(
+    `statistic/election_day/statistic`,
+  );
+  return useQuery({
+    queryKey: ["ElectionDayStats", filter],
+    queryFn: () => api.getItem({ params: filter }),
+  });
+};
+
+export const useGetMyVotesStats = (filter: any) => {
   const api = new APIClient<any>(
-    `candidate/voters/statistics/votes-counts-by-date?date_filter=${period}`,
+    `candidate/voters/statistics/my-votes-status-percentage`,
+  );
+
+  const { status, ...rest } = filter;
+
+  return useQuery({
+    queryKey: ["MyVotesStats", rest],
+    queryFn: () =>
+      api.getItem({
+        params: {
+          ...rest,
+        },
+      }),
+  });
+};
+
+export const useGetDelegatesVotes = (filter: any) => {
+  const api = new APIClient<any>(
+    `candidate/voters/statistics/mandoub-main-vote-counts`,
+  );
+
+  const { mandoub_main, ...rest } = filter;
+
+  return useQuery({
+    queryKey: ["DelegatesVotes", rest],
+    queryFn: () =>
+      api.getList({
+        params: rest,
+      }) as any,
+  });
+};
+
+export const useGetPlaceBasedVotes = (filter: any) => {
+  const { page } = usePlaceVotersStore();
+
+  const api = new APIClient<any>(
+    `statistic/election_day/place_of_residence_delivery_table`,
+  );
+
+  const { place_of_residence, ...rest } = filter;
+
+  return useQuery({
+    queryKey: ["GetPlaceBasedVotes", page, rest],
+    queryFn: () =>
+      api.getPageintaed({
+        params: {
+          page,
+          ...rest,
+        },
+      }) as any,
+  });
+};
+
+export const useGetActivitiesVotes = (period: string, filter?: any) => {
+  const api = new APIClient<any>(
+    `candidate/voters/statistics/votes-counts-by-date`,
   );
   return useQuery({
     queryKey: ["ActivitiesVotes"],
-    queryFn: () => api.getList() as any,
+    queryFn: () =>
+      api.getList({
+        params: {
+          date_filter: period,
+          ...filter,
+        },
+      }) as any,
   });
 };
 
@@ -262,6 +359,31 @@ export const useDeleteSupporters = () => {
       });
 
       return "Deleted";
+    },
+    onError: (error: Error) => {
+      if (error) return error;
+    },
+  });
+};
+
+export const useSendSupporters = (token: string, users_ids: string[]) => {
+  const clientQuery = useQueryClient();
+  const url = new APIClient<any>("supporter/select_users_for_token");
+
+  return useMutation<any>({
+    mutationFn: async () => {
+      console.log(">>>>>>>>>>>>>>");
+
+      const response = await url.post({
+        token,
+        users_ids,
+      });
+      return response;
+    },
+    onSuccess: async () => {
+      clientQuery.resetQueries({
+        queryKey: ["SendSupporters"],
+      });
     },
     onError: (error: Error) => {
       if (error) return error;

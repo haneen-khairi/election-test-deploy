@@ -27,6 +27,15 @@ export const useGetSupporterNameDropdown = (search?: string) => {
   });
 };
 
+export const useGetManadeebDropDown = (id: string) => {
+  const api = new APIClient<GetDropDown>(`account/manadeeb/dropdown/${id}`);
+  return useQuery({
+    queryKey: ["GetManadeebDropDown", id],
+    queryFn: () => api.getList(),
+    enabled: !!id,
+  });
+};
+
 export const useGetFirstNameDropdown = (search?: string) => {
   const { filter } = useFilterStore();
   const api = new APIClient<GetDropDown>(`${url}/first_name`);
@@ -37,7 +46,7 @@ export const useGetFirstNameDropdown = (search?: string) => {
       filter?.second_name,
       filter?.third_name,
       filter?.last_name,
-      filter?.Place_of_residence,
+      filter?.place_of_residence,
       filter?.electoral_district,
       filter?.gender,
     ],
@@ -46,12 +55,7 @@ export const useGetFirstNameDropdown = (search?: string) => {
         params: {
           page: pageParam,
           first_name: search || undefined,
-          second_name: filter?.second_name,
-          third_name: filter?.third_name,
-          last_name: filter?.last_name,
-          Place_of_residence: filter?.Place_of_residence,
-          electoral_district: filter?.electoral_district,
-          gender: filter?.gender,
+          ...filter,
         },
       }),
     getNextPageParam: (lastPage, allPages) => {
@@ -72,7 +76,7 @@ export const useGetSecondNameDropdown = (search?: string) => {
       filter?.first_name,
       filter?.third_name,
       filter?.last_name,
-      filter?.Place_of_residence,
+      filter?.place_of_residence,
       filter?.electoral_district,
       filter?.gender,
     ],
@@ -84,7 +88,7 @@ export const useGetSecondNameDropdown = (search?: string) => {
           second_name: search || undefined,
           third_name: filter?.third_name,
           last_name: filter?.last_name,
-          Place_of_residence: filter?.Place_of_residence,
+          place_of_residence: filter?.place_of_residence,
           electoral_district: filter?.electoral_district,
           gender: filter?.gender,
         },
@@ -107,7 +111,7 @@ export const useGetThirdNameDropdown = (search?: string) => {
       filter?.first_name,
       filter?.second_name,
       filter?.last_name,
-      filter?.Place_of_residence,
+      filter?.place_of_residence,
       filter?.electoral_district,
       filter?.gender,
     ],
@@ -119,7 +123,7 @@ export const useGetThirdNameDropdown = (search?: string) => {
           second_name: filter?.second_name,
           third_name: search || undefined,
           last_name: filter?.last_name,
-          Place_of_residence: filter?.Place_of_residence,
+          place_of_residence: filter?.place_of_residence,
           electoral_district: filter?.electoral_district,
           gender: filter?.gender,
         },
@@ -143,7 +147,7 @@ export const useGetLastNameDropdown = (search?: string) => {
       filter?.first_name,
       filter?.second_name,
       filter?.third_name,
-      filter?.Place_of_residence,
+      filter?.place_of_residence,
       filter?.electoral_district,
       filter?.gender,
     ],
@@ -154,7 +158,7 @@ export const useGetLastNameDropdown = (search?: string) => {
           first_name: filter?.first_name,
           second_name: filter?.second_name,
           third_name: filter?.third_name,
-          Place_of_residence: filter?.Place_of_residence,
+          place_of_residence: filter?.place_of_residence,
           last_name: search || undefined,
           electoral_district: filter?.electoral_district,
           gender: filter?.gender,
@@ -233,7 +237,7 @@ export const useGetplaceOfResidenceDropdown = (search?: string) => {
           second_name: filter?.second_name,
           third_name: filter?.third_name,
           last_name: filter?.last_name,
-          Place_of_residence: search || undefined,
+          place_of_residence: search || undefined,
           electoral_district: filter?.electoral_district,
           gender: filter?.gender,
         },
@@ -284,7 +288,7 @@ export const useGetElectoralDistrictDropdown = (search?: string) => {
       filter?.second_name,
       filter?.third_name,
       filter?.last_name,
-      filter?.Place_of_residence,
+      filter?.place_of_residence,
       filter?.gender,
     ],
     queryFn: ({ pageParam = 1 }) =>
@@ -295,7 +299,7 @@ export const useGetElectoralDistrictDropdown = (search?: string) => {
           second_name: filter?.second_name,
           third_name: filter?.third_name,
           last_name: filter?.last_name,
-          Place_of_residence: filter?.Place_of_residence,
+          place_of_residence: filter?.place_of_residence,
           gender: filter?.gender,
           electoral_district: search || undefined,
         },
@@ -308,7 +312,6 @@ export const useGetElectoralDistrictDropdown = (search?: string) => {
     initialPageParam: 1,
   });
 };
- 
 
 export const useGetVotingCenterDropDown = () => {
   const api = new APIClient<GetDropDown>("data/voting_center");
@@ -317,7 +320,8 @@ export const useGetVotingCenterDropDown = () => {
     queryFn: () => api.getList(),
   });
 };
- 
+
+// Filter on Multi Center Id
 export const useGetBoxesDropDown = (votingCenters?: number[]) => {
   const api = new APIClient<GetDropDown>("data/voting_center/boxes");
   return useQuery({
@@ -335,27 +339,13 @@ export const useGetBoxesDropDown = (votingCenters?: number[]) => {
 };
 
 // Filter on One Center Id
-export const useGetBoxesDropDown2 = (votingCenter: number) => {
-  const api = new APIClient<GetDropDown>(
-    `account/box_list?voting_center_id=${votingCenter}`,
+export const useGetBoxesDropDown2 = (votingCenter: string) => {
+  const api = new APIClient<any>(
+    `data/map/voting_center/boxes/${votingCenter}`,
   );
   return useQuery({
     queryKey: ["GetBoxesDropDown2", votingCenter],
-    queryFn: () =>
-      api.getList({
-        params: {
-          voting_center: votingCenter,
-        },
-      }),
-    enabled: !!votingCenter,
-  });
-};
-
-export const useGetManadeebDropDown = (id: string) => {
-  const api = new APIClient<GetDropDown>(`account/manadeeb/dropdown/${id}`);
-  return useQuery({
-    queryKey: ["GetManadeebDropDown", id],
     queryFn: () => api.getList(),
-    enabled: !!id,
+    enabled: !!votingCenter,
   });
 };

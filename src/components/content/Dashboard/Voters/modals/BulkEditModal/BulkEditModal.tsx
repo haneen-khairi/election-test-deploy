@@ -65,7 +65,6 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
   const onSubmit = (values: PutVoter) => {
     updateVotser
       .mutateAsync({
-        election_time: values.election_time || undefined,
         latitude: parseFloat(values.latitude?.toFixed(2) || ""),
         longitude: parseFloat(values.longitude?.toFixed(2) || ""),
         mandoub_haraka: values.mandoub_haraka || undefined,
@@ -164,34 +163,34 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
                   )}
                 />
               </Box>
-              {values.status === 100 && (
-                <Box w="40%" flexGrow="1">
-                  <Controller
-                    control={control}
-                    name="mandoub_haraka"
-                    render={({ field: { onChange, value } }) => (
-                      <InputSelect
-                        loading={isHarakMandoobLoading}
-                        label="مندوب الحركة"
-                        options={
-                          harakMandoob?.data
-                            ? harakMandoob?.data.map((el) => ({
-                                label: el.name || "",
-                                value: el.id || 0,
-                              }))
-                            : []
-                        }
-                        multi={false}
-                        placeholder="اختر  مندوب الحركة"
-                        onChange={onChange}
-                        value={value}
-                        error={errors.mandoub_haraka?.message}
-                        size="lg"
-                      />
-                    )}
-                  />
-                </Box>
-              )}
+
+              <Box w="40%" flexGrow="1">
+                <Controller
+                  control={control}
+                  name="mandoub_haraka"
+                  render={({ field: { onChange, value } }) => (
+                    <InputSelect
+                      loading={isHarakMandoobLoading}
+                      label="مندوب الحركة"
+                      options={
+                        harakMandoob?.data
+                          ? harakMandoob?.data.map((el) => ({
+                              label: el.name || "",
+                              value: el.id || 0,
+                            }))
+                          : []
+                      }
+                      multi={false}
+                      placeholder="اختر  مندوب الحركة"
+                      onChange={onChange}
+                      value={value}
+                      error={errors.mandoub_haraka?.message}
+                      size="lg"
+                    />
+                  )}
+                />
+              </Box>
+
               <Box w="40%" flexGrow="1" overflow="hidden">
                 <LocationBox
                   label="الموقع"
@@ -201,16 +200,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
                   error={errors.latitude?.message}
                 />
               </Box>
-              {values.status === 100 && (
-                <Box w="40%" flexGrow="1">
-                  <Input
-                    label="وقت الإنتخاب"
-                    type="time"
-                    register={register("election_time")}
-                    error={errors.election_time?.message}
-                  />
-                </Box>
-              )}
+
               <Box w="40%" flexGrow="1">
                 <Input
                   label="رقم الجوال"

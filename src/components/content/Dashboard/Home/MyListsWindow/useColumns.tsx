@@ -1,26 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useMemo } from "react";
-import {
-  Box,
-  Button,
-  HStack,
-  Text,
-  UseDisclosureReturn,
-} from "@chakra-ui/react";
-import { ShowTime } from "@constants/functions/ShowTime";
+import { HStack, Text } from "@chakra-ui/react";
 import { truncateText } from "@constants/functions/TruncateText";
-import { FaInfoCircle } from "react-icons/fa";
-import { MdEdit } from "react-icons/md";
 import { CellValue } from "react-table";
 import { CheckBox } from "@components/core";
 
 interface Props {
-  edit: UseDisclosureReturn;
-  info: UseDisclosureReturn;
+  names: string | undefined;
 }
 
-const useColumns = ({ edit, info }: Props) => {
+const useColumns = ({ names }: Props) => {
   const [checkedRows, setCheckedRows] = useState<string[]>([]);
-  const [recordID, setRecordID] = useState<string>();
 
   const handleCheckboxChange = (id: string) => {
     if (checkedRows.includes(id)) {
@@ -30,9 +21,11 @@ const useColumns = ({ edit, info }: Props) => {
     }
   };
 
-  const columns = useMemo(
-    () => [
-      {
+  const columns = useMemo(() => {
+    const array = [];
+
+    if (names !== "found_with_mandoub_main")
+      array.push({
         Header: " ",
         Cell: ({ cell }: CellValue) => {
           const id = cell.row.original.id;
@@ -43,93 +36,87 @@ const useColumns = ({ edit, info }: Props) => {
             />
           );
         },
-      },
-      {
-        Header: "الإسم",
-        Cell: ({ cell }: CellValue) => {
-          return (
-            <HStack justifyContent="flex-start">
-              <Text color="mPrimary" fontWeight="600" noOfLines={1}>
-                {truncateText(
-                  `${cell.row.original.first_name} ${cell.row.original.second_name} ${cell.row.original.third_name} ${cell.row.original.last_name}`,
-                  150
-                )}
-              </Text>
-            </HStack>
-          );
-        },
-      },
-      {
-        Header: "المندوب الرئيسي",
-        accessor: "mandoub_main",
-      },
-      {
-        Header: "مندوب الحركة",
-        accessor: "mandoub_haraka",
-      },
-      {
-        Header: "مكان الإنتخاب",
-        accessor: "place_of_residence",
-      },
-      {
-        Header: "صندوق رقم",
-        accessor: "box",
-      },
-      {
-        Header: "وقت الإنتخاب",
-        Cell: ({ cell }: CellValue) => {
-          return (
-            <Text>{ShowTime(cell.row.original.election_time) || "-"}</Text>
-          );
-        },
-      },
-      {
-        Header: "  ",
-        Cell: ({ cell }: CellValue) => {
-          const id = cell.row.original.id;
-          return (
-            <HStack justifyContent="flex-end">
-              {checkedRows.includes(id) && checkedRows.length <= 1 && (
-                <Box
-                  as={Button}
-                  size="xs"
-                  rounded="full"
-                  px="0"
-                  variant="ghost"
-                  fontSize="15px"
-                  color="primary.500"
-                  onClick={() => {
-                    setRecordID(cell.row.original.id);
-                    edit.onOpen();
-                  }}
-                >
-                  <MdEdit />
-                </Box>
-              )}
-              <Box
-                as={Button}
-                size="xs"
-                rounded="full"
-                px="0"
-                variant="ghost"
-                fontSize="15px"
-                color="primary.500"
-                onClick={() => {
-                  setRecordID(cell.row.original.id);
-                  info.onOpen();
-                }}
-              >
-                <FaInfoCircle />
-              </Box>
-            </HStack>
-          );
-        },
-      },
-    ],
-    [checkedRows]
-  );
+      });
 
-  return { columns, checkedRows, recordID, setCheckedRows };
+    array.push(
+      ...[
+        {
+          Header: "الإسم",
+          Cell: ({ cell }: CellValue) => {
+            return (
+              <HStack justifyContent="flex-start">
+                <Text color="mPrimary" fontWeight="600" noOfLines={1}>
+                  {truncateText(cell.row.original.full_name, 150)}
+                </Text>
+              </HStack>
+            );
+          },
+        },
+        {
+          Header: "رقم الهاتف",
+          accessor: "mobile_number",
+        },
+        {
+          Header: "حالة الضمان",
+          Cell: ({ cell }: CellValue) => {
+            return (
+              <Text fontWeight="600">
+                {cell.row.original.status
+                  ? `${cell.row.original.status} %`
+                  : "-"}
+              </Text>
+            );
+          },
+        },
+        // {
+        //   Header: "  ",
+        //   Cell: ({ cell }: CellValue) => {
+        //     const id = cell.row.original.id;
+        //     return (
+        //       <HStack justifyContent="flex-end">
+        //         {checkedRows.includes(id) && checkedRows.length <= 1 && (
+        //           <Box
+        //             as={Button}
+        //             size="xs"
+        //             rounded="full"
+        //             px="0"
+        //             variant="ghost"
+        //             fontSize="15px"
+        //             color="primary.500"
+        //             onClick={() => {
+        //               setRecordID(cell.row.original.id);
+        //               edit.onOpen();
+        //             }}
+        //           >
+        //             <MdEdit />
+        //           </Box>
+        //         )}
+        //         <Box
+        //           as={Button}
+        //           size="xs"
+        //           rounded="full"
+        //           px="0"
+        //           variant="ghost"
+        //           fontSize="15px"
+        //           color="primary.500"
+        //           onClick={() => {
+        //             setRecordID(cell.row.original.id);
+        //             info.onOpen();
+        //           }}
+        //         >
+        //           <FaInfoCircle />
+        //         </Box>
+        //       </HStack>
+        //     );
+        //   },
+        // },
+      ],
+    );
+
+    return array;
+  }, [checkedRows, names]);
+
+  return { columns, checkedRows, setCheckedRows };
 };
 
 export default useColumns;

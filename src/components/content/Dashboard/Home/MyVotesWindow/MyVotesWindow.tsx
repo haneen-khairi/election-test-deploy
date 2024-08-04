@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ActivityChart, DownloadDB, MyVotes } from "@assets/icons";
-import { Box, Button, Grid, HStack, Text, VStack } from "@chakra-ui/react";
+import { ActivityChart, MyVotes } from "@assets/icons";
+import { Box, Grid, HStack, Text, VStack } from "@chakra-ui/react";
 import { Ebox } from "@components/core";
 import VotersBarChart from "../VotersBarChart/VotersBarChart";
 import { VotesStats } from "@services/hooks/voters/Voters";
@@ -19,13 +19,13 @@ import {
 import { useEffect, useState } from "react";
 import VotersTable from "../VotersTable/VotersTable";
 import PlaceBasedVotesTable from "../PlaceBasedVotesTable/PlaceBasedVotesTable";
-import HomeFilterSection from "../FilterSection/FilterSection";
+import DownloadButton from "@components/core/downloadButton/DownloadButton";
 
 const MyVotesWindow = ({
   filter,
   setFilter,
   homePage = false,
-  getCheckboxList =(data?: any[]) => {}
+  setFilter,
 }: {
   filter: any;
   homePage: boolean,
@@ -44,20 +44,16 @@ const MyVotesWindow = ({
       period: undefined,
     },
   });
-  function handleReset(){
-    console.log("==== handle reset ====");
-    setFilter(undefined);
-    setKey(key => key+1)
-  }
   const { data: myVoters } = useGetMyVotesStats(filter);
   const sortedData = ((myVoters?.data || []) as VotesStats[]).sort(
     (a, b) => b.status - a.status,
   );
+
   const {
     data,
     isLoading: activitiesDataIsLoading,
     refetch,
-  } = useGetActivitiesVotes(watch("period") || "week");
+  } = useGetActivitiesVotes(watch("period") || "week", filter);
 
   useEffect(() => {
     refetch();
@@ -93,7 +89,7 @@ const MyVotesWindow = ({
                 </Text>
               </HStack>
 
-              <VotersBarChart filter={filter} />
+              <VotersBarChart filter={filter} setFilter={setFilter} />
             </VStack>
           </HStack>
         </Ebox>
@@ -103,22 +99,13 @@ const MyVotesWindow = ({
             <VStack w="100%" gap="33px" fontSize="20px">
               <HStack w="100%" fontWeight={600}>
                 <Text ml="auto">سجل المناديب الرئيسيين</Text>
-                <Button
-                  rounded="full"
-                  p="10px 15px"
-                  variant="ghost"
-                  colorScheme="green"
-                  fontSize="20px"
-                  size="sm"
-                >
-                  <DownloadDB />
-                  <Text mr="10px" color="#318973">
-                    تحميل
-                  </Text>
-                </Button>
+                <DownloadButton
+                  url="candidate/voters/statistics/mandoub-main-vote-counts"
+                  fileName="delegates-main-vote-counts.xlsx"
+                />
               </HStack>
 
-              <DelegatesTable />
+              <DelegatesTable filter={filter} setFilter={setFilter} />
             </VStack>
           </Ebox>
         </VStack>
@@ -136,22 +123,17 @@ const MyVotesWindow = ({
               <Text fontWeight={600} ml="auto">
                 أصواتي حسب المناطق
               </Text>
-              <Button
-                rounded="full"
-                p="10px 15px"
-                variant="ghost"
-                colorScheme="green"
-                fontSize="20px"
-                size="sm"
-              >
-                <DownloadDB />
-                <Text mr="10px" color="#318973">
-                  تحميل
-                </Text>
-              </Button>
+              <DownloadButton
+                url="statistic/election_day/place_of_residence_delivery_table"
+                fileName="content.xlsx"
+              />
             </HStack>
 
-            <PlaceBasedVotesTable withCharts={false} />
+            <PlaceBasedVotesTable
+              withCharts={false}
+              filter={filter}
+              setFilter={setFilter}
+            />
           </VStack>
         </Ebox>
 

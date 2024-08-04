@@ -11,6 +11,7 @@ import {
   VStack,
   Heading,
   Text,
+  list
 } from '@chakra-ui/react'
 import CreateMyselfModal from '@components/content/Dashboard/messages/CreateMyselfModal'
 import DeleteIcon from '@components/content/Dashboard/messages/DeleteIcon'
@@ -53,7 +54,6 @@ export default function MessagesPage() {
     onClose: onCloseMenuEditModal
   } = useDisclosure()
   function handleOnEdit() {
-    console.log("🚀 ~ handleOnEdit ~ handleOnEdit:")
 
   }
   function handleOnDelete() {

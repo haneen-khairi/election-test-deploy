@@ -62,7 +62,6 @@
 //   useResetFormModal(isOpen, reset);
 
 //   const onSubmit = (values: any) => {
-//    console.log("🚀 ~ onSubmit ~ values:", values)
    
 //   };
 

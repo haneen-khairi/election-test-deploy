@@ -9,7 +9,6 @@ import useExpensesStore from "@store/ExpensesStore";
 
 const FinancialTable = ({ tab, data }: { tab: 1 | 2; data: any }) => {
   const { setPage, page } = useExpensesStore();
-  // const { data, isLoading, isFetching } = useGetDelegatesVotes();
 
   const financialData: DelegatesVotes[] = useMemo(() => data || [], [data]);
 
@@ -20,7 +19,6 @@ const FinancialTable = ({ tab, data }: { tab: 1 | 2; data: any }) => {
     <ETable
       columns={tab === 1 ? incomeColumns : expensesColumns}
       data={financialData}
-      // isFetching={isFetching}
       count={data?.count}
       setPage={setPage}
       page={page}

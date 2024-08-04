@@ -1,6 +1,6 @@
-
+import React from 'react'
 import "./MessagePage.css"
-import { Box, Button, Flex, Grid, GridItem, Text } from '@chakra-ui/react'
+import { Box, Button, Center, Flex, Grid, GridItem, HStack, Text } from '@chakra-ui/react'
 import NameListChecked from './NameListChecked'
 import { Controller, useForm } from 'react-hook-form';
 import { InputSelect, Input, Btn } from '@components/core';
@@ -34,7 +34,9 @@ export default function SentMessagesPage() {
                 <Box position={'relative'}>
                 <div className="message__page--divider"></div>
 
-                </Box> 
+                </Box>
+            {/* <Box w="1%" flexGrow="1" position={'relative'}>
+            </Box> */}
                 <Input
                     type="text"
                     placeholder="الإسم كاملاً"
@@ -46,7 +48,16 @@ export default function SentMessagesPage() {
                     control={control}
                     name="father"
                     render={({ field: { onChange, value } }) => (
-                        <InputSelect 
+                        <InputSelect
+                            // loading={isLoading}
+                            // options={
+                            //   data?.data
+                            //     ? data?.data?.map((el) => ({
+                            //         label: el.name || "",
+                            //         value: el.id || "",
+                            //       }))
+                            //     : []
+                            // }
                             options={[{
                                 label: 'تست',
                                 value: 'تست'

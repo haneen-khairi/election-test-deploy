@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  DBTabs,
-  DownloadDB,
-  GoldBars,
-  MoneyCoins,
-  UpwardArrow,
-} from "@assets/icons";
+import { DBTabs, GoldBars, MoneyCoins, UpwardArrow } from "@assets/icons";
 import { Box, Grid, HStack, Text, VStack } from "@chakra-ui/react";
 import { Ebox } from "@components/core";
 import { ReactNode, useState } from "react";
@@ -22,6 +16,7 @@ import {
   useGetIncomeSummary,
   useGetIncomeTypes,
 } from "@services/hooks/expenses/useExpenses";
+import DownloadButton from "@components/core/downloadButton/DownloadButton";
 
 interface SideBox {
   text: string;
@@ -101,7 +96,7 @@ const IncomeWindow = () => {
           <VStack>
             <HStack w="100%" fontWeight={600}>
               {<UpwardArrow color="#12B76A" />}
-              <Text ml="auto">{"دخل الجهات"}</Text>
+              <Text ml="auto">دخل الجهات</Text>
             </HStack>
 
             <ExpensesBarChart tab={1} data={incomeTypes?.data || {}} />
@@ -110,8 +105,8 @@ const IncomeWindow = () => {
 
         <Ebox>
           <HStack w="100%" fontWeight={600} mb="20px" alignItems="center">
-            <DBTabs color={"#12B76A"} />
-            <Text ml="auto">{"الدخل"}</Text>
+            <DBTabs color="#12B76A" />
+            <Text ml="auto">الدخل</Text>
           </HStack>
 
           <Box
@@ -141,7 +136,7 @@ const IncomeWindow = () => {
           <AccountsBarChart
             tab={1}
             data={
-              activeTabIndex === 1
+              activeTabIndex === 0
                 ? incomeAccountsData?.data?.income_by_my_accounts || {}
                 : incomeAccountsData?.data?.income_by_mandoob || {}
             }
@@ -152,8 +147,10 @@ const IncomeWindow = () => {
       <Ebox>
         <HStack w="100%" fontWeight={600} mb="20px" fontSize="18px">
           <Text ml="auto">المعاملات المالية</Text>
-          <DownloadDB />
-          <Text color="#318973">تحميل</Text>
+          <DownloadButton
+            url="expense/get_transaction_income_table"
+            fileName="content.xlsx"
+          />
         </HStack>
 
         <FinancialTable tab={1} data={financialData?.data} />

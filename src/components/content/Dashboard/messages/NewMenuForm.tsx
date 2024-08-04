@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Box, HStack, VStack, list, useDisclosure, useToast } from "@chakra-ui/react";
 import {
@@ -194,6 +196,7 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess, token }: Props
         type="save"
         onProceed={handleSubmit(onSubmit)}
       />
+
       <Popup
         title={"إنشاء قائمة جديدة"}
         size="5xl"
@@ -203,6 +206,7 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess, token }: Props
 
         <VStack align="stretch" spacing="16px">
           <HStack mt="16px" flexWrap="wrap">
+
 
             <Box w="100%" flexGrow="1">
               <Input
@@ -253,8 +257,10 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess, token }: Props
                   value: el?.id || 0,
                 }))}
               />
-            </Box>} */}
-            <MyVotesWindow getCheckboxList={getVoters} homePage={false} filter={filter} setFilter={setFilter} />
+            </Box>}
+            <MyVotesWindow homePage={false} filter={filter} setFilter={setFilter} />;
+
+
           </HStack>
         </VStack>
         <HStack justifyContent="flex-end" mt="24px">
@@ -267,7 +273,6 @@ const NewMenuFormModal = ({ isOpen, onClose, recordID, onSuccess, token }: Props
 
           </GradientButton>
         </HStack>
-
 
       </Popup>
     </>

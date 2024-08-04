@@ -1,18 +1,17 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createBrowserRouter } from "react-router-dom";
 import { LoginPage, UserVerfication } from "@pages/auth";
 import {
   CentersPage,
   DelegatesPage,
-  ExpensesPage,
+  AccountancySystemPage,
   HomePage,
   Layout,
   PreliminaryResultsPage,
   TasksPage,
   TransportationStatistics,
   VotersPage,
-  VotesPage,
-  FamilyTree,
 } from "@pages/dashboard";
 import { GlobeLayout } from "@pages/layout";
 import IsAuth from "./IsAuth";
@@ -21,6 +20,7 @@ import MessagesPage from "@pages/dashboard/messages/MessagesPage";
 import MessageServiceLayout from "@pages/layout/MessageServiceLayout";
 import SentMessagesPage from "@pages/Home/SentMessagesPage";
 import ProfilePage from "@pages/Home/ProfilePage";
+
 
 const ErrorPage = () => {
     const error: any = useRouteError();
@@ -56,10 +56,6 @@ const router = createBrowserRouter([
             element: <VotersPage />,
           },
           {
-            path: "/my-votes",
-            element: <VotesPage />,
-          },
-          {
             path: "/centers",
             element: <CentersPage />,
           },
@@ -69,7 +65,7 @@ const router = createBrowserRouter([
           },
           {
             path: "/expenses",
-            element: <ExpensesPage />,
+            element: <AccountancySystemPage />,
           },
           {
             path: "/tasks",
@@ -87,10 +83,6 @@ const router = createBrowserRouter([
             path: "/transportation-statistics",
             element: <TransportationStatistics />,
           },
-          {
-            path: "/family-tree",
-            element: <FamilyTree />,
-          }
         ],
       },
       {
@@ -98,6 +90,22 @@ const router = createBrowserRouter([
         element: (
           <IsAuth page="login">
             <LoginPage />
+          </IsAuth>
+        ),
+      },
+      {
+        path: "/qr/:code",
+        element: (
+          <IsAuth page="qr">
+            <QRPage />
+          </IsAuth>
+        ),
+      },
+      {
+        path: "/supporter/:id",
+        element: (
+          <IsAuth page="supporter">
+            <SupportersPage />
           </IsAuth>
         ),
       },

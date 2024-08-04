@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ETable } from "@components/core";
 import { useGetDelegatesVotes } from "@services/hooks/voters/useVoters";
@@ -6,9 +7,9 @@ import useColumns from "./useColumns";
 import { useMemo } from "react";
 import { DelegatesVotes } from "@services/hooks/voters/Voters";
 
-const ActionDelegatesTable = () => {
+const ActionDelegatesTable = ({ filter }: { filter: any }) => {
   const { setPage, page } = useVostersStore();
-  const { data, isLoading, isFetching } = useGetDelegatesVotes();
+  const { data, isLoading, isFetching } = useGetDelegatesVotes(filter);
 
   const voters: DelegatesVotes[] = useMemo(
     () => (isLoading ? [] : data || []),

@@ -67,6 +67,30 @@ export const useGetExpensesTable = () => {
   });
 };
 
+export const useGetAddIncomeAccounts = () => {
+  const api = new APIClient<any>("expense/accounts");
+  return useQuery({
+    queryKey: ["AddIncomeAccounts", "GetAddIncomeTypes"],
+    queryFn: () => api.getList(),
+  });
+};
+
+export const useGetAddIncomeTypes = () => {
+  const api = new APIClient<any>("expense/types/in");
+  return useQuery({
+    queryKey: ["GetAddIncomeTypes"],
+    queryFn: () => api.getList(),
+  });
+};
+
+export const useGetAddExpensesTypes = () => {
+  const api = new APIClient<any>("expense/types/out");
+  return useQuery({
+    queryKey: ["AddExpensesTypes"],
+    queryFn: () => api.getList(),
+  });
+};
+
 export const useGetExpenses = (filter?: any) => {
   const { page } = useExpensesStore();
   const api = new APIClient<GetExpensesType>("expense/expenses");
@@ -85,6 +109,7 @@ export const useGetExpenses = (filter?: any) => {
 
 export const useGetIncomeSummary = () => {
   const api = new APIClient<IncomeSummary>("expense/income_summary");
+
   return useQuery({
     queryKey: ["IncomeSummary"],
     queryFn: () => api.getItem(),
@@ -119,6 +144,7 @@ export const useGetExpenseAccountsData = () => {
 
 export const useGetIncomeTypes = () => {
   const api = new APIClient<IncomeExpensesType>("expense/types_income");
+
   return useQuery({
     queryKey: ["IncomeTypes"],
     queryFn: () => api.getItem(),
@@ -203,6 +229,119 @@ export const usePostExpense = () => {
         type: "active",
       });
       return "Added";
+    },
+    onError: (error: Error) => {
+      if (error) return error;
+    },
+  });
+};
+
+export const useAddIncome = () => {
+  const clientQuery = useQueryClient();
+  const api = new APIClient<any>(`expense/transaction_in`);
+
+  return useMutation<ItemResponse<string>, Error, any>({
+    mutationFn: async (data: any) => {
+      const response = (await api.post(data)) as ItemResponse<string>;
+      return response;
+    },
+    onSuccess: async () => {
+      clientQuery.resetQueries({
+        queryKey: ["AddIncome"],
+      });
+      clientQuery.invalidateQueries({
+        queryKey: [
+          "IncomeSummary",
+          "IncomeAccountsData",
+          "IncomeTypes",
+          "FinancialIncomeData",
+        ],
+      });
+    },
+    onError: (error: Error) => {
+      if (error) return error;
+    },
+  });
+};
+
+export const useAddIncomeType = () => {
+  const clientQuery = useQueryClient();
+  const api = new APIClient<any>(`expense/types`);
+
+  return useMutation<ItemResponse<string>, Error, any>({
+    mutationFn: async (data: any) => {
+      const response = (await api.post(data)) as ItemResponse<string>;
+      return response;
+    },
+    onSuccess: async () => {
+      clientQuery.resetQueries({
+        queryKey: ["AddIncomeType", "GetAddIncomeTypes"],
+      });
+    },
+    onError: (error: Error) => {
+      if (error) return error;
+    },
+  });
+};
+
+export const useAddAccount = () => {
+  const clientQuery = useQueryClient();
+  const api = new APIClient<any>(`expense/accounts`);
+
+  return useMutation<ItemResponse<string>, Error, any>({
+    mutationFn: async (data: any) => {
+      const response = (await api.post(data)) as ItemResponse<string>;
+      return response;
+    },
+    onSuccess: async () => {
+      clientQuery.invalidateQueries({
+        queryKey: ["IncomeAccountsData", "ExpenseAccountsData"],
+      });
+    },
+    onError: (error: Error) => {
+      if (error) return error;
+    },
+  });
+};
+
+export const useAddExpense = () => {
+  const clientQuery = useQueryClient();
+  const api = new APIClient<any>(`expense/transaction_out`);
+
+  return useMutation<ItemResponse<string>, Error, any>({
+    mutationFn: async (data: any) => {
+      const response = (await api.post(data)) as any;
+      return response;
+    },
+    onSuccess: async () => {
+      clientQuery.invalidateQueries({
+        queryKey: [
+          "ExpenseSummary",
+          "ExpenseAccountsData",
+          "ExpensesTypes",
+          "FinancialExpenseData",
+        ],
+      });
+    },
+    onError: (error: Error) => {
+      if (error) return error;
+    },
+  });
+};
+
+export const useTransBetweenAccounts = () => {
+  const clientQuery = useQueryClient();
+  const api = new APIClient<any>(`expense/transaction`);
+
+  return useMutation<ItemResponse<string>, Error, any>({
+    mutationFn: async (data: any) => {
+      const response = (await api.post(data)) as ItemResponse<string>;
+      return response;
+    },
+    onSuccess: async () => {
+      clientQuery.resetQueries({
+        queryKey: ["TransBetweenAccounts"],
+      });
     },
     onError: (error: Error) => {
       if (error) return error;

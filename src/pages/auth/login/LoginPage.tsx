@@ -36,7 +36,6 @@ const LoginPage = () => {
     mutationFn: (data: LoginForm) => api.post(data),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onSuccess: (res: any) => {
-      console.log(res, "res");
       if (res.status) {
         // CryptoStorage.setItem("token", res.data.access);
         login(res.data);

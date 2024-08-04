@@ -65,7 +65,6 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
   const onSubmit = (values: PutVoter) => {
     updateVotser
       .mutateAsync({
-        election_time: values.election_time || undefined,
         latitude: parseFloat(values.latitude?.toFixed(2) || ""),
         longitude: parseFloat(values.longitude?.toFixed(2) || ""),
         mandoub_haraka: values.mandoub_haraka || undefined,
@@ -201,16 +200,7 @@ const BulkEditModal = ({ isOpen, onClose, recordIDs }: Props) => {
                   error={errors.latitude?.message}
                 />
               </Box>
-              {values.status === 100 && (
-                <Box w="40%" flexGrow="1">
-                  <Input
-                    label="وقت الإنتخاب"
-                    type="time"
-                    register={register("election_time")}
-                    error={errors.election_time?.message}
-                  />
-                </Box>
-              )}
+              
               <Box w="40%" flexGrow="1">
                 <Input
                   label="رقم الجوال"

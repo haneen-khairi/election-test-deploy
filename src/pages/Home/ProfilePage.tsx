@@ -1,3 +1,4 @@
+import React from 'react'
 import Profile from './Profile'
 import { Box } from '@chakra-ui/react'
 export default function ProfilePage() {

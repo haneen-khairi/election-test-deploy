@@ -29,11 +29,16 @@ import MissionModal from "./MissonModal";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess?: () => void,
+  onSuccess?: () => void;
   recordID?: string;
 }
 
-const AUTaskModal = ({ isOpen, onClose, recordID, onSuccess }: Props) => {
+const AUTaskModal = ({
+  isOpen,
+  onClose,
+  recordID,
+  onSuccess = () => {},
+}: Props) => {
   const alert = useDisclosure();
   const {
     handleSubmit,
@@ -96,9 +101,7 @@ const AUTaskModal = ({ isOpen, onClose, recordID, onSuccess }: Props) => {
               title: "نجاح العملية",
               description: "تم التعديل بنجاح",
             });
-            if(onSuccess !== undefined){
-              onSuccess()
-            }
+            onSuccess();
             alert.onClose();
             onClose();
           }
@@ -168,9 +171,7 @@ const AUTaskModal = ({ isOpen, onClose, recordID, onSuccess }: Props) => {
         isOpen={isOpen}
         onClose={onClose}
         extraHeaderButton={true}
-        extraHeaderButtonOnClick={
-          onOpen
-        }
+        extraHeaderButtonOnClick={onOpen}
       >
         {isLoading && <Loader />}
         {!isLoading && (

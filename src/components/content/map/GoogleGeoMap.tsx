@@ -1,33 +1,35 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import { Box } from "@chakra-ui/react";
 import { MapVoter } from "@services/hooks/insights/Insights";
 
-const data: {
-  center: google.maps.LatLngLiteral;
-  count: number;
-}[] = [
-  {
-    center: { lat: 31.15528277717891, lng: 36.5526912241781 },
-    count: 70000,
-  },
-  {
-    center: { lat: 31.5434291, lng: 35.8526912241781 },
-    count: 330000,
-  },
-  {
-    center: { lat: 32.1434291, lng: 35.8526912241781 },
-    count: 500,
-  },
-];
+// const data: {
+//   center: google.maps.LatLngLiteral;
+//   count: number;
+// }[] = [
+//   {
+//     center: { lat: 31.15528277717891, lng: 36.5526912241781 },
+//     count: 70000,
+//   },
+//   {
+//     center: { lat: 31.5434291, lng: 35.8526912241781 },
+//     count: 330000,
+//   },
+//   {
+//     center: { lat: 32.1434291, lng: 35.8526912241781 },
+//     count: 500,
+//   },
+// ];
 
 const minRadius = 10000;
 const maxRadius = 30000;
 
 const getScale = (userValue: number, userMin: number, userMax: number) => {
+  if (userMax === userMin && userValue === userMax) return minRadius;
+
   const userRange = userMax - userMin;
   const definedRange = maxRadius - minRadius;
   const normalizedValue = (userValue - userMin) / userRange;
@@ -43,50 +45,38 @@ declare global {
 }
 
 const GoogleGeoMap = ({ mapVoters }: { mapVoters: MapVoter[] }) => {
-  const { userMin, userMax } = data.reduce(
-    (acc, curr) => {
-      let max = acc.userMax;
-      let min = acc.userMin;
+  const { userMin, userMax } = useMemo(
+    () =>
+      mapVoters.reduce(
+        (acc, curr) => {
+          let max = acc.userMax;
+          let min = acc.userMin;
 
-      if (curr.count > max) max = curr.count;
-      if (curr.count < min) min = curr.count;
+          if (curr?.boxes_count || 0 > max) max = curr?.boxes_count || 0;
+          if (curr?.boxes_count || 0 < min) min = curr?.boxes_count || 0;
 
-      return {
-        userMin: min,
-        userMax: max,
-      };
-    },
-    {
-      userMin: data[0].count,
-      userMax: data[0].count,
-    },
+          return {
+            userMin: min,
+            userMax: max,
+          };
+        },
+        {
+          userMin: mapVoters[0]?.boxes_count || 0,
+          userMax: mapVoters[0]?.boxes_count || 0,
+        },
+      ),
+    [mapVoters],
   );
 
   const mapRef = useRef<HTMLDivElement>(null);
+
   const position = {
     lat: 31.15528277717891,
     lng: 36.5526912241781,
   };
 
-  // const [searchQuery, setSearchQuery] = useState("");
   const [_map, setMap] = useState<google.maps.Map | null>(null);
   const [_loader, setLoader] = useState<Loader | null>(null);
-
-  // function createMarker(place: google.maps.places.PlaceResult) {
-  //   const infowindow: google.maps.InfoWindow = new google.maps.InfoWindow();
-
-  //   if (!place.geometry || !place.geometry.location) return;
-
-  //   const marker = new google.maps.Marker({
-  //     map,
-  //     position: place.geometry.location,
-  //   });
-
-  //   google.maps.event.addListener(marker, "click", () => {
-  //     infowindow.setContent(place.name || "");
-  //     infowindow.open(map);
-  //   });
-  // }
 
   useEffect(() => {
     const mapInit = async () => {
@@ -103,9 +93,6 @@ const GoogleGeoMap = ({ mapVoters }: { mapVoters: MapVoter[] }) => {
       }
 
       const { Map } = await loader.importLibrary("maps");
-      // const { Marker } = (await loader.importLibrary(
-      //   "marker",
-      // )) as google.maps.MarkerLibrary;
 
       const mapOptions = {
         center: position,

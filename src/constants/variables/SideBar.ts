@@ -1,12 +1,11 @@
 import { HiOutlineHome } from "react-icons/hi";
 import { LuUsers2 } from "react-icons/lu";
-import { RxLayers } from "react-icons/rx";
 import { GrLocation } from "react-icons/gr";
 import { PiBagSimpleBold } from "react-icons/pi";
 import { LiaCoinsSolid } from "react-icons/lia";
 import { FaListUl } from "react-icons/fa6";
 import { AiOutlineFileSearch } from "react-icons/ai";
-import { HiOutlineChartBar } from "react-icons/hi";
+// import { HiOutlineChartBar } from "react-icons/hi";
 import MessageIcon from "./MessageIcon";
 
 export const links = [
@@ -21,22 +20,12 @@ export const links = [
     icon: LuUsers2,
   },
   {
-    name: "أصواتي",
-    url: "/my-votes",
-    icon: RxLayers,
-  },
-  {
     name: "مراكز الاقتراع",
     url: "/centers",
     icon: GrLocation,
   },
   {
-    name: "المناديب",
-    url: "/delegates",
-    icon: PiBagSimpleBold,
-  },
-  {
-    name: "المصروفات",
+    name: "نظام الحسابات",
     url: "/expenses",
     icon: LiaCoinsSolid,
   },
@@ -46,18 +35,23 @@ export const links = [
     icon: FaListUl,
   },
   {
-    name: "النتائج الأولية",
-    url: "/preliminary-results",
-    icon: AiOutlineFileSearch,
+    name: "المناديب",
+    url: "/delegates",
+    icon: PiBagSimpleBold,
   },
   {
     name: "نظام الرسائل",
     url: "/messages",
     icon: MessageIcon,
   },
+  // {
+  //   name: "إحصائيات الحركة",
+  //   url: "/transportation-statistics",
+  //   icon: HiOutlineChartBar,
+  // },
   {
-    name: "إحصائيات الحركة",
-    url: "/transportation-statistics",
-    icon: HiOutlineChartBar,
+    name: "النتائج الأولية",
+    url: "/preliminary-results",
+    icon: AiOutlineFileSearch,
   },
 ];

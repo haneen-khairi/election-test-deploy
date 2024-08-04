@@ -9,21 +9,20 @@ import {
 import useVostersStore from "@store/VostersSotre";
 import useColumns from "./useColumns";
 import { useMemo } from "react";
-import { GetVoters } from "@services/hooks/voters/Voters";
 import { HStack, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { BulkEditModal, EditModal } from "../../Voters/modals";
 import { InfoModal } from "../../Modals";
 
 const ElectionDayVotersTable = ({ filter }: { filter: any }) => {
   const { setPage, page } = useVostersStore();
-  const { data, isLoading, isFetching } = useGetVoters(filter);
+  const { data, isLoading, isFetching } = useGetVoters(filter, undefined, true);
 
   const remove = useDisclosure();
   const edit = useDisclosure();
   const bulkEdit = useDisclosure();
   const bulkRemove = useDisclosure();
 
-  const voters: GetVoters[] = useMemo(
+  const voters = useMemo(
     () => (isLoading ? [] : data?.data || []),
     [data, isLoading],
   );
@@ -33,16 +32,6 @@ const ElectionDayVotersTable = ({ filter }: { filter: any }) => {
     remove,
   });
 
-  // const handleCheckAll = () => {
-  //   const votersData: {
-  //     id: string;
-  //   }[] = voters as [];
-
-  //   setCheckedRows(
-  //     checkedRows.length === 0 ? votersData.map((voter) => voter.id) : [],
-  //   );
-  // };
-
   const removeVoter = useDeleteVoter(recordID || "");
   const removeVoters = useDeleteVoters(checkedRows);
 
@@ -50,78 +39,6 @@ const ElectionDayVotersTable = ({ filter }: { filter: any }) => {
     <VStack>
       <HStack w="100%" fontWeight={600} fontSize="20px" mb="20px">
         <Text ml="auto">جدول الناخبين</Text>
-        {/* 
-        {checkedRows.length > 1 && (
-          <>
-            <Button
-              rounded="full"
-              p="10px 15px"
-              variant="ghost"
-              colorScheme="green"
-              fontSize="20px"
-              size="sm"
-              onClick={bulkEdit.onOpen}
-            >
-              <EditPenIcon />
-              <Text mr="10px" color="#318973">
-                تعديل
-              </Text>
-            </Button>
-
-            <Button
-              rounded="full"
-              p="10px 15px"
-              variant="ghost"
-              colorScheme="green"
-              fontSize="20px"
-              onClick={bulkRemove.onOpen}
-              size="sm"
-              _hover={{
-                backgroundColor: "#ce112712",
-              }}
-            >
-              <TrashIcon />
-              <Text mr="10px" color="#CE1126">
-                حذف
-              </Text>
-            </Button>
-          </>
-        )}
-
-        <Button
-          rounded="full"
-          p="10px 15px"
-          variant="ghost"
-          colorScheme="green"
-          fontSize="20px"
-          size="sm"
-          onClick={handleCheckAll}
-        >
-          {checkedRows.length !== 0 ? <MdDeselect /> : <MdSelectAll />}
-          {checkedRows.length !== 0 ? (
-            <Text mr="10px" color="#318973">
-              إلغاء التحديد
-            </Text>
-          ) : (
-            <Text mr="10px" color="#318973">
-              تحديد الكل
-            </Text>
-          )}
-        </Button>
-
-        <Button
-          rounded="full"
-          p="10px 15px"
-          variant="ghost"
-          colorScheme="green"
-          fontSize="20px"
-          size="sm"
-        >
-          <DownloadDB />
-          <Text mr="10px" color="#318973">
-            تحميل
-          </Text>
-        </Button> */}
       </HStack>
 
       <EditModal

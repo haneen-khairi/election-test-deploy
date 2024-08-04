@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ETable } from "@components/core";
 import { useGetDelegatesVotes } from "@services/hooks/voters/useVoters";
@@ -6,19 +7,23 @@ import useColumns from "./useColumns";
 import { VotingDelegate } from "@services/hooks/insights/Insights";
 
 const ActionDelegatesTable = ({
+  filter,
+  setFilter,
   votingDelegates,
 }: {
+  filter: any;
+  setFilter: any;
   votingDelegates: VotingDelegate[];
 }) => {
   const { setPage, page } = useVostersStore();
-  const { data, isFetching } = useGetDelegatesVotes();
+  const { data, isFetching } = useGetDelegatesVotes(filter);
 
   // const voters: DelegatesVotes[] = useMemo(
   //   () => (isLoading ? [] : data?.data || []),
   //   [data, isLoading],
   // );
 
-  const { columns } = useColumns();
+  const { columns } = useColumns({ setFilter, filter });
 
   return (
     <ETable

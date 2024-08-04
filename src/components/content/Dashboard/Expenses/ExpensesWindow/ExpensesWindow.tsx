@@ -5,7 +5,6 @@ import {
   CashIcon,
   DBIcon,
   DBTabs,
-  DownloadDB,
   ExpensesSquare,
 } from "@assets/icons";
 import { Box, Grid, HStack, Text, VStack } from "@chakra-ui/react";
@@ -22,6 +21,7 @@ import {
   useGetExpensesTypes,
   useGetFinancialExpenseData,
 } from "@services/hooks/expenses/useExpenses";
+import DownloadButton from "@components/core/downloadButton/DownloadButton";
 
 interface SideBox {
   text: string;
@@ -142,7 +142,7 @@ const ExpensesWindow = () => {
           <AccountsBarChart
             tab={2}
             data={
-              activeTabIndex === 1
+              activeTabIndex === 0
                 ? expenseAccountsData?.data?.expenses_by_my_accounts || {}
                 : expenseAccountsData?.data?.expenses_by_mandoob || {}
             }
@@ -153,8 +153,10 @@ const ExpensesWindow = () => {
       <Ebox>
         <HStack w="100%" fontWeight={600} mb="20px" fontSize="18px">
           <Text ml="auto">المعاملات المالية</Text>
-          <DownloadDB />
-          <Text color="#318973">تحميل</Text>
+          <DownloadButton
+            url="expense/get_transaction_expenses_table"
+            fileName="content.xlsx"
+          />
         </HStack>
 
         <FinancialTable tab={2} data={financialData?.data} />

@@ -3,11 +3,14 @@ import { Navigate } from "react-router-dom";
 
 interface Props {
   children: React.ReactNode;
-  page: "dashboard" | "login";
+  page: "dashboard" | "login" | "qr" | "supporter";
 }
 const IsAuth = ({ page, children }: Props) => {
   const { isAuthenticated } = useAuthStore();
+
   if (isAuthenticated && page == "dashboard") {
+    return children;
+  } else if (["qr", "supporter"].includes(page)) {
     return children;
   } else if (!isAuthenticated && page == "login") {
     return children;

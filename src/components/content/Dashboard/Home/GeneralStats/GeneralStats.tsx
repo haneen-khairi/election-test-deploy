@@ -1,6 +1,5 @@
 import { HStack, useBreakpointValue } from "@chakra-ui/react";
 import { ESkeleton } from "@components/core";
-import { useGetGeneralStats } from "@services/hooks/insights/useInsights";
 import {
   BMandobCountBoxt,
   CentersCountBox,
@@ -11,15 +10,17 @@ import {
   MainManobCountBox,
   MaleCountBox,
 } from "./partials";
+import { useGetVotersStats } from "@services/hooks/voters/useVoters";
 
 const GeneralStats = () => {
-  const { data, isLoading } = useGetGeneralStats({});
+  const { data, isLoading } = useGetVotersStats({});
   const width = useBreakpointValue({
     base: "100%",
     md: "48%",
     lg: "25%",
     xl: "20%",
   });
+
   return (
     <HStack
       flexWrap="wrap"

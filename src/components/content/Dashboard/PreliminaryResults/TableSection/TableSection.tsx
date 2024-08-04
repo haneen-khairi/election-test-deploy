@@ -11,12 +11,14 @@ interface Props {
 }
 
 const TableSection = ({ filter }: Props) => {
-  const { data, isLoading, isFetching } = useGetCandidates(filter);
+  const { data, isLoading, isFetching } = useGetCandidates(
+    filter?.box_id || "",
+  );
   const { setPage, page } = usePreliminaryStore();
 
   const candidates = useMemo(
     () => (isLoading ? [] : data?.data || []),
-    [data?.data, isLoading]
+    [data?.data, isLoading],
   );
 
   const { columns } = useColumns();

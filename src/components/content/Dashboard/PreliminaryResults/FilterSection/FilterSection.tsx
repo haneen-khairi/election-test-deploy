@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, HStack, Text } from "@chakra-ui/react";
 import { Btn, InputSelect } from "@components/core";
 import { CiSearch } from "react-icons/ci";
@@ -10,10 +12,10 @@ import {
   useGetBoxesDropDown2,
   useGetVotingCenterDropDown,
 } from "@services/hooks/dropdown/useDropDown";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 interface Props {
-  SFilter: (data: FilterType | undefined) => void;
+  SFilter: any;
 }
 
 const FilterSection = ({ SFilter }: Props) => {
@@ -34,14 +36,17 @@ const FilterSection = ({ SFilter }: Props) => {
   const { data: centers, isLoading: isCentersLoading } =
     useGetVotingCenterDropDown();
   const { data: boxes, isLoading: isBoxesLoading } = useGetBoxesDropDown2(
-    Number(watch("voting_center"))
+    watch("voting_center") || "",
   );
 
+  const boxesData: any = useMemo(() => boxes?.data || [], [boxes]);
+
   const handleFilter = (values: FilterType) => {
-    SFilter({
+    SFilter((prev: any) => ({
+      ...prev,
       voting_center: values.voting_center,
       box_id: values.box_id,
-    });
+    }));
   };
 
   useEffect(() => {
@@ -85,8 +90,8 @@ const FilterSection = ({ SFilter }: Props) => {
               <InputSelect
                 loading={isBoxesLoading}
                 options={
-                  boxes?.data
-                    ? boxes?.data.map((el) => ({
+                  boxesData?.boxes
+                    ? boxesData?.boxes.map((el: any) => ({
                         label: el.name || "",
                         value: el.id || 0,
                       }))

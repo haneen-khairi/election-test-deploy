@@ -1,4 +1,7 @@
-import { DownloadDB, SwitchIcon, TrashIcon } from "@assets/icons";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { SwitchIcon } from "@assets/icons";
 import {
   Box,
   Button,
@@ -7,118 +10,78 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import RadioCardGroup from "@components/core/RadioCardButton/RadioCardButton";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import { myListsSchema } from "./myListsSchemas";
 import { ETable } from "@components/core";
 import useColumns from "./useColumns";
-// import { useMemo } from "react";
-// import { useGetVoters } from "@services/hooks/voters/useVoters";
-import useVostersStore from "@store/VostersSotre";
+import RadioCardGroup from "@components/core/RadioCardButton/RadioCardButton";
+import DownloadButton from "@components/core/downloadButton/DownloadButton";
+import TransferModal from "../modals/TransferModal/TransferModal";
 
-const MyListsTable = () => {
-  // const { data, isLoading, isFetching } = useGetVoters({});
-  const { setPage, page } = useVostersStore();
-
-  const { control } = useForm({
-    resolver: yupResolver(myListsSchema),
-    defaultValues: {
-      names: undefined,
-    },
-  });
-
-  const info = useDisclosure();
-  const edit = useDisclosure();
-
-  // const voters = useMemo(
-  //   () => (isLoading ? [] : data?.data || []),
-  //   [data?.data, isLoading],
-  // );
+const MyListsTable = ({
+  names,
+  data,
+  control,
+}: {
+  data: any;
+  names: any;
+  control: any;
+}) => {
+  const transfer = useDisclosure();
 
   const { columns } = useColumns({
-    edit,
-    info,
+    names,
   });
 
   return (
     <VStack>
       <HStack p="30px 30px 20px 30px" w="100%" fontWeight={600} fontSize="18px">
-        <Text ml="20px">جدول قوائمي</Text>
+        <Text ml="10px">جدول قوائمي</Text>
 
-        <Box ml="auto">
+        <TransferModal isOpen={transfer.isOpen} onClose={transfer.onClose} />
+
+        <Box ml="auto" h="40px">
           <RadioCardGroup
+            name="names"
+            control={control}
             options={[
               {
                 label: "أسامي تم العثور عليها",
-                value: "found",
+                value: "found_in_voters",
               },
               {
-                label: "أسامي لم يتم العثورعليها",
-                value: "notFound",
+                label: "أسامي لم يتم العثور عليها",
+                value: "not_found",
+              },
+              {
+                label: "أسامي مع مناديب آخرين",
+                value: "found_with_mandoub_main",
               },
             ]}
-            name="gender"
-            control={control}
           />
         </Box>
 
-        <Button
-          rounded="full"
-          p="10px 15px"
-          variant="ghost"
-          colorScheme="green"
-          fontSize="20px"
-          size="sm"
-          _hover={{
-            backgroundColor: "#ce112712",
-          }}
-        >
-          <TrashIcon />
-          <Text mr="10px" color="#CE1126">
-            حذف
-          </Text>
-        </Button>
+        {names === "found_in_voters" && (
+          <Button
+            rounded="full"
+            p="10px 15px"
+            variant="ghost"
+            colorScheme="green"
+            fontSize="20px"
+            size="sm"
+            onClick={() => transfer.onOpen()}
+          >
+            <SwitchIcon />
+            <Text mr="10px" color="#318973">
+              نقل الى أصواتي
+            </Text>
+          </Button>
+        )}
 
-        <Button
-          rounded="full"
-          p="10px 15px"
-          variant="ghost"
-          colorScheme="green"
-          fontSize="20px"
-          size="sm"
-        >
-          <SwitchIcon />
-          <Text mr="10px" color="#318973">
-            نقل الى أصواتي
-          </Text>
-        </Button>
-
-        <Button
-          rounded="full"
-          p="10px 15px"
-          variant="ghost"
-          colorScheme="green"
-          fontSize="20px"
-          size="sm"
-        >
-          <DownloadDB />
-          <Text mr="10px" color="#318973">
-            تحميل
-          </Text>
-        </Button>
+        {names === "not_found" && (
+          <DownloadButton url="" fileName="content.xlsx" />
+        )}
       </HStack>
 
-      <ETable
-        columns={columns}
-        data={[]}
-        // isFetching={isFetching}
-        // count={data?.count}
-        setPage={setPage}
-        page={page}
-        withPagination
-        pageSize={20}
-      />
+      <ETable columns={columns} data={data} pageSize={20} />
     </VStack>
   );
 };

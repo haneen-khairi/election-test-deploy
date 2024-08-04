@@ -54,7 +54,12 @@ const FamilyRepBarChart = ({
     if (chartElement.length > 0) {
       const index = chartElement[0].index;
       const clickedFamily = filteredData?.data[index].family;
-      setFilter((prev: any) => ({ ...prev, last_name: clickedFamily || "" }));
+
+      setFilter((prev: any) => ({
+        ...prev,
+        last_name: clickedFamily || "",
+        selectedBarIndex: index,
+      }));
     }
   };
 
@@ -67,31 +72,33 @@ const FamilyRepBarChart = ({
   //   [filteredData],
   // );
 
+  const createChartData = () => {
+    const backgroundColors = filteredData?.data.map((_item, index) => {
+      if (!filter?.selectedBarIndex && filter?.selectedBarIndex !== 0)
+        return "#318973";
+
+      return index !== filter?.selectedBarIndex ? "#aaaaaa84" : "#318973";
+    });
+
+    return {
+      labels: filteredData?.data.map((item) => item.family) || [],
+      datasets: [
+        {
+          data: filteredData?.data.map((item) => item.count),
+          backgroundColor: backgroundColors,
+          barThickness: 17,
+          borderRadius: 50,
+        },
+      ],
+    };
+  };
+
   return (
     <Box>
       {filteredData?.data && !isLoading && (
         <Bar
-          style={{
-            paddingTop: "20px",
-          }}
-          data={{
-            labels: filteredData?.data.map((item) => item.family) || [],
-            datasets: [
-              {
-                data: filteredData?.data.map((item) => item.count),
-                backgroundColor: "#318973",
-                barThickness: 17,
-                borderRadius: 50,
-              },
-              // {
-              //   data: Array(filteredData?.data?.length).fill(
-              //     maxCount + maxCount * 0.2,
-              //   ),
-              //   backgroundColor: "#ECFFF5",
-              //   barThickness: 17,
-              // },
-            ],
-          }}
+          style={{ paddingTop: "20px" }}
+          data={createChartData()}
           height="400px"
           options={{
             onClick: handleBarClick,

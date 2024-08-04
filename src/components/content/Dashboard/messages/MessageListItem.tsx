@@ -18,11 +18,11 @@ interface MessageListItemProps {
 export default function MessageListItem({ title, id, onClick, onDelete, onEdit, isStatic }: MessageListItemProps) {
   const toast = useToast();
   const { data } = useAuthStore();
-  // const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   const handleItemClick = () => {
     if(isStatic) return;
-    // setIsActive(true);
+    setIsActive(true);
     onClick(id, title);
   };
 

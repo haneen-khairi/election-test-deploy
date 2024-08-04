@@ -10,9 +10,8 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { PlaceOfResidenceSelect } from "@components/content/DropDown";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { filterSectionSchema } from "./FilterSectionSchemas";
 import useAuthStore from "@store/AuthStore";
 import Filters from "./Filters";
@@ -25,10 +24,10 @@ import {
   StackIcon,
 } from "@assets/icons";
 import { Btn } from "@components/core";
-import ElectoralDistrictSelect from "@components/content/DropDown/ElectoralDistrictSelect";
-import CompanionModal from "../modals/CompanionModal/CompanionModal";
-import { useEffect } from "react";
-import { SlRefresh } from "react-icons/sl";
+import SupporterModal from "../modals/CompanionModal/SupporterModal";
+import { useEffect, useState } from "react";
+import { useDownloadMyLists } from "@services/hooks/excel/useExcel";
+import { saveXLSXFile } from "@constants/functions/SaveXLSX";
 
 const HomeFilterSection = ({
   activeTabIndex,
@@ -45,6 +44,7 @@ const HomeFilterSection = ({
 }) => {
   const { data } = useAuthStore();
   const companion = useDisclosure();
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const {
     control,
@@ -54,9 +54,8 @@ const HomeFilterSection = ({
   } = useForm({
     resolver: yupResolver(filterSectionSchema),
     defaultValues: {
-      district: undefined,
-      representative_name: undefined,
-      gender: "M",
+      mandoub_main: undefined,
+      gender: undefined,
       first_name: undefined,
       second_name: undefined,
       third_name: undefined,
@@ -66,23 +65,22 @@ const HomeFilterSection = ({
       boxes: undefined,
       centers: undefined,
       supporter_name: undefined,
+      status: undefined,
     },
   });
 
-  const { place_of_residence, district } = watch();
-
   const handleSearch = () => {
     const newFilter: any = {};
+    const multiFilter: any = {};
 
     [
       "gender",
       "first_name",
       "second_name",
       "third_name",
-      "last_name",
-      "representative_name",
-      "district",
-      "place_of_residence",
+      "mandoub_main",
+      "electoral_district",
+      "status",
       // ---
       "boxes",
       "centers",
@@ -91,28 +89,49 @@ const HomeFilterSection = ({
       if (item) newFilter[field] = item;
     });
 
-    setFilter((prev: any) => ({
-      ...prev,
-      ...newFilter,
-    }));
-  };
-
-  console.log(watch("place_of_residence"));
-  
-
-  useEffect(() => {
-    const newFilter: any = {};
-
-    ["place_of_residence", "district"].forEach((field) => {
-      const item = watch(field as any);
-      if (item) newFilter[field] = item;
+    ["place_of_residence", "last_name"].forEach((field) => {
+      const item = watch(field as any) as string[];
+      if (item) newFilter[field] = item.join(",");
     });
 
     setFilter((prev: any) => ({
       ...prev,
       ...newFilter,
+      ...multiFilter,
     }));
-  }, [place_of_residence, district]);
+  };
+
+  const downloadMyLists = useDownloadMyLists();
+
+  const getFiltersLayout = () => {
+    if (activeTabIndex === 0)
+      return {
+        columns: "repeat(12, 1fr)",
+        rows: "repeat(3, auto)",
+      };
+
+    if (activeTabIndex === 4)
+      return {
+        columns: "repeat(12, 1fr)",
+        rows: "repeat(5, auto)",
+      };
+
+    return {
+      columns: "repeat(12, 1fr)",
+      rows: "repeat(3, auto)",
+    };
+  };
+
+  const handleExport = async () => {
+    downloadMyLists.mutateAsync({}).then((res) => {
+      saveXLSXFile(res, "candidates.xlsx");
+    });
+  };
+
+  useEffect(() => {
+    setFilter({});
+    reset();
+  }, [activeTabIndex]);
 
   return (
     homePage ? <VStack w="100%" alignItems="start">
@@ -122,68 +141,17 @@ const HomeFilterSection = ({
             <Text>مرحبا</Text>
             <Text>{data?.user?.name || "الاسم غير معروف,"}</Text>
           </Heading>
+
           <Text fontSize="md">
             هذه هي لوحة التحكم الخاصة بك حيث يمكنك عرض إحصائيات أصواتك لانتخابات
             عام 2024
           </Text>
 
-          <CompanionModal
+          <SupporterModal
             isOpen={companion.isOpen}
             onClose={companion.onClose}
           />
         </VStack>
-
-        {activeTabIndex === 0 && (
-          <HStack gap="12px" w="50%">
-            <Controller
-              control={control}
-              name="place_of_residence"
-              render={({ field: { onChange, value } }) => (
-                <PlaceOfResidenceSelect
-                  key={value}
-                  value={value}
-                  onChange={onChange}
-                  error={errors.place_of_residence?.message}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="district"
-              render={({ field: { onChange, value } }) => (
-                <ElectoralDistrictSelect
-                  key={value}
-                  value={value}
-                  onChange={onChange}
-                  error={errors.district?.message}
-                />
-              )}
-            />
-
-            <Btn
-              w="100%"
-              type="outlined"
-              fontSize="17px"
-              color="red"
-              border="1px solid red"
-              borderColor="red"
-              borderRadius="50px"
-              icon={<SlRefresh />}
-              iconPlacment="right"
-              _hover={{
-                backgroundColor: "red",
-                color: "white",
-              }}
-              onClick={() => {
-                reset();
-                setFilter({});
-              }}
-            >
-              <Text>مسح الكل</Text>
-            </Btn>
-          </HStack>
-        )}
 
         {activeTabIndex === 3 && (
           <Btn
@@ -202,20 +170,28 @@ const HomeFilterSection = ({
         )}
 
         {activeTabIndex === 2 && (
-          <Btn
-            type="solid"
-            borderRadius="50px"
-            icon={<DownloadIcon />}
-            iconPlacment="right"
-            bg="#318973"
-            color="#fff"
-            fontSize="17px"
-            onClick={() => {}}
-            padding="20px 25px"
-            mb="auto"
-          >
-            <Text>تحميل ملف Excel</Text>
-          </Btn>
+          <VStack>
+            <Btn
+              type="solid"
+              borderRadius="50px"
+              icon={<DownloadIcon />}
+              iconPlacment="right"
+              bg={isFetching ? "#63636357" : "#318973"}
+              borderColor={isFetching ? "transparent" : "#318973"}
+              color="#fff"
+              disabled={isFetching}
+              fontSize="17px"
+              onClick={async () => {
+                setIsFetching(true);
+
+                await handleExport();
+              }}
+              padding="20px 25px"
+              mb="auto"
+            >
+              <Text>{isFetching ? "جاري التنزيل ..." : "تحميل ملف Excel"}</Text>
+            </Btn>
+          </VStack>
         )}
       </HStack>
 
@@ -262,14 +238,10 @@ const HomeFilterSection = ({
         />
       </Box>
 
-      {activeTabIndex !== 0 && (
+      {activeTabIndex !== 2 && (
         <Grid
-          templateColumns={
-            activeTabIndex !== 4
-              ? "repeat(4, 1fr) 150px"
-              : "repeat(2, 1fr) 150px"
-          }
-          templateRows="repeat(2, 1fr)"
+          templateColumns={getFiltersLayout().columns}
+          templateRows={getFiltersLayout().rows}
           mt="20px"
           gap="16px"
           w="100%"
@@ -282,6 +254,7 @@ const HomeFilterSection = ({
             reset={reset}
             isDirty={isDirty}
             activeTabIndex={activeTabIndex}
+            setFilter={setFilter}
           />
         </Grid>
       )}
