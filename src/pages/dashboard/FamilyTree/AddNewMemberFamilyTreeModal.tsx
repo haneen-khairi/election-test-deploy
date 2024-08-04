@@ -197,6 +197,7 @@ const AddNewMemberFamilyTreeModal = ({
         <VStack align="stretch" spacing="16px">
           <HStack mt="16px" flexWrap="wrap">
             <MyVotesWindow
+            
               getCheckboxList={getVoters}
               homePage={false}
               filter={filter}
