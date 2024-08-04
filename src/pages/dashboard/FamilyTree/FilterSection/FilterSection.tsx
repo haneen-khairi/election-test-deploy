@@ -1,43 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, HStack, Text,
-  //  Radio, RadioGroup, Stack 
-  } from "@chakra-ui/react";
-// import {
-//   FirstNameSelect,
-//   MiddleNameSelect,
-//   SecondNameSelect,
-// } from "@components/content/DropDown";
+import {
+  Box, HStack, Text,
+} from "@chakra-ui/react";
+
 import { Btn } from "@components/core";
 import { CiSearch } from "react-icons/ci";
 import { SlRefresh } from "react-icons/sl";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FilterSchema } from "./FilterSchema";
-// import ElectoralDistrictSelect from "@components/content/DropDown/ElectoralDistrictSelect";
-// import MultiSelect from "@components/core/multiSelect/MultiSelect";
-import {
-  // useGetLastNameDropdown,
-  // useGetplaceOfResidenceDropdown,
-  useGetVotingCentersDropdown,
-} from "@services/hooks/dropdown/useDropDown";
-import { useState } from "react";
-// import CentersSelect from "@components/content/DropDown/CentersSelect";
 
 interface Props {
   setFilter: (data: any) => void;
   filter?: any;
 }
 const FilterSection = ({ setFilter }: Props) => {
-  // const [search, setSearch] = useState<string>();
-  // const dropDownObj = useGetVotingCentersDropdown(search);
 
   const {
-    // control,
     reset,
-    // setValue,
     watch,
-    // formState: { errors },
   } = useForm({
     resolver: yupResolver(FilterSchema),
     defaultValues: {
@@ -69,10 +49,7 @@ const FilterSection = ({ setFilter }: Props) => {
       if (item) newFilter[field] = item;
     });
 
-    // ["place_of_residence", "last_name"].forEach((field) => {
-    //   const item = watch(field as any) as string[];
-    //   if (item) newFilter[field] = item.join(",");
-    // });
+
 
     setFilter((prev: any) => ({
       ...prev,
@@ -82,28 +59,17 @@ const FilterSection = ({ setFilter }: Props) => {
 
   return (
     <Box>
-      {/* Dropdowns Select */}
       <HStack spacing="2%" gridGap="16px" mb="24px" flexWrap="wrap">
-        
+
         <Box w="100%" color={'#000'} flexGrow="1">
-          {/*
-          <MultiSelect
-            name="last_name"
-            placeholder="إسم العائلة"
-            filter={filter}
-            control={control}
-            fetchFunction={useGetLastNameDropdown}
-          />
-          */}
+
         </Box>
 
-       
- 
+
+
       </HStack>
 
-     
 
-      {/* Buttons */}
       <HStack justifyContent="flex-end">
         <Btn
           w="fit-content"
