@@ -15,6 +15,7 @@ const VotersPage = () => {
       <Ebox title="فلترة البحث">
         <FilterSection setFilter={setFilter} filter={filter} />
       </Ebox>
+
       <TableSection filter={filter} />
     </VStack>
   );

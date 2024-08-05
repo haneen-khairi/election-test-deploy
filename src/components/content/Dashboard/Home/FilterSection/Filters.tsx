@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FilerIcon } from "@assets/icons";
-import { Text } from "@chakra-ui/react";
+import { Button, Text } from "@chakra-ui/react";
 import {
   FirstNameSelect,
   MiddleNameSelect,
@@ -260,21 +260,23 @@ const Filters = ({
       </FilterBox>
 
       <FilterBox name="filter" tab={activeTabIndex}>
-        <Btn
+        <Button
+          w="100%"
           h="fit-content"
           py="10px"
-          type="solid"
+          type="submit"
           borderRadius="50px"
-          icon={<FilerIcon />}
-          iconPlacment="right"
           bg={"#318973"}
           borderColor={"#318973"}
           color="#fff"
           fontSize="17px"
           onClick={handleSearch}
+          display="flex"
+          gap="10px"
         >
+          <FilerIcon />
           <Text>فلترة</Text>
-        </Btn>
+        </Button>
       </FilterBox>
 
       <FilterBox name="clear" tab={activeTabIndex}>

@@ -11,6 +11,7 @@ import { MdSelectAll } from "react-icons/md";
 import { MdDeselect } from "react-icons/md";
 import DownloadButton from "@components/core/downloadButton/DownloadButton";
 import DownloadPdfButton from "@components/core/downloadButton/DownloadPdfButton";
+import useAuthStore from "@store/AuthStore";
 
 interface Props {
   filter?: any;
@@ -19,6 +20,22 @@ interface Props {
 const TableSection = ({ filter }: Props) => {
   const { data, isLoading, isFetching } = useGetVoters(filter);
   const { setPage, page } = useVostersStore();
+  const { data: userData } = useAuthStore();
+
+  console.log(userData);
+
+  const isDownloadAllowed: boolean = useMemo(
+    () =>
+      userData?.permissions?.filter(
+        ({ codename }) => codename === "0006_download_voters_as_pdf",
+      )[0]?.has_perm || false,
+    [userData?.permissions],
+  );
+
+  const isCsvAllowed: boolean = useMemo(
+    () => userData?.user?.group === "مرشح" || false,
+    [userData?.user],
+  );
 
   // Modal Configurations
   const info = useDisclosure();
@@ -98,17 +115,21 @@ const TableSection = ({ filter }: Props) => {
               filter?.last_name ||
               filter?.voting_center) && (
               <>
-                <DownloadButton
-                  url="candidate/voters"
-                  fileName="voters.xlsx"
-                  filter={filter}
-                  myvote={false}
-                />
-                <DownloadPdfButton
-                  url="candidate/voters/pdf"
-                  fileName="voters.pdf"
-                  filter={filter}
-                />
+                {isCsvAllowed && (
+                  <DownloadButton
+                    url="candidate/voters"
+                    fileName="voters.xlsx"
+                    filter={filter}
+                    myvote={false}
+                  />
+                )}
+                {isDownloadAllowed && (
+                  <DownloadPdfButton
+                    url="candidate/voters/pdf"
+                    fileName="voters.pdf"
+                    filter={filter}
+                  />
+                )}
               </>
             )}
           </HStack>

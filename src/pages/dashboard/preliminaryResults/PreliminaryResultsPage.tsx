@@ -25,6 +25,7 @@ const PreliminaryResultsPage = () => {
       <Ebox title="فلترة البحث">
         <FilterSection SFilter={SFilter} />
       </Ebox>
+
       <Ebox
         title="عدد الاصوات"
         element={

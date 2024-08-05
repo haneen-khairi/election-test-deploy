@@ -14,9 +14,33 @@ type User = {
   mobile_number?: string;
 };
 
+type Permission = {
+  has_perm: false;
+  id: number;
+  codename:
+    | "0001_supervisor"
+    | "0002_main_delegate"
+    | "0003_movement_delegate"
+    | "0004_box_delegate"
+    | "0005_candidate"
+    | "0006_download_voters_as_pdf"
+    | "0007_show_nationality_id"
+    | "0008_show_family_tree";
+  name:
+    | "Supervisor"
+    | "Main delegate"
+    | "Movement delegate"
+    | "Box delegate"
+    | "Candidate"
+    | "تحميل الناخبين كملف PDF"
+    | "رؤية الرقم الوطني"
+    | "رؤية شجرة العائلة";
+};
+
 export type UserInfo = {
   tokens?: Tokens;
   user?: User;
+  permissions: Permission[];
 };
 
 interface AuthStore {
@@ -49,6 +73,7 @@ const useAuthStore = create<AuthStore>((set) => ({
           mobile_number: "",
           name: "",
         },
+        permissions: [],
       },
       isAuthenticated: false,
     });

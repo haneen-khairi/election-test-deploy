@@ -59,7 +59,9 @@ const AccountsSelect = ({
         options
           ? options?.map((el) => ({
               label: el.name || "",
-              value: isName ? el.name?.toString() || "" : el.id?.toString(),
+              value: isName
+                ? el.name?.toString() || ""
+                : el.id?.toString() || "",
             }))
           : []
       }

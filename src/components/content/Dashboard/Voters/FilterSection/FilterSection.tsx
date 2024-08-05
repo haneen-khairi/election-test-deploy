@@ -1,12 +1,21 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, HStack, Text, Radio, RadioGroup, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Text,
+  Radio,
+  RadioGroup,
+  Stack,
+  Button,
+} from "@chakra-ui/react";
 import {
   FirstNameSelect,
   MiddleNameSelect,
   SecondNameSelect,
 } from "@components/content/DropDown";
-import { Btn, Input } from "@components/core";
+import { Input } from "@components/core";
 import { CiSearch } from "react-icons/ci";
 import { SlRefresh } from "react-icons/sl";
 import { Controller, useForm } from "react-hook-form";
@@ -20,9 +29,10 @@ import {
   useGetplaceOfResidenceDropdown,
   useGetVotingCentersDropdown,
 } from "@services/hooks/dropdown/useDropDown";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import CentersSelect from "@components/content/DropDown/CentersSelect";
 import BoxesSelect from "@components/content/DropDown/BoxesSelect";
+import useAuthStore from "@store/AuthStore";
 
 interface Props {
   setFilter: (data: any) => void;
@@ -31,6 +41,23 @@ interface Props {
 const FilterSection = ({ filter, setFilter }: Props) => {
   const [search, setSearch] = useState<string>();
   const dropDownObj = useGetVotingCentersDropdown(search);
+  const { data: userData } = useAuthStore();
+
+  const isFamilyTreeAllowed: boolean = useMemo(
+    () =>
+      userData?.permissions?.filter(
+        ({ codename }) => codename === "0008_show_family_tree",
+      )[0]?.has_perm || false,
+    [userData?.permissions],
+  );
+
+  const isNAtionalityAllowed: boolean = useMemo(
+    () =>
+      userData?.permissions?.filter(
+        ({ codename }) => codename === "0007_show_nationality_id",
+      )[0]?.has_perm || false,
+    [userData?.permissions],
+  );
 
   const {
     control,
@@ -39,39 +66,41 @@ const FilterSection = ({ filter, setFilter }: Props) => {
     watch,
     register,
     formState: { errors },
+    handleSubmit,
   } = useForm({
     resolver: yupResolver(FilterSchema),
     defaultValues: {
-      family_tree_id: undefined,
-      nationality_id: undefined,
       full_name: undefined,
       first_name: undefined,
       second_name: undefined,
       third_name: undefined,
       last_name: undefined,
-      place_of_residence: undefined,
+      nationality_id: undefined,
       electoral_district: undefined,
       voting_center: undefined,
+      box: undefined,
+      family_tree_id: undefined,
+      place_of_residence: undefined,
       gender: undefined,
     },
   });
 
-  const handleFilter = () => {
+  const handleFilter = async () => {
     const newFilter: any = {};
 
     [
-      "nationality_id",
-      "family_tree_id",
       "full_name",
       "first_name",
       "second_name",
       "third_name",
-      "electoral_district",
-      "gender",
-      "box",
-      "place_of_residence",
       "last_name",
+      "nationality_id",
+      "electoral_district",
       "voting_center",
+      "box",
+      "family_tree_id",
+      "place_of_residence",
+      "gender",
     ].forEach((field) => {
       const item = watch(field as any);
       if (item) newFilter[field] = item;
@@ -84,7 +113,7 @@ const FilterSection = ({ filter, setFilter }: Props) => {
   };
 
   return (
-    <Box>
+    <Box as="form">
       {/* Dropdowns Select */}
       <HStack spacing="2%" gridGap="16px" mb="24px" flexWrap="wrap">
         <Box w="22%" flexGrow="1">
@@ -161,21 +190,23 @@ const FilterSection = ({ filter, setFilter }: Props) => {
           />
         </Box>
 
-        <Box w="22%" flexGrow="1">
-          <Controller
-            control={control}
-            name="nationality_id"
-            render={({ field }) => (
-              <Input
-                type="number"
-                placeholder="الرقم الوطني"
-                register={register("nationality_id")}
-                error={errors.nationality_id?.message}
-                {...field}
-              />
-            )}
-          />
-        </Box>
+        {isNAtionalityAllowed && (
+          <Box w="22%" flexGrow="1">
+            <Controller
+              control={control}
+              name="nationality_id"
+              render={({ field }) => (
+                <Input
+                  type="number"
+                  placeholder="الرقم الوطني"
+                  register={register("nationality_id")}
+                  error={errors.nationality_id?.message}
+                  {...field}
+                />
+              )}
+            />
+          </Box>
+        )}
 
         <Box w="22%" flexGrow="1">
           <Controller
@@ -225,16 +256,18 @@ const FilterSection = ({ filter, setFilter }: Props) => {
           />
         </Box>
 
-        <Box w="100%">
-          <MultiSelect
-            name="family_tree_id"
-            placeholder="شجرة العائلة"
-            filter={filter}
-            control={control}
-            isId={true}
-            fetchFunction={useGetFamilyTreeDropdown}
-          />
-        </Box>
+        {isFamilyTreeAllowed && (
+          <Box w="100%">
+            <MultiSelect
+              name="family_tree_id"
+              placeholder="شجرة العائلة"
+              filter={filter}
+              control={control}
+              isId={true}
+              fetchFunction={useGetFamilyTreeDropdown}
+            />
+          </Box>
+        )}
 
         <Box w="100%">
           <MultiSelect
@@ -268,28 +301,45 @@ const FilterSection = ({ filter, setFilter }: Props) => {
 
       {/* Buttons */}
       <HStack justifyContent="flex-end">
-        <Btn
-          w="fit-content"
-          type="solid"
-          icon={<CiSearch size="20px" />}
-          iconPlacment="right"
-          onClick={handleFilter}
+        <Button
+          type="submit"
+          onClick={handleSubmit(handleFilter)}
+          w="150px"
+          h="fit-content"
+          py="10px"
+          borderRadius="50px"
+          bg="#318973"
+          borderColor="#318973"
+          color="#fff"
+          fontSize="17px"
+          display="flex"
+          gap="10px"
         >
+          <CiSearch size="20px" />
           <Text>بحث</Text>
-        </Btn>
+        </Button>
 
-        <Btn
-          w="fit-content"
-          type="outlined"
-          icon={<SlRefresh />}
-          iconPlacment="right"
+        <Button
+          w="150px"
+          h="fit-content"
+          py="10px"
+          type="button"
+          borderRadius="50px"
+          bg={"transparent"}
+          fontSize="17px"
+          color="red"
+          border="1px solid red"
+          borderColor="red"
           onClick={() => {
             reset();
             setFilter({});
           }}
+          display="flex"
+          gap="10px"
         >
+          <SlRefresh size="20px" />
           <Text>مسح الكل</Text>
-        </Btn>
+        </Button>
       </HStack>
     </Box>
   );

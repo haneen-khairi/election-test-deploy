@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Text, VStack } from "@chakra-ui/react";
 import { useRefreshToken } from "@services/hooks/auth/useAuth";
 import useAuthStore from "@store/AuthStore";

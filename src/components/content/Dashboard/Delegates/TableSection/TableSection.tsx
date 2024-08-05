@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { HStack, Text, useDisclosure } from "@chakra-ui/react";
 import { ETable, Ebox, GradientButton } from "@components/core";
 import useColumns from "../hooks/useColumns";
-import { FilterType } from "../FilterSection/FilterType";
 import {
   useDeleteDelegate,
   useGetDelegates,
@@ -13,13 +12,9 @@ import useDelegatesStore from "@store/DelegatesStore";
 import { InfoModal } from "../../Modals";
 import { Delegates, NotFound } from "../../../TableAssets";
 
-interface Props {
-  filter?: FilterType;
-}
-
-const TableSection = ({ filter }: Props) => {
-  const { data, isLoading, isFetching } = useGetDelegates(filter);
-  const { setPage, page } = useDelegatesStore();
+const TableSection = () => {
+  const { data, isLoading, isFetching } = useGetDelegates();
+  const { setPage, page, filter } = useDelegatesStore();
 
   // Modal Configurations
   const modals = {
