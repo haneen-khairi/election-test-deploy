@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { VStack } from "@chakra-ui/react";
 import MyVotesWindow from "@components/content/Dashboard/Home/MyVotesWindow/MyVotesWindow";
 import VotersCountWindow from "@components/content/Dashboard/Home/VotersCountWindow/VotersCountWindow";
@@ -20,7 +18,7 @@ const HomePage = () => {
 
     if (activeTabIndex === 1)
       return (
-        <MyVotesWindow homePage={true} filter={filter} setFilter={setFilter} />
+        <MyVotesWindow homePage={true} filter={filter} setFilter={setFilter}  />
       );
 
     if (activeTabIndex === 2) return <MyListsWindow />;

@@ -93,7 +93,7 @@ const AddNewMemberFamilyTreeModal = ({
   async function handleSubmitForm(data: any) {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_PRIVATE_API_URL}/family_tree/trees/${familyId}`,
+        `${import.meta.env.VITE_PRIVATE_API_URL}/family_tree/trees/${familyId}/`,
         data,
         {
           headers: {

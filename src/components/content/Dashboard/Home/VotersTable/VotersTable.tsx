@@ -16,23 +16,16 @@ import { MdDeselect, MdSelectAll } from "react-icons/md";
 import { BulkEditModal, EditModal } from "../../Voters/modals";
 import { InfoModal } from "../../Modals";
 
-const VotersTable = ({ 
-  filter , 
-  getCheckboxList =(data: any[]) => {}
-}: { 
-  filter: any, 
-  getCheckboxList?: (data: any[]) => void 
-}) => {
+const VotersTable = ({ filter , getCheckboxList =(data?: any[]) => {}}: { filter: any, getCheckboxList?: (data: any[]) => void }) => {
   const { setPage, page } = useVostersStore();
   const { data, isLoading, isFetching } = useGetVoters(filter);
-  console.log("🚀 ~ useVostersStore:", data)
 
   const remove = useDisclosure();
   const edit = useDisclosure();
   const bulkEdit = useDisclosure();
   const bulkRemove = useDisclosure();
 
-  const voters: any[] = useMemo(
+  const voters: GetVoters[] = useMemo(
     () => (isLoading ? [] : data?.data || []),
     [data, isLoading],
   );

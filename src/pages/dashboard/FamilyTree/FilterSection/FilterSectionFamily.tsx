@@ -1,4 +1,4 @@
-import { Box, HStack, Text, Checkbox, Stack } from "@chakra-ui/react";
+import { Box, HStack, Text, Stack } from "@chakra-ui/react";
 import { Btn } from "@components/core";
 import { CiSearch } from "react-icons/ci";
 import { SlRefresh } from "react-icons/sl";
@@ -35,8 +35,7 @@ const FilterSectionFamily = ({ filter, setFilter }: Props) => {
   });
 
   // Placeholder for the last name list (Replace this with actual data fetching)
-  const lastNameList = ["القضاه", "العبدالله", "السلمان"]; // Example data
-
+ 
   const handleFilter = () => {
     const newFilter: any = {};
 
@@ -65,11 +64,11 @@ const FilterSectionFamily = ({ filter, setFilter }: Props) => {
     }));
   };
 
-  const handleNameSelection = (name: string) => {
-    setSelectedNames((prev) =>
-      prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
-    );
-  };
+  // const handleNameSelection = (name: string) => {
+  //   setSelectedNames((prev) =>
+  //     prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
+  //   );
+  // };
 
   return (
     <Box>
@@ -86,7 +85,13 @@ const FilterSectionFamily = ({ filter, setFilter }: Props) => {
         </Box>
       </HStack>
 
-      
+      {/* Table with checkboxes */}
+      <Box mb="24px">
+        <Text mb="8px">اختر الأسماء:</Text>
+        <Stack spacing="4">
+        
+        </Stack>
+      </Box>
 
       {/* Buttons */}
       <HStack justifyContent="flex-end">

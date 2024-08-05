@@ -69,7 +69,7 @@ import {
       try {
         setFamilyId(id);
         const res = await axios.get(
-          `${import.meta.env.VITE_PRIVATE_API_URL}/candidate/voters?family_tree_id=${id}/`,
+          `${import.meta.env.VITE_PRIVATE_API_URL}/candidate/voters?family_tree_id=${id}`,
           {
             headers: {
               Authorization: `Bearer ${data?.tokens?.access}`,

@@ -1,6 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ActivityChart, MyVotes } from "@assets/icons";
 import { Box, Grid, HStack, Text, VStack } from "@chakra-ui/react";
 import { Ebox } from "@components/core";

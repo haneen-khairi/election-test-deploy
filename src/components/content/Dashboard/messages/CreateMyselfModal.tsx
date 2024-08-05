@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { HStack, useDisclosure } from "@chakra-ui/react";
 import { GradientButton, Popup } from "@components/core";
 import { useForm } from "react-hook-form";
