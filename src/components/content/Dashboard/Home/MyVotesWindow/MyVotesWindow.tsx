@@ -23,12 +23,14 @@ const MyVotesWindow = ({
   filter,
   homePage = false,
   setFilter,
+  treePage = false,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getCheckboxList=  (data: any[]) => {return data}
 }: {
   filter: any;
-  homePage: boolean,
+  homePage: boolean;
   setFilter: any;
+  treePage?: boolean;
   getCheckboxList?: (data: any[]) => void
 }) => {
   const {
@@ -167,9 +169,8 @@ const MyVotesWindow = ({
           </VStack>
         </Ebox>
       </Grid>}
-
       <Ebox>
-        <VotersTable getCheckboxList={getCheckboxList}  filter={filter} />
+        <VotersTable setFilter={setFilter} treePage={treePage} getCheckboxList={getCheckboxList}  filter={filter} />
       </Ebox>
     </VStack>
   );

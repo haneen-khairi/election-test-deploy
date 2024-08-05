@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HStack, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import { GradientButton, Popup } from "@components/core";
 import { useForm } from "react-hook-form";

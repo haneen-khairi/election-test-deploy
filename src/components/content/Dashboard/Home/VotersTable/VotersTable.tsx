@@ -8,18 +8,40 @@ import {
 } from "@services/hooks/voters/useVoters";
 import useVostersStore from "@store/VostersSotre";
 import useColumns from "./useColumns";
-import { useEffect, useMemo } from "react";
-import { Button, HStack, Text, VStack, useDisclosure } from "@chakra-ui/react";
+import { useEffect, useMemo, useState } from "react";
+import { Button, HStack, Input, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { DownloadDB, EditPenIcon, TrashIcon } from "@assets/icons";
 import { MdDeselect, MdSelectAll } from "react-icons/md";
 import { BulkEditModal, EditModal } from "../../Voters/modals";
 import { InfoModal } from "../../Modals";
 
-const VotersTable = ({ filter, getCheckboxList = (data?: any[]) => { 
-  return data} }: { filter: any, getCheckboxList?: (data: any[]) => void }) => {
+const VotersTable = ({ filter, 
+  setFilter,
+  getCheckboxList = (data?: any[]) => { 
+  return data} ,
+  treePage = false
+}: { 
+    filter: any, 
+    setFilter: any,
+    getCheckboxList?: (data: any[]) => void , 
+    treePage?: boolean
+  } ) => {
   const { setPage, page } = useVostersStore();
   const { data, isLoading, isFetching } = useGetVoters(filter);
+  console.log("🚀 ~ VotersTable ~ data:", data)
+  const [searchTerm, setSearchTerm] = useState("");
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+    setFilter({
+      first_name: value
+    })
+    // setFilter((prevFilter: any) => ({
+    //   ...prevFilter,
+    //   search: value,
+    // }));
+  };
   const remove = useDisclosure();
   const edit = useDisclosure();
   const bulkEdit = useDisclosure();
@@ -58,6 +80,11 @@ const VotersTable = ({ filter, getCheckboxList = (data?: any[]) => {
 
   return (
     <VStack>
+      {treePage && <Input
+          placeholder="Search by name"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />}
       <HStack w="100%" fontWeight={600} fontSize="20px" mb="20px">
         <Text ml="auto">جدول الناخبين</Text>
 
