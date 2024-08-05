@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { VStack } from "@chakra-ui/react";
 import MyVotesWindow from "@components/content/Dashboard/Home/MyVotesWindow/MyVotesWindow";
 import VotersCountWindow from "@components/content/Dashboard/Home/VotersCountWindow/VotersCountWindow";

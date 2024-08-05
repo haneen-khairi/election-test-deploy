@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HStack, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import { GradientButton, Popup } from "@components/core";
 import { useForm } from "react-hook-form";
@@ -55,7 +56,7 @@ const AddNewMemberFamilyTreeModal = ({
       );
       console.log("🚀 ~ getListDetails ~ response:", response.data);
       if (response.data.status) {
-        let initialValue = {
+        const initialValue = {
           name: response.data.data.name,
         };
         reset({ ...initialValue });
@@ -69,7 +70,7 @@ const AddNewMemberFamilyTreeModal = ({
   const toast = useToast();
 
   const onSubmit = () => {
-    let newList = {
+    const newList = {
       voter_ids: votersLists,
     };
     console.log("🚀 ~ onSubmit ~ newList:", newList);

@@ -9,14 +9,14 @@ import {
 import useVostersStore from "@store/VostersSotre";
 import useColumns from "./useColumns";
 import { useEffect, useMemo } from "react";
-import { GetVoters } from "@services/hooks/voters/Voters";
 import { Button, HStack, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { DownloadDB, EditPenIcon, TrashIcon } from "@assets/icons";
 import { MdDeselect, MdSelectAll } from "react-icons/md";
 import { BulkEditModal, EditModal } from "../../Voters/modals";
 import { InfoModal } from "../../Modals";
 
-const VotersTable = ({ filter , getCheckboxList =(data?: any[]) => {}}: { filter: any, getCheckboxList?: (data: any[]) => void }) => {
+const VotersTable = ({ filter, getCheckboxList = (data?: any[]) => { 
+  return data} }: { filter: any, getCheckboxList?: (data: any[]) => void }) => {
   const { setPage, page } = useVostersStore();
   const { data, isLoading, isFetching } = useGetVoters(filter);
 
@@ -25,7 +25,7 @@ const VotersTable = ({ filter , getCheckboxList =(data?: any[]) => {}}: { filter
   const bulkEdit = useDisclosure();
   const bulkRemove = useDisclosure();
 
-  const voters: GetVoters[] = useMemo(
+  const voters: any[] = useMemo(
     () => (isLoading ? [] : data?.data || []),
     [data, isLoading],
   );
@@ -52,10 +52,10 @@ const VotersTable = ({ filter , getCheckboxList =(data?: any[]) => {}}: { filter
     getCheckboxList(checkedRows);
 
     return () => {
-      
+
     }
   }, [checkedRows])
-  
+
   return (
     <VStack>
       <HStack w="100%" fontWeight={600} fontSize="20px" mb="20px">

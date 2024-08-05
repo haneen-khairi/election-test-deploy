@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ActivityChart, MyVotes } from "@assets/icons";
 import { Box, Grid, HStack, Text, VStack } from "@chakra-ui/react";
 import { Ebox } from "@components/core";
@@ -22,12 +23,13 @@ const MyVotesWindow = ({
   filter,
   homePage = false,
   setFilter,
-  getCheckboxList=  (data: any[]) => {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getCheckboxList=  (data: any[]) => {return data}
 }: {
   filter: any;
   homePage: boolean,
   setFilter: any;
-  getCheckboxList: (data: any[]) => void
+  getCheckboxList?: (data: any[]) => void
 }) => {
   const {
     control,

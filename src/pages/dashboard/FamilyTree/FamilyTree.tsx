@@ -162,7 +162,7 @@ import {
           }}
         />
         <AddNewMemberFamilyTreeModal
-          onSuccess={() => {}}
+          onSuccess={() => getFamilyNameById(familyId)}
           familyId={familyId}
           token={data?.tokens?.access || ""}
           isOpen={isAddNamesOpen}
