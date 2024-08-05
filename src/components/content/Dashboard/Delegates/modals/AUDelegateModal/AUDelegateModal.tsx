@@ -209,6 +209,7 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                     )}
                   />
                 </Box>
+
                 <Box w="40%" flexGrow="1">
                   <Input
                     label="اسم المندوب"
@@ -218,6 +219,7 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                     error={errors.name?.message}
                   />
                 </Box>
+
                 <Box w="40%" flexGrow="1">
                   <Input
                     label="رقم الموبايل"
@@ -227,6 +229,7 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                     error={errors.mobile_number?.message}
                   />
                 </Box>
+
                 <Box w="40%" flexGrow="1">
                   <Input
                     label="كلمة المرور"
@@ -236,6 +239,7 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                     error={errors.password?.message}
                   />
                 </Box>
+                
                 {(Number(values?.group || 0) == 4 ||
                   Number(values?.group || 0) == 3) && (
                   <VStack alignItems="start" w="40%" flexGrow="1" gap="20px">
@@ -348,6 +352,7 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                 )}
               </HStack>
             </VStack>
+
             <HStack justifyContent="flex-end" mt="24px">
               <GradientButton
                 onClick={isValid ? alert.onOpen : handleSubmit(onSubmit)}

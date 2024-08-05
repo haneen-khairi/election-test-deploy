@@ -8,13 +8,12 @@ import {
 } from "@tanstack/react-query";
 import { GetDelegate, GetDelegates, PostDelegate } from "./Delegates";
 import { ItemResponse } from "@services/structure";
-import { FilterType } from "@components/content/Dashboard/Delegates/FilterSection/FilterType";
 import useDelegatesStore from "@store/DelegatesStore";
 import useSupportersStore from "@store/SupportersStore";
 
 const manadeebURL = "account/manadeeb";
-export const useGetDelegates = (filter?: FilterType) => {
-  const { page } = useDelegatesStore();
+export const useGetDelegates = () => {
+  const { page, filter } = useDelegatesStore();
   const api = new APIClient<GetDelegates>(manadeebURL + "/");
   return useQuery({
     queryKey: ["Delegates", filter, page],

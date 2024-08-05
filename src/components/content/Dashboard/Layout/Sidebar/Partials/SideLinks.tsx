@@ -1,9 +1,12 @@
 import { HStack, Text, VStack } from "@chakra-ui/react";
 import { links } from "@constants/variables/SideBar";
+import useAuthStore from "@store/AuthStore";
+import { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const SideLinks = () => {
   const location = useLocation();
+  const { data } = useAuthStore();
 
   const getLinkStyles = (index: number, url: string) => {
     const isActive =
@@ -19,9 +22,27 @@ const SideLinks = () => {
     };
   };
 
+  const isFamilyTreeAllowed: boolean = useMemo(
+    () =>
+      data?.permissions?.filter(
+        ({ codename }) => codename === "0008_show_family_tree",
+      )[0]?.has_perm || false,
+    [data?.permissions],
+  );
+
+  const filteredLinks = useMemo(
+    () =>
+      links.filter(
+        ({ url }) =>
+          url !== "/family-tree" ||
+          (url === "/family-tree" && isFamilyTreeAllowed),
+      ) || [],
+    [isFamilyTreeAllowed],
+  );
+
   return (
     <VStack align="stretch" mt="24px" spacing="6px">
-      {links.map((link, index) => (
+      {filteredLinks.map((link, index) => (
         <HStack
           key={index}
           as={Link}

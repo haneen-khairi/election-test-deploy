@@ -50,6 +50,7 @@ const HomeFilterSection = ({
     reset,
     watch,
     formState: { errors, isDirty },
+    handleSubmit,
   } = useForm({
     resolver: yupResolver(filterSectionSchema),
     defaultValues: {
@@ -67,6 +68,9 @@ const HomeFilterSection = ({
       status: undefined,
     },
   });
+
+  console.log(errors);
+  
 
   const handleSearch = () => {
     const newFilter: any = {};
@@ -254,6 +258,7 @@ const HomeFilterSection = ({
 
       {activeTabIndex !== 2 && (
         <Grid
+          as={"form"}
           templateColumns={getFiltersLayout().columns}
           templateRows={getFiltersLayout().rows}
           mt="20px"
@@ -261,7 +266,7 @@ const HomeFilterSection = ({
           w="100%"
         >
           <Filters
-            handleSearch={handleSearch}
+            handleSearch={handleSubmit(handleSearch)}
             control={control}
             errors={errors}
             reset={reset}

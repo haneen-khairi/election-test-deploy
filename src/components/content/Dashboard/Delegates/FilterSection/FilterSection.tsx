@@ -1,26 +1,23 @@
-import { Box, HStack, Text } from "@chakra-ui/react";
-import { Btn, Input, InputSelect } from "@components/core";
+import { Box, Button, HStack, Text } from "@chakra-ui/react";
+import { Input, InputSelect } from "@components/core";
 import { CiSearch } from "react-icons/ci";
 import { SlRefresh } from "react-icons/sl";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FilterSchema } from "./FilterSchema";
 import { FilterType } from "./FilterType";
-import { useEffect } from "react";
 import useDelegatesStore from "@store/DelegatesStore";
 import { useGetDelegateTypes } from "@services/hooks/delegates/useGroups";
 
-interface Props {
-  SFilter: (data: FilterType | undefined) => void;
-}
-const FilterSection = ({ SFilter }: Props) => {
+const FilterSection = () => {
   const { data, isLoading } = useGetDelegateTypes();
+  const { setFilter } = useDelegatesStore();
+
   const {
     handleSubmit,
     control,
     reset,
     register,
-    watch,
     formState: { errors, isDirty },
   } = useForm({
     resolver: yupResolver(FilterSchema),
@@ -32,24 +29,11 @@ const FilterSection = ({ SFilter }: Props) => {
   });
 
   const handleFilter = (values: FilterType) => {
-    SFilter(values);
+    setFilter(values);
   };
 
-  const { group, mobile_number, name } = watch();
-  const { setFilter } = useDelegatesStore();
-
-  useEffect(() => {
-    if (isDirty) {
-      setFilter({
-        group,
-        mobile_number,
-        name,
-      });
-    }
-  }, [group, mobile_number, name, isDirty, setFilter]);
-
   return (
-    <Box>
+    <Box as="form">
       {/* Dropdowns Select */}
       <HStack spacing="2%" gridGap="16px" mb="24px" flexWrap="wrap">
         <Box w="32%" flexGrow="1">
@@ -97,28 +81,46 @@ const FilterSection = ({ SFilter }: Props) => {
 
       {/* Buttons */}
       <HStack justifyContent="flex-end">
-        <Btn
-          w="fit-content"
-          type="solid"
-          icon={<CiSearch size="20px" />}
-          iconPlacment="right"
+        <Button
+          type="submit"
           onClick={handleSubmit(handleFilter)}
+          w="150px"
+          h="fit-content"
+          py="10px"
+          borderRadius="50px"
+          bg="#318973"
+          borderColor="#318973"
+          color="#fff"
+          fontSize="17px"
+          display="flex"
+          gap="10px"
         >
+          <CiSearch size="20px" />
           <Text>بحث</Text>
-        </Btn>
-        <Btn
-          w="fit-content"
-          type="outlined"
-          icon={<SlRefresh />}
-          iconPlacment="right"
+        </Button>
+
+        <Button
+          w="150px"
+          h="fit-content"
+          py="10px"
+          type="button"
+          borderRadius="50px"
+          bg={"transparent"}
+          fontSize="17px"
+          color="red"
+          border="1px solid red"
+          borderColor="red"
           onClick={() => {
             reset();
-            SFilter(undefined);
+            setFilter({});
           }}
           disabled={!isDirty}
+          display="flex"
+          gap="10px"
         >
+          <SlRefresh size="20px" />
           <Text>مسح الكل</Text>
-        </Btn>
+        </Button>
       </HStack>
     </Box>
   );

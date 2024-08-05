@@ -5,4 +5,4 @@ build:
 	npm run build
 
 acp:
-	git add . && git commit -m "fix: fixing bugs" && git push
+	git add . && git commit -m "fix: changes 8/5" && git push

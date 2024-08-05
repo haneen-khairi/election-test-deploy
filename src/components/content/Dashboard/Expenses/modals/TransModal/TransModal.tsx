@@ -44,7 +44,10 @@ const TransModal = ({ isOpen, onClose }: Props) => {
             toast: toast,
             status: "error",
             title: "Error",
-            description: res.error,
+            description:
+              typeof res.error === "string"
+                ? res.error
+                : (Object.values(res.error as any)[0] as any)[0],
           });
         } else {
           EToast({
@@ -79,6 +82,7 @@ const TransModal = ({ isOpen, onClose }: Props) => {
                   key={value}
                   label="من حساب"
                   placeholder="اختر الحساب"
+                  isName={false}
                 />
               )}
             />
@@ -96,6 +100,7 @@ const TransModal = ({ isOpen, onClose }: Props) => {
                   key={value}
                   label="إلى حساب"
                   placeholder="اختر الحساب"
+                  isName={false}
                 />
               )}
             />

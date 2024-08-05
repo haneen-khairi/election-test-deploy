@@ -86,6 +86,7 @@ const EditModal = ({ isOpen, onClose, recordID }: Props) => {
         voters: JSON.stringify([recordID]),
       })
       .then((res) => {
+        reset()
         if (res.error) {
           const errorMessages = Object.values(res.error).join("; ");
           EToast({
@@ -224,7 +225,10 @@ const EditModal = ({ isOpen, onClose, recordID }: Props) => {
                     label="الموقع"
                     onOpen={mapPopup.onOpen}
                     placeholder="حدد الموقع من الخريطة"
-                    value={values}
+                    value={{
+                      latitude: values?.latitude || 0,
+                      longitude: values?.longitude || 0,
+                    }}
                     error={errors.latitude?.message}
                   />
                 </Box>

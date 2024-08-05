@@ -15,10 +15,11 @@ export const AUDelegateSchema = yup.object().shape({
   place_of_residence: yup
     .array()
     .test("conditional-required", "هذا الحقل اجباري", function (value) {
+      if (this.parent.place_of_residence_is_all) return true;
+
       const group = this.parent.group;
-      if (group === 4 || group === 3) {
-        return value && value?.length > 0;
-      }
+      if (group === 4 || group === 3) return value && value?.length > 0;
+
       return true;
     }),
   electoral_boxes: yup

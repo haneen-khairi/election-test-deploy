@@ -1,20 +1,31 @@
 import * as yup from "yup";
+
 const numberRegex = /^07\d{8}$/;
+
 export const EditSchema = yup.object().shape({
   status: yup.number().required("يجب اختيار الحالة"),
-  longitude: yup.number().required("هذا الحقل اجباري"),
-  latitude: yup.number().required("هذا الحقل اجباري"),
+  longitude: yup.number().optional(),
+  latitude: yup.number().optional(),
   mandoub_main: yup.string().required("هذا الحقل اجباري"),
+  note: yup.string().optional(),
   mobile_number: yup
     .string()
-    .required("هذا الحقل اجباري")
-    .matches(numberRegex, "رقم الجوال لا يمكن ان يحتوي على احرف ويجب ان يبدأ ب07")
-    .max(10, "رقم الجوال يجب ان يحتوي على 10 ارقام كحد اقصى")
-    .min(10, "رقم الجوال يجب ان يحتوي على 10 ارقام كحد ادنى"),
-  note: yup.string().required("هذا الحقل اجباري"),
+    .optional()
+    .test(
+      "conditional-required",
+      "رقم الجوال لا يمكن ان يحتوي على احرف ويجب ان يتكون من 10 أرقام و يبدأ ب07",
+      function (value) {
+        if (!value) return true;
+        if (!numberRegex.test(value)) return false;
+        if (value.length !== 10) return false;
+
+        return true;
+      },
+    ),
   mandoub_haraka: yup
     .string()
     .test("conditional-required", "هذا الحقل اجباري", function (value) {
+      if (!value) return false;
       const status = this.parent.status;
       if (status == 100) {
         return value !== undefined;
