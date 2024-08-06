@@ -8,8 +8,8 @@ import {
 } from "@services/hooks/voters/useVoters";
 import useVostersStore from "@store/VostersSotre";
 import useColumns from "./useColumns";
-import { useEffect, useMemo, useState } from "react";
-import { Button, HStack, Input, Text, VStack, useDisclosure } from "@chakra-ui/react";
+import { useEffect, useMemo } from "react";
+import { Button, HStack, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { DownloadDB, EditPenIcon, TrashIcon } from "@assets/icons";
 import { MdDeselect, MdSelectAll } from "react-icons/md";
 import { BulkEditModal, EditModal } from "../../Voters/modals";
@@ -30,19 +30,15 @@ const VotersTable = ({ filter,
   const { setPage, page } = useVostersStore();
   const { data, isLoading, isFetching } = useGetVoters(filter);
   console.log("🚀 ~ VotersTable ~ data:", data)
-  const [searchTerm, setSearchTerm] = useState("");
+  // const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSearchTerm(value);
-    setFilter({
-      first_name: value
-    })
-    // setFilter((prevFilter: any) => ({
-    //   ...prevFilter,
-    //   search: value,
-    // }));
-  };
+  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = event.target.value;
+  //   setSearchTerm(value);
+  //   setFilter({
+  //     first_name: value
+  //   })
+  // };
   const remove = useDisclosure();
   const edit = useDisclosure();
   const bulkEdit = useDisclosure();
