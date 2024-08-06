@@ -3,6 +3,8 @@ import { useState } from "react";
 type Props = {
   family: FamilyObject;
   onClick: (id: string) => void;
+  isActive: boolean;
+
 };
 
 type FamilyObject = {
@@ -15,19 +17,20 @@ export const FamilyList = ({
   onClick = (id: string) => {
     console.log(id);
   },
+  isActive
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = (id: string) => {
-    setIsOpen((prev) => !prev);  
+    // setIsOpen((prev) => !prev);  
     onClick(id);
   };
 
   return (
     <Button
       onClick={() => handleClick(family.id)} 
-      bg={"primary.500" }
-      color={isOpen ? "#fff" : "#000"}
+      bg={isActive ? "primary.500" : "#fff"}
+      color={isActive ? "#fff" : "#000"}
       borderBottom="1px solid #c2c2c2"
       w="100%"
       mt={5}
@@ -37,7 +40,7 @@ export const FamilyList = ({
       justifyContent="space-between"
       transition="background-color 0.3s, color 0.3s"
       _hover={{ bg: "primary.600" }}
-      _active={{ bg: "#c2c2c2", color: "#000" }}
+      // _active={{ bg: "#c2c2c2", color: "#000" }}
     >
       {family.name}
     </Button>

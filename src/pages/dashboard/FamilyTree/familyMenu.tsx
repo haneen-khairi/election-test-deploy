@@ -13,6 +13,11 @@ type Family = {
 }
 
 const FamilyMenu = ({ families, onClick }: Props) => {
+    const [activeId, setActiveId] = useState<string | null>(null);
+    const handleButtonClick = (id: string) => {
+        setActiveId(id);
+        onClick(id)
+      };
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
 
@@ -34,7 +39,9 @@ const FamilyMenu = ({ families, onClick }: Props) => {
                 <Heading size='md' color={'#000'}>شجرة العائلة</Heading>
                 <SimpleGrid columns={1} spacing={5} minW={'250px'}>
                     {currentData.length ? currentData.map((family: Family) => (
-                        <FamilyList key={family.id} family={family} onClick={onClick} />
+                        <FamilyList 
+                        isActive={family.id === activeId}
+                        key={family.id} family={family} onClick={handleButtonClick} />
                     )) : ""}
                 </SimpleGrid>
                 <HStack mt={5} justifyContent="space-between">
