@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { InfoError } from "@assets/icons";
 import { IoIosEye, IoMdEyeOff } from "react-icons/io";
 import {
@@ -9,13 +10,13 @@ import {
   HTMLChakraProps,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { UseFormRegisterReturn } from "react-hook-form";
+// import { UseFormRegisterReturn } from "react-hook-form";
 
 interface Props extends HTMLChakraProps<"div"> {
   label?: string;
   type: "text" | "password" | "time" | "date" | "number";
   placeholder?: string;
-  register?: UseFormRegisterReturn;
+  register?: any;
   error?: string;
   dir?: "ltr" | "rtl";
 }

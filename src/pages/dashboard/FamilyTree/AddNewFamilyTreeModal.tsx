@@ -1,17 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Badge, Box, Button, HStack, Input, VStack, useDisclosure, useToast } from "@chakra-ui/react";
+import { HStack, useDisclosure, useToast } from "@chakra-ui/react";
 import { GradientButton, Popup } from "@components/core";
 import { useForm } from "react-hook-form";
 import { InfoModal } from "@components/content/Dashboard/Modals";
-import { useEffect, useState } from "react";
+import Input from "@components/core/Input/Input";
+
+import { useEffect } from "react";
 import { EToast } from "@constants/functions/toast";
 import axios from "axios";
 // import FilterSectionFamily from "./FilterSection/FilterSectionFamily";
 // import MyVotesWindow from "@components/content/Dashboard/Home/MyVotesWindow/MyVotesWindow";
-type FamilyObject = {
-  name: string;
-  id: string;
-};
+// type FamilyObject = {
+//   name: string;
+//   id: string;
+// };
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -31,8 +33,8 @@ const AddNewFamilyTreeModal = ({
 }: Props) => {
   const alert = useDisclosure();
   // const [votersLists, setVotersLists] = useState<any[]>([]);
-  const [newFamilyName, setNewFamilyName] = useState("");
-  const [families, setFamilies] = useState<any[]>([])
+  // const [newFamilyName, setNewFamilyName] = useState("");
+  // const [families, setFamilies] = useState<any[]>([])
   // const [filter, setFilter] = useState<any>({});
   // function getVoters(e: any) {
   //   console.log("🚀 ~ getVoters ~ e:", e);
@@ -41,8 +43,13 @@ const AddNewFamilyTreeModal = ({
   const {
     handleSubmit,
     reset,
-    formState: { isValid },
-  } = useForm({});
+    formState: { isValid},
+    register,
+  } = useForm<any>({
+    defaultValues: {
+      last_name: ""
+    }
+  });
 
   async function getListDetails(id: string) {
     try {
@@ -69,12 +76,13 @@ const AddNewFamilyTreeModal = ({
 
   const toast = useToast();
 
-  const onSubmit = () => {
+  const onSubmit = (data: any) => {
+    console.log("🚀 ~ onSubmit ~ data:", data)
     // const newList = {
     //   voter_ids: votersLists,
     // };
-    const familiesInstance = [...families]
-    const stringFamilies = familiesInstance.map((family) => family.name)
+    // const familiesInstance = [...families]
+    // const stringFamilies = familiesInstance.map((family) => family.name)
     // console.log("🚀 ~ onSubmit ~ newList:", newList);
     // if (votersLists.length === 0 && !recordID) {
     //   EToast({
@@ -91,14 +99,14 @@ const AddNewFamilyTreeModal = ({
     //     handleSubmitForm(newList);
     //   }
     // }
-    handleSubmitForm(stringFamilies)
+    handleSubmitForm(data)
   };
 
   async function handleSubmitForm(data: any) {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_PRIVATE_API_URL}/family_tree/trees/${familyId}/`,
-        {voter_ids:data},
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -109,14 +117,14 @@ const AddNewFamilyTreeModal = ({
       if (response.data.status) {
         reset();
         // setVotersLists([]);
-        setFamilies([])
+        // setFamilies([])
         onSuccess();
         onClose();
         EToast({
           toast: toast,
           status: "success",
           title: "Success",
-          description: "List created successfully",
+          description: "محاولة ناجحة",
         });
       } else {
         EToast({
@@ -175,16 +183,16 @@ const AddNewFamilyTreeModal = ({
   //     console.log("🚀 ~ handleSubmitForm ~ error:", error);
   //   }
   // }
-  const handleAddFamily = () => {
-    if (newFamilyName.trim()) {
-      const newFamily: FamilyObject = {
-        name: newFamilyName,
-        id: Math.random().toString(),
-      };
-      setFamilies([...families, newFamily]);
-      setNewFamilyName("");
-    }
-  };
+  // const handleAddFamily = () => {
+  //   if (newFamilyName.trim()) {
+  //     const newFamily: FamilyObject = {
+  //       name: newFamilyName,
+  //       id: Math.random().toString(),
+  //     };
+  //     setFamilies([...families, newFamily]);
+  //     setNewFamilyName("");
+  //   }
+  // };
   useEffect(() => {
     if (recordID) {
       getListDetails(recordID);
@@ -210,6 +218,7 @@ const AddNewFamilyTreeModal = ({
         isOpen={isOpen}
         onClose={onClose}
       >
+      {/* 
         <VStack spacing={4}>
       <HStack>
         <Input
@@ -235,8 +244,13 @@ const AddNewFamilyTreeModal = ({
           </Badge>
         ))}
       </Box>
-    </VStack>
+    </VStack> */}
+      <Input 
+        register={register("last_name")}
+        // error={errors?.name?.last_name}
+        type="text"
 
+      />
         {/* <FilterSectionFamily  filter={filter} setFilter={setFilter} /> */}
         
         {/* {filter?.last_name?.length ? <VStack align="stretch" spacing="16px">

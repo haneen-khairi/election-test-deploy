@@ -127,7 +127,7 @@ import {
             borderRadius={"10px"}
             w={"100%"}
           >
-            <ButtonGroup gap="5">
+            {familyId !== "" && <ButtonGroup gap="5">
               <Button
                 onClick={onOpenAddFamily}
                 colorScheme="primary"
@@ -145,7 +145,7 @@ import {
                 اضافة اسماء
               </Button>
             
-            </ButtonGroup>
+            </ButtonGroup>}
             {familyNamesDetails.length ? (
                 <FamilyNames families={familyNamesDetails} />
               ) : (
@@ -169,7 +169,7 @@ import {
           onClose={onCloseAddNames}
         />
         <AddNewFamilyTreeModal
-          onSuccess={() => {}}
+          onSuccess={() => getFamilyNameById(familyId)}
           familyId={familyId}
           token={data?.tokens?.access || ""}
           isOpen={isAddFamilyOpen}
