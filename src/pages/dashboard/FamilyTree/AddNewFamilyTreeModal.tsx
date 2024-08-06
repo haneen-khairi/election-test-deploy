@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { HStack, VStack, useDisclosure, useToast } from "@chakra-ui/react";
+import { Badge, Box, Button, HStack, Input, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import { GradientButton, Popup } from "@components/core";
 import { useForm } from "react-hook-form";
 import { InfoModal } from "@components/content/Dashboard/Modals";
 import { useEffect, useState } from "react";
 import { EToast } from "@constants/functions/toast";
 import axios from "axios";
-import FilterSectionFamily from "./FilterSection/FilterSectionFamily";
-import MyVotesWindow from "@components/content/Dashboard/Home/MyVotesWindow/MyVotesWindow";
-
+// import FilterSectionFamily from "./FilterSection/FilterSectionFamily";
+// import MyVotesWindow from "@components/content/Dashboard/Home/MyVotesWindow/MyVotesWindow";
+type FamilyObject = {
+  name: string;
+  id: string;
+};
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -27,12 +30,14 @@ const AddNewFamilyTreeModal = ({
   familyId,
 }: Props) => {
   const alert = useDisclosure();
-  const [votersLists, setVotersLists] = useState<any[]>([]);
-  const [filter, setFilter] = useState<any>({});
-  function getVoters(e: any) {
-    console.log("🚀 ~ getVoters ~ e:", e);
-    setVotersLists(e);
-  }
+  // const [votersLists, setVotersLists] = useState<any[]>([]);
+  const [newFamilyName, setNewFamilyName] = useState("");
+  const [families, setFamilies] = useState<any[]>([])
+  // const [filter, setFilter] = useState<any>({});
+  // function getVoters(e: any) {
+  //   console.log("🚀 ~ getVoters ~ e:", e);
+  //   setVotersLists(e);
+  // }
   const {
     handleSubmit,
     reset,
@@ -65,32 +70,35 @@ const AddNewFamilyTreeModal = ({
   const toast = useToast();
 
   const onSubmit = () => {
-    const newList = {
-      voter_ids: votersLists,
-    };
-    console.log("🚀 ~ onSubmit ~ newList:", newList);
-    if (votersLists.length === 0 && !recordID) {
-      EToast({
-        toast: toast,
-        status: "error",
-        title: "Error",
-        description:
-          "لا يمكنك إنشاء قائمة جديدة بأي قسم أو القائمة بالقيم المسجلة",
-      });
-    } else {
-      if (recordID) {
-        handleUpdateForm(recordID, newList);
-      } else {
-        handleSubmitForm(newList);
-      }
-    }
+    // const newList = {
+    //   voter_ids: votersLists,
+    // };
+    const familiesInstance = [...families]
+    const stringFamilies = familiesInstance.map((family) => family.name)
+    // console.log("🚀 ~ onSubmit ~ newList:", newList);
+    // if (votersLists.length === 0 && !recordID) {
+    //   EToast({
+    //     toast: toast,
+    //     status: "error",
+    //     title: "Error",
+    //     description:
+    //       "لا يمكنك إنشاء قائمة جديدة بأي قسم أو القائمة بالقيم المسجلة",
+    //   });
+    // } else {
+    //   if (recordID) {
+    //     handleUpdateForm(recordID, newList);
+    //   } else {
+    //     handleSubmitForm(newList);
+    //   }
+    // }
+    handleSubmitForm(stringFamilies)
   };
 
   async function handleSubmitForm(data: any) {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_PRIVATE_API_URL}/family_tree/trees/${familyId}/`,
-        data,
+        {voter_ids:data},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -100,7 +108,8 @@ const AddNewFamilyTreeModal = ({
       console.log("🚀 ~ handleSubmitForm ~ response:", response.data);
       if (response.data.status) {
         reset();
-        setVotersLists([]);
+        // setVotersLists([]);
+        setFamilies([])
         onSuccess();
         onClose();
         EToast({
@@ -121,52 +130,61 @@ const AddNewFamilyTreeModal = ({
       console.log("🚀 ~ handleSubmitForm ~ error:", error);
     }
   }
-  useEffect(() => {
-    console.log("======== filter =======", filter);
-    const wordInSearch = filter.last_name?.split(",")
-    console.log("🚀 ~ useEffect ~ wordInSearch:", wordInSearch)
+  // useEffect(() => {
+  //   console.log("======== filter =======", filter);
+  //   const wordInSearch = filter.last_name?.split(",")
+  //   console.log("🚀 ~ useEffect ~ wordInSearch:", wordInSearch)
   
-    return () => {
+  //   return () => {
       
-    }
-  }, [filter])
+  //   }
+  // }, [filter])
   
-  async function handleUpdateForm(id: string, data: any) {
-    try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_PRIVATE_API_URL}/sms/list/details/${id}/`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log("🚀 ~ handleSubmitForm ~ response:", response.data);
-      if (response.data.status) {
-        reset();
-        setVotersLists([]);
-        onSuccess();
-        onClose();
-        EToast({
-          toast: toast,
-          status: "success",
-          title: "Success",
-          description: "List updated successfully",
-        });
-      } else {
-        EToast({
-          toast: toast,
-          status: "error",
-          title: "Error",
-          description: response.data.message,
-        });
-      }
-    } catch (error) {
-      console.log("🚀 ~ handleSubmitForm ~ error:", error);
+  // async function handleUpdateForm(id: string, data: any) {
+  //   try {
+  //     const response = await axios.put(
+  //       `${import.meta.env.VITE_PRIVATE_API_URL}/sms/list/details/${id}/`,
+  //       data,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     console.log("🚀 ~ handleSubmitForm ~ response:", response.data);
+  //     if (response.data.status) {
+  //       reset();
+  //       setVotersLists([]);
+  //       onSuccess();
+  //       onClose();
+  //       EToast({
+  //         toast: toast,
+  //         status: "success",
+  //         title: "Success",
+  //         description: "List updated successfully",
+  //       });
+  //     } else {
+  //       EToast({
+  //         toast: toast,
+  //         status: "error",
+  //         title: "Error",
+  //         description: response.data.message,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log("🚀 ~ handleSubmitForm ~ error:", error);
+  //   }
+  // }
+  const handleAddFamily = () => {
+    if (newFamilyName.trim()) {
+      const newFamily: FamilyObject = {
+        name: newFamilyName,
+        id: Math.random().toString(),
+      };
+      setFamilies([...families, newFamily]);
+      setNewFamilyName("");
     }
-  }
-
+  };
   useEffect(() => {
     if (recordID) {
       getListDetails(recordID);
@@ -192,9 +210,36 @@ const AddNewFamilyTreeModal = ({
         isOpen={isOpen}
         onClose={onClose}
       >
-        <FilterSectionFamily  filter={filter} setFilter={setFilter} />
+        <VStack spacing={4}>
+      <HStack>
+        <Input
+          value={newFamilyName}
+          onChange={(e: any) => setNewFamilyName(e.target.value)}
+          placeholder="إضافة عائلة"
+        />
+        <Button bgColor={'primary.500'} onClick={handleAddFamily} bg="primary.500" color="#fff">
+          إضافة عائلة
+        </Button>
+      </HStack>
+      <Box w="100%">
+        {families.map((family) => (
+          <Badge
+            key={family.id}
+            bg="primary.500"
+            color={'#fff'}
+            m={1}
+            p={2}
+            borderRadius="md"
+          >
+            {family.name}
+          </Badge>
+        ))}
+      </Box>
+    </VStack>
+
+        {/* <FilterSectionFamily  filter={filter} setFilter={setFilter} /> */}
         
-        {filter?.last_name?.length ? <VStack align="stretch" spacing="16px">
+        {/* {filter?.last_name?.length ? <VStack align="stretch" spacing="16px">
           <HStack mt="16px" flexWrap="wrap">
             <MyVotesWindow
               getCheckboxList={getVoters}
@@ -203,7 +248,7 @@ const AddNewFamilyTreeModal = ({
               setFilter={setFilter}
             />
           </HStack>
-        </VStack>: ""}
+        </VStack>: ""} */}
    
         <HStack justifyContent="flex-end" mt="24px">
           <GradientButton
