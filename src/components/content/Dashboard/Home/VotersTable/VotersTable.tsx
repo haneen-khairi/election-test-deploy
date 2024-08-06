@@ -14,6 +14,7 @@ import { DownloadDB, EditPenIcon, TrashIcon } from "@assets/icons";
 import { MdDeselect, MdSelectAll } from "react-icons/md";
 import { BulkEditModal, EditModal } from "../../Voters/modals";
 import { InfoModal } from "../../Modals";
+import { FilterSection } from "../../Voters";
 
 const VotersTable = ({ filter, 
   setFilter,
@@ -80,11 +81,18 @@ const VotersTable = ({ filter,
 
   return (
     <VStack>
-      {treePage && <Input
+      {treePage && <> 
+        {/* <Input
           placeholder="Search by name"
           value={searchTerm}
           onChange={handleSearchChange}
-        />}
+        /> */}
+        <FilterSection 
+        filter={filter}
+        setFilter={setFilter}
+        treePage={true}
+        />
+        </>}
       <HStack w="100%" fontWeight={600} fontSize="20px" mb="20px">
         <Text ml="auto">جدول الناخبين</Text>
 

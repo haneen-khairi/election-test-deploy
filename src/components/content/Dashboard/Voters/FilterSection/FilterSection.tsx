@@ -19,8 +19,8 @@ import { Input } from "@components/core";
 import { CiSearch } from "react-icons/ci";
 import { SlRefresh } from "react-icons/sl";
 import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { FilterSchema } from "./FilterSchema";
+// import { yupResolver } from "@hookform/resolvers/yup";
+// import { FilterSchema } from "./FilterSchema";
 import ElectoralDistrictSelect from "@components/content/DropDown/ElectoralDistrictSelect";
 import MultiSelect from "@components/core/multiSelect/MultiSelect";
 import {
@@ -37,8 +37,9 @@ import useAuthStore from "@store/AuthStore";
 interface Props {
   setFilter: (data: any) => void;
   filter: any;
+  treePage?: boolean
 }
-const FilterSection = ({ filter, setFilter }: Props) => {
+const FilterSection = ({ filter, setFilter , treePage = false}: Props) => {
   const [search, setSearch] = useState<string>();
   const dropDownObj = useGetVotingCentersDropdown(search);
   const { data: userData } = useAuthStore();
@@ -68,7 +69,7 @@ const FilterSection = ({ filter, setFilter }: Props) => {
     formState: { errors },
     handleSubmit,
   } = useForm({
-    resolver: yupResolver(FilterSchema),
+    // resolver: yupResolver(FilterSchema),
     defaultValues: {
       full_name: undefined,
       first_name: undefined,
@@ -189,8 +190,8 @@ const FilterSection = ({ filter, setFilter }: Props) => {
             fetchFunction={useGetLastNameDropdown}
           />
         </Box>
-
-        {isNAtionalityAllowed && (
+          
+        {(isNAtionalityAllowed && !treePage) && (
           <Box w="22%" flexGrow="1">
             <Controller
               control={control}
@@ -207,7 +208,7 @@ const FilterSection = ({ filter, setFilter }: Props) => {
             />
           </Box>
         )}
-
+{!treePage ?  <>
         <Box w="22%" flexGrow="1">
           <Controller
             control={control}
@@ -255,8 +256,9 @@ const FilterSection = ({ filter, setFilter }: Props) => {
             )}
           />
         </Box>
+  </>: ""}
 
-        {isFamilyTreeAllowed && (
+        {(isFamilyTreeAllowed && !treePage) && (
           <Box w="100%">
             <MultiSelect
               name="family_tree_id"
@@ -268,7 +270,7 @@ const FilterSection = ({ filter, setFilter }: Props) => {
             />
           </Box>
         )}
-
+{!treePage ?  <>
         <Box w="100%">
           <MultiSelect
             name="place_of_residence"
@@ -279,11 +281,12 @@ const FilterSection = ({ filter, setFilter }: Props) => {
             isId={true}
           />
         </Box>
+  </>: ""}
       </HStack>
 
       <Box mt="27px">
         <RadioGroup
-          onChange={(d) => {
+          onChange={(d: any) => {
             setValue("gender", d);
           }}
         >

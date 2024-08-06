@@ -1,5 +1,4 @@
 import { Button, } from "@chakra-ui/react";
-import { useState } from "react";
 type Props = {
   family: FamilyObject;
   onClick: (id: string) => void;
@@ -19,16 +18,11 @@ export const FamilyList = ({
   },
   isActive
 }: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
 
-  const handleClick = (id: string) => {
-    // setIsOpen((prev) => !prev);  
-    onClick(id);
-  };
 
   return (
     <Button
-      onClick={() => handleClick(family.id)} 
+      onClick={() => onClick(family.id)} 
       bg={isActive ? "primary.500" : "#fff"}
       color={isActive ? "#fff" : "#000"}
       borderBottom="1px solid #c2c2c2"
