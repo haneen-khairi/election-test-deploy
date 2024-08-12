@@ -1,28 +1,31 @@
 import * as yup from "yup";
-const numberRegex = /^[0-9]+$/;
+
+const numberRegex = /^07\d{8}$/;
+
 export const BulkEditSchema = yup.object().shape({
-  status: yup.number().required("يجب اختيار الحالة"),
-  longitude: yup.number().required("هذا الحقل اجباري"),
-  latitude: yup.number().required("هذا الحقل اجباري"),
-  mandoub_main: yup.number().required("هذا الحقل اجباري"),
+  status: yup.number().optional(),
+  longitude: yup.number().optional(),
+  latitude: yup.number().optional(),
+  mandoub_main: yup.string().optional(),
   mobile_number: yup
     .string()
-    .required("هذا الحقل اجباري")
-    .matches(numberRegex, "رقم الجوال لا يمكن ان يحتوي على احرف")
-    .max(10, "رقم الجوال يجب ان يحتوي على 10 ارقام كحد اقصى")
-    .min(10, "رقم الجوال يجب ان يحتوي على 10 ارقام كحد ادنى"),
-  note: yup.string().required("هذا الحقل اجباري"),
-  election_time: yup
-    .string()
-    .test("conditional-required", "هذا الحقل اجباري", function (value) {
-      const status = this.parent.status;
-      if (status == 100) {
-        return value != "";
-      }
-      return true;
-    }),
+    .optional()
+    .test(
+      "conditional-required",
+      "رقم الجوال لا يمكن ان يحتوي على احرف ويجب ان يتكون من 10 أرقام و يبدأ ب07",
+      function (value) {
+        if (!value) return true;
+
+        if (!numberRegex.test(value)) return false;
+        if (value.length !== 10) return false;
+
+        return true;
+      },
+    ),
+  note: yup.string().optional(),
   mandoub_haraka: yup
-    .number()
+    .string()
+    .optional()
     .test("conditional-required", "هذا الحقل اجباري", function (value) {
       const status = this.parent.status;
       if (status == 100) {

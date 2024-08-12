@@ -42,9 +42,8 @@ const BulkMoveModal = ({ isOpen, onClose, recordIDs }: Props) => {
   const toast = useToast();
 
   const assignSupporters = useAssignSupportersToVotes();
-  // Map Popup
   const mapPopup = useDisclosure();
-  
+
   const {
     handleSubmit,
     control,
@@ -66,9 +65,8 @@ const BulkMoveModal = ({ isOpen, onClose, recordIDs }: Props) => {
   const onSubmit = (values: AssignSupporter) => {
     assignSupporters
       .mutateAsync({
-        election_time: values.election_time || undefined,
-        latitude: parseFloat(values.latitude?.toFixed(2) || ""),
-        longitude: parseFloat(values.longitude?.toFixed(2) || ""),
+        latitude: parseFloat(values?.latitude?.toString() || ""),
+        longitude: parseFloat(values?.longitude?.toString() || ""),
         mandoub_haraka: values.mandoub_haraka || undefined,
         mandoub_main: values.mandoub_main,
         mobile_number: values.mobile_number,
@@ -202,15 +200,6 @@ const BulkMoveModal = ({ isOpen, onClose, recordIDs }: Props) => {
                   placeholder="حدد الموقع من الخريطة"
                   value={values}
                   error={errors.latitude?.message}
-                />
-              </Box>
-
-              <Box w="40%" flexGrow="1">
-                <Input
-                  label="وقت الإنتخاب"
-                  type="time"
-                  register={register("election_time")}
-                  error={errors.election_time?.message}
                 />
               </Box>
 

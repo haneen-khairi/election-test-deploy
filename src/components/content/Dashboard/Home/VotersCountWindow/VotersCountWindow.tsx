@@ -18,7 +18,6 @@ import FamilyDonutChart from "../FamilyDonutChart/FamilyDonutChart";
 import FamilyRepBarChart from "../FamilyRepBarChart/FamilyRepBarChart";
 import GoogleGeoMap from "@components/content/map/GoogleGeoMap";
 import { displaySpinner } from "@services/utils/displaySpinner";
-import { useGetGeneralStats } from "@services/hooks/insights/useInsights";
 import {
   useGetMapVoters,
   useGetVotersStats,
@@ -38,17 +37,16 @@ const VotersCountWindow = ({
   filter: any;
   setFilter: any;
 }) => {
-  const { data: generalStats, isLoading: isLoading1 } =
-    useGetGeneralStats(filter);
-  const { data: votersStats, isLoading: isLoading2 } = useGetVotersStats(filter);
-  const { data: mapVoters, isLoading: isLoading3 } = useGetMapVoters();
+  const { data: votersStats, isLoading: isLoading1 } =
+    useGetVotersStats(filter);
+  const { data: mapVoters, isLoading: isLoading2 } = useGetMapVoters(filter);
 
   const leftSideBoxes: SideBox[] = [
     {
       text: "المناديب الرئيسيين",
       icon: <MainRepresentatives />,
       number: displaySpinner(
-        generalStats?.data?.manadeeb_raeesi_count,
+        votersStats?.data?.manadeeb_raeesi_count,
         isLoading1,
         "---",
       ),
@@ -57,7 +55,7 @@ const VotersCountWindow = ({
       text: "مناديب الحركة",
       icon: <MotionRepresentatives />,
       number: displaySpinner(
-        generalStats?.data?.manadeeb_haraka_count,
+        votersStats?.data?.manadeeb_haraka_count,
         isLoading1,
         "---",
       ),
@@ -66,7 +64,7 @@ const VotersCountWindow = ({
       text: "مناديب الصندوق",
       icon: <BoxRepresentatives />,
       number: displaySpinner(
-        generalStats?.data?.manadeeb_sandoq_count,
+        votersStats?.data?.manadeeb_sandoq_count,
         isLoading1,
         "---",
       ),
@@ -75,7 +73,7 @@ const VotersCountWindow = ({
       text: "مراقبي المدارس",
       icon: <SchoolWatchers />,
       number: displaySpinner(
-        generalStats?.data?.muraqib_count,
+        votersStats?.data?.muraqib_count,
         isLoading1,
         "---",
       ),
@@ -87,8 +85,8 @@ const VotersCountWindow = ({
       text: "مراكز الإقتراع",
       icon: <VotingCenters />,
       number: displaySpinner(
-        votersStats?.data?.voting_centers,
-        isLoading2,
+        votersStats?.data?.voting_center_count,
+        isLoading1,
         "---",
       ),
     },
@@ -101,14 +99,14 @@ const VotersCountWindow = ({
       text: "عدد العائلات",
       icon: <FamiliesNumbers />,
       number: displaySpinner(
-        generalStats?.data?.unique_last_names_count,
+        votersStats?.data?.unique_last_names_count,
         isLoading1,
         "---",
       ),
       content: (
         <FamilyDonutChart
           setFilter={setFilter}
-          data={generalStats?.data}
+          data={votersStats?.data}
           isLoading={isLoading1}
         />
       ),
@@ -133,7 +131,7 @@ const VotersCountWindow = ({
                 </HStack>
                 <Text fontWeight={600} mb="10px" fontSize="24px">
                   {displaySpinner(
-                    generalStats?.data?.total_voters,
+                    votersStats?.data?.total_voters,
                     isLoading1,
                     "---",
                   )}
@@ -142,10 +140,10 @@ const VotersCountWindow = ({
             </HStack>
 
             <Box w="100%" h="auto">
-              {isLoading3 ? (
+              {isLoading2 ? (
                 <Spinner />
               ) : (
-                mapVoters?.data && <GoogleGeoMap mapVoters={mapVoters?.data} />
+                mapVoters?.data && <GoogleGeoMap mapVoters={mapVoters.data} />
               )}
             </Box>
           </Ebox>

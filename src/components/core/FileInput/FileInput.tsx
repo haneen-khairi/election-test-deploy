@@ -1,14 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useRef } from "react";
 import { Text, Icon, Button, Flex, Box } from "@chakra-ui/react";
 import { BsX } from "react-icons/bs";
 import { DownloadIcon } from "@assets/icons";
 
 interface FileInputProps {
-  selectedFile: File | null;
-  setSelectedFile: (x: File | null) => void;
+  selectedFile: any;
+  setSelectedFile: (file: File | null) => void;
+  type: "excel" | "image" | "excel-image";
 }
 
-function FileInput({ selectedFile, setSelectedFile }: FileInputProps) {
+function FileInput({ selectedFile, setSelectedFile, type }: FileInputProps) {
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -36,7 +38,8 @@ function FileInput({ selectedFile, setSelectedFile }: FileInputProps) {
     if (!file) return;
 
     const fileType = file.type;
-    const allowedTypes = [
+
+    const excelTypes = [
       "application/vnd.ms-excel",
       "application/msexcel",
       "application/x-msexcel",
@@ -46,15 +49,22 @@ function FileInput({ selectedFile, setSelectedFile }: FileInputProps) {
       "application/x-dos_ms_excel",
       "application/xls",
       "application/x-xls",
+      "application/xlsx",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     ];
-    
-    console.log("🚀 ~ handleFile ~ fileType:", fileType)
+
+    const imageTypes = ["image/png", "image/jpg", "image/jpeg"];
+
+    const allowedTypes: string[] = [];
+
+    type === "excel" && allowedTypes.push(...excelTypes);
+    type === "image" && allowedTypes.push(...imageTypes);
+    type === "excel-image" && allowedTypes.push(...imageTypes, ...excelTypes);
+
     if (allowedTypes.includes(fileType)) {
-      //   setMessage(`File ${file.name} selected!`);
       setSelectedFile(file);
     } else {
-      setMessage("Please select a Excel file.");
+      setMessage("Please select a valid file type.");
       setSelectedFile(null);
     }
   };
@@ -66,6 +76,20 @@ function FileInput({ selectedFile, setSelectedFile }: FileInputProps) {
       inputRef.current.value = "";
     }
   };
+
+  const fileType =
+    type === "excel"
+      ? ".csv,.xlsx"
+      : type === "image"
+        ? ".png,.jpg,.jpeg"
+        : ".csv,.xlsx,.png,.jpg,.jpeg";
+
+  const fileText =
+    type === "excel"
+      ? "أرفق ملف Excel"
+      : type === "image"
+        ? "أرفق صورة"
+        : "أرفق صورة او ملف Excel";
 
   return (
     <>
@@ -81,13 +105,13 @@ function FileInput({ selectedFile, setSelectedFile }: FileInputProps) {
         direction={"column"}
         cursor={"pointer"}
         gap="5px"
-        padding={'16px'}
-        borderRadius={'12px'}
-        border={'1px dashed #CACACA'}
+        padding={"16px"}
+        borderRadius={"12px"}
+        border={"1px dashed #CACACA"}
       >
         <input
           type="file"
-          accept=".csv"
+          accept={fileType}
           style={{ display: "none" }}
           onChange={handleFileSelect}
           ref={inputRef}
@@ -113,7 +137,7 @@ function FileInput({ selectedFile, setSelectedFile }: FileInputProps) {
           pointerEvents={"none"}
           color="#353535"
         >
-          أرفق ملف Excel
+          {fileText}
         </Text>
 
         <Text
@@ -151,9 +175,16 @@ function FileInput({ selectedFile, setSelectedFile }: FileInputProps) {
         </Text>
         <Text pointerEvents={"none"}>{message}</Text>
       </Flex>
-      {selectedFile && (
-        <Box width={'100%'} className="">
-            <Flex mt={2}  alignItems="center" border={'1px solid #CACACA'} borderRadius={'12px'} p={2} gap={2}>  
+      {selectedFile && selectedFile.name && (
+        <Box width={"100%"} className="">
+          <Flex
+            mt={2}
+            alignItems="center"
+            border={"1px solid #CACACA"}
+            borderRadius={"12px"}
+            p={2}
+            gap={2}
+          >
             <Text
               whiteSpace={"nowrap"}
               overflow={"hidden"}
@@ -164,12 +195,16 @@ function FileInput({ selectedFile, setSelectedFile }: FileInputProps) {
             >
               {selectedFile.name}
             </Text>
-            <Button variant="ghost" padding={0} colorScheme="black" onClick={removeFile}>
+            <Button
+              variant="ghost"
+              padding={0}
+              colorScheme="black"
+              onClick={removeFile}
+            >
               <Icon as={BsX} />
             </Button>
-
-        </Flex>
-          </Box>
+          </Flex>
+        </Box>
       )}
     </>
   );

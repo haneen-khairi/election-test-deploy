@@ -1,7 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { ChartSkeleton } from "@components/core";
-
-import { useGetGeneralStats } from "@services/hooks/insights/useInsights";
+import { useGetVotersStats } from "@services/hooks/voters/useVoters";
 
 import {
   Chart as ChartJS,
@@ -29,7 +28,7 @@ ChartJS.register(
 );
 
 const MaleFemaleChart = () => {
-  const { data, isLoading } = useGetGeneralStats({});
+  const { data, isLoading } = useGetVotersStats({});
   const colors = ["#318973", "#36A88B"];
 
   return (

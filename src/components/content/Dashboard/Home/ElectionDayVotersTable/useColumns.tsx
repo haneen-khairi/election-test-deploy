@@ -35,18 +35,6 @@ const useColumns = ({ edit }: Props) => {
 
   const columns = useMemo(
     () => [
-      // {
-      //   Header: " ",
-      //   Cell: ({ cell }: CellValue) => {
-      //     const id = cell.row.original.id;
-      //     return (
-      //       <CheckBox
-      //         checked={checkedRows.includes(id)}
-      //         onChange={() => handleCheckboxChange(id)}
-      //       />
-      //     );
-      //   },
-      // },
       {
         Header: "الإسم",
         Cell: ({ cell }: CellValue) => {
@@ -70,11 +58,25 @@ const useColumns = ({ edit }: Props) => {
       },
       {
         Header: "حالة التوصيل",
-        accessor: "",
+        Cell: ({ cell }: CellValue) => {
+          return (
+            <Text color="mPrimary" fontWeight="600" noOfLines={1}>
+              {cell.row.original.delivery_status === "1"
+                ? "تم التوصيل"
+                : "لم يتم التوصيل"}
+            </Text>
+          );
+        },
       },
       {
         Header: "حالة التصويت",
-        accessor: "",
+        Cell: ({ cell }: CellValue) => {
+          return (
+            <Text color="mPrimary" fontWeight="600" noOfLines={1}>
+              {cell.row.original.is_voted ? "تم التصويت" : "لم يتم التصويت"}
+            </Text>
+          );
+        },
       },
       {
         Header: "المندوب الرئيسي",
@@ -85,54 +87,19 @@ const useColumns = ({ edit }: Props) => {
         accessor: "mandoub_haraka",
       },
       {
-        Header: "مركز الأقتراء",
-        accessor: "",
+        Header: "مركز الأقتراع",
+        Cell: ({ cell }: CellValue) => {
+          return (
+            <Text color="mPrimary" noOfLines={1}>
+              {truncateText(cell.row.original.school || "", 150)}
+            </Text>
+          );
+        },
       },
       {
         Header: "صندوق",
-        accessor: "",
+        accessor: "box",
       },
-      // {
-      //   Header: "  ",
-      //   Cell: ({ cell }: CellValue) => {
-      //     const id = cell.row.original.id;
-      //     return (
-      //       <HStack justifyContent="center" gap="20px">
-      //         <Box
-      //           as={Button}
-      //           size="xs"
-      //           rounded="full"
-      //           px="0"
-      //           variant="ghost"
-      //           fontSize="15px"
-      //           color="primary.500"
-      //           onClick={() => {
-      //             setRecordID(cell.row.original.id);
-      //             edit.onOpen();
-      //           }}
-      //         >
-      //           <EditPenIcon />
-      //         </Box>
-
-      //         <Box
-      //           as={Button}
-      //           size="xs"
-      //           rounded="full"
-      //           px="0"
-      //           variant="ghost"
-      //           fontSize="15px"
-      //           color="primary.500"
-      //           onClick={() => {
-      //             setRecordID(cell.row.original.id);
-      //             remove.onOpen();
-      //           }}
-      //         >
-      //           <TrashIcon />
-      //         </Box>
-      //       </HStack>
-      //     );
-      //   },
-      // },
     ],
     [checkedRows, edit, handleCheckboxChange],
   );

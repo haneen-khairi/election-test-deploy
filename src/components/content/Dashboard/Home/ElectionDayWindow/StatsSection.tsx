@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ThreePeopleIcon } from "@assets/icons";
-import { Box, Grid, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Grid, HStack, Text, VStack } from "@chakra-ui/react";
 import { Ebox } from "@components/core";
 import { useGetElectionDayStats } from "@services/hooks/voters/useVoters";
 import { displaySpinner } from "@services/utils/displaySpinner";
@@ -22,11 +22,16 @@ const dateToSlots = (
   };
 };
 
-const StatsSection = () => {
-  const { data, isLoading } = useGetElectionDayStats();
+const StatsSection = ({
+  filter,
+  setFilter,
+}: {
+  filter: any;
+  setFilter: any;
+}) => {
+  const { data, isLoading } = useGetElectionDayStats(filter);
 
   const clone = structuredClone(data) as any;
-
   const slots = dateToSlots(clone?.timer);
 
   const GreenBox = ({ direction }: { direction: "up" | "down" }) => (
@@ -88,6 +93,36 @@ const StatsSection = () => {
     );
   };
 
+  const getColor = (
+    type: "isVoted" | "isDelivered" | "isNotVoted" | "isNotDelivered",
+  ) => {
+    if (["isDelivered", "isNotDelivered"].includes(type)) {
+      if (!filter?.delivery_status) return "#12B76A";
+      return (filter?.delivery_status === "1" && type === "isDelivered") ||
+        (filter?.delivery_status === "0" && type === "isNotDelivered")
+        ? "#12B76A"
+        : "#aaaaaa";
+    }
+
+    if (["isVoted", "isNotVoted"].includes(type)) {
+      if (!filter?.is_voted) return "#D62C2C";
+      return (filter?.is_voted === "true" && type === "isVoted") ||
+        (filter?.is_voted === "false" && type === "isNotVoted")
+        ? "#D62C2C"
+        : "#aaaaaa";
+    }
+  };
+
+  const filterData = (key: string, value: any) => {
+    const extra: any = {};
+    extra[key] = value;
+
+    setFilter((prev: any) => ({
+      ...prev,
+      ...extra,
+    }));
+  };
+
   return (
     <Grid
       width="100%"
@@ -132,80 +167,94 @@ const StatsSection = () => {
       </Ebox>
 
       <Ebox display="flex" flexDir="column" justifyContent="center">
-        <Text
-          fontSize="18px"
+        <Button
           width="100%"
-          textAlign="center"
-          height="fit-content"
+          bg="transparent"
+          onClick={() => filterData("delivery_status", "1")}
         >
-          تم التوصيل
-        </Text>
+          <Text fontSize="18px" textAlign="center" height="fit-content">
+            تم التوصيل
+          </Text>
+        </Button>
         <Text
           fontSize="20px"
           width="100%"
           textAlign="center"
           height="fit-content"
-          color="#12B76A"
+          color={getColor("isDelivered")}
         >
           {displaySpinner(clone?.delivered, isLoading, "---")}
         </Text>
       </Ebox>
 
       <Ebox display="flex" flexDir="column" justifyContent="center">
-        <Text
-          fontSize="18px"
+        <Button
           width="100%"
-          textAlign="center"
-          height="fit-content"
+          bg="transparent"
+          onClick={() => filterData("is_voted", "true")}
         >
-          تم التصويت
-        </Text>
+          <Text fontSize="18px" textAlign="center" height="fit-content">
+            تم التصويت
+          </Text>
+        </Button>
         <Text
           fontSize="20px"
           width="100%"
           textAlign="center"
           height="fit-content"
-          color="#12B76A"
+          color={getColor("isVoted")}
         >
           {displaySpinner(clone?.is_voted, isLoading, "---")}
         </Text>
       </Ebox>
 
       <Ebox display="flex" flexDir="column" justifyContent="center">
-        <Text
-          fontSize="18px"
+        <Button
           width="100%"
-          textAlign="center"
-          height="fit-content"
+          bg="transparent"
+          onClick={() => filterData("delivery_status", "0")}
         >
-          لم يتم التوصيل
-        </Text>
+          <Text
+            fontSize="18px"
+            width="100%"
+            textAlign="center"
+            height="fit-content"
+          >
+            لم يتم التوصيل
+          </Text>
+        </Button>
         <Text
           fontSize="20px"
           width="100%"
           textAlign="center"
           height="fit-content"
-          color="#D62C2C"
+          color={getColor("isNotDelivered")}
         >
           {displaySpinner(clone?.still_waiting_delivery, isLoading, "---")}
         </Text>
       </Ebox>
 
       <Ebox display="flex" flexDir="column" justifyContent="center">
-        <Text
-          fontSize="18px"
+        <Button
           width="100%"
-          textAlign="center"
-          height="fit-content"
+          bg="transparent"
+          onClick={() => filterData("is_voted", "false")}
         >
-          لم يتم التصويت
-        </Text>
+          <Text
+            fontSize="18px"
+            width="100%"
+            textAlign="center"
+            height="fit-content"
+          >
+            لم يتم التصويت
+          </Text>
+        </Button>
         <Text
           fontSize="20px"
           width="100%"
           textAlign="center"
           height="fit-content"
-          color="#D62C2C"
+          color={getColor("isNotVoted")}
         >
           {displaySpinner(clone?.is_not_voted, isLoading, "---")}
         </Text>

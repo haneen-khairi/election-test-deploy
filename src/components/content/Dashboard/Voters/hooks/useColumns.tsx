@@ -7,8 +7,6 @@ import {
   Text,
   UseDisclosureReturn,
 } from "@chakra-ui/react";
-import { StatusBadge } from "@components/content/StatusBadge";
-import { ShowTime } from "@constants/functions/ShowTime";
 import { truncateText } from "@constants/functions/TruncateText";
 import { FaInfoCircle } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
@@ -32,6 +30,17 @@ const useColumns = ({ edit, info }: Props) => {
     }
   };
 
+  const getDotColor = (status: number | undefined | null): string => {
+    if (!status) return "#9F9F9F";
+    if (status === 100) return "#EEB72A";
+    if (status === 80) return "#1C8FA6";
+    if (status === 60) return "#50B698";
+    if (status === 40) return "#EE882A";
+    if (status === 20) return "#e80000";
+
+    return "#9F9F9F";
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -51,10 +60,16 @@ const useColumns = ({ edit, info }: Props) => {
         Cell: ({ cell }: CellValue) => {
           return (
             <HStack justifyContent="flex-start">
+              <Box
+                w="10px"
+                h="10px"
+                borderRadius="100%"
+                bg={getDotColor(cell.row.original.status)}
+              />
               <Text color="mPrimary" fontWeight="600" noOfLines={1}>
                 {truncateText(
                   `${cell.row.original.first_name} ${cell.row.original.second_name} ${cell.row.original.third_name} ${cell.row.original.last_name}`,
-                  150,
+                  50,
                 )}
               </Text>
             </HStack>
@@ -62,12 +77,12 @@ const useColumns = ({ edit, info }: Props) => {
         },
       },
       {
-        Header: "الحالة",
+        Header: "الرقم الوطني",
         Cell: ({ cell }: CellValue) => {
           return (
-            <Box w="100px">
-              <StatusBadge statusID={cell.row.original.status} />
-            </Box>
+            <Text color="mPrimary" noOfLines={1}>
+              {cell.row.original.nationality_id || "-"}
+            </Text>
           );
         },
       },
@@ -80,19 +95,13 @@ const useColumns = ({ edit, info }: Props) => {
         accessor: "mandoub_haraka",
       },
       {
-        Header: "مكان الإنتخاب",
+        Header: "مكان الإقامة",
         accessor: "place_of_residence",
       },
       {
-        Header: "صندوق رقم",
-        accessor: "box",
-      },
-      {
-        Header: "وقت الإنتخاب",
+        Header: "اسم المدرسة",
         Cell: ({ cell }: CellValue) => {
-          return (
-            <Text>{ShowTime(cell.row.original.election_time) || "-"}</Text>
-          );
+          return `${cell.row.original.school || ""} (${cell.row.original.box || "0"})`;
         },
       },
       {
@@ -101,7 +110,7 @@ const useColumns = ({ edit, info }: Props) => {
           const id = cell.row.original.id;
           return (
             <HStack justifyContent="flex-end">
-              {checkedRows.includes(id) && checkedRows.length <= 1 && (
+              {checkedRows.includes(id) && checkedRows?.length <= 1 && (
                 <Box
                   as={Button}
                   size="xs"

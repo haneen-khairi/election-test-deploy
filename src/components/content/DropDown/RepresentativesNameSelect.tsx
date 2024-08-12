@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { InputSelect } from "@components/core";
-import { useGetFirstNameDropdown } from "@services/hooks/dropdown/useDropDown";
-import { useEffect, useRef, useState } from "react";
+import { useGetManadeebDropDown } from "@services/hooks/dropdown/useDropDown";
+import { useState } from "react";
 
 interface Props {
   value: unknown;
@@ -8,53 +10,24 @@ interface Props {
   error?: string;
 }
 const RepresentativesNameSelect = ({ value, onChange, error }: Props) => {
-  const [search, setSearch] = useState<string>();
-  const { data, fetchNextPage, hasNextPage, isFetching } =
-    useGetFirstNameDropdown(search);
-  const [isFetchingNextPage, setIsFetchingNextPage] = useState<boolean>(false);
-  const sentinelRef = useRef(null);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          setIsFetchingNextPage(true);
-          fetchNextPage().then(() => {
-            setIsFetchingNextPage(false);
-          });
-        }
-      },
-      { threshold: 1.0 },
-    );
-
-    if (sentinelRef.current) {
-      observer.observe(sentinelRef.current);
-    }
-
-    return () => {
-      if (sentinelRef.current) {
-        observer.unobserve(sentinelRef.current);
-      }
-    };
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
-
-  const options = data?.pages.flatMap((page) => page.data);
+  const [_search, setSearch] = useState<string>();
+  const { data, isFetching } = useGetManadeebDropDown("4");
+ 
   return (
     <InputSelect
       loading={isFetching}
       options={
-        options
-          ? options?.map((el) => ({
-              label: el.name || "",
-              value: el.name?.toString() || "",
-            }))
-          : []
+        data?.data.map((item) => ({
+          label: item.name,
+          value: item.id,
+        })) || []
       }
       multi={false}
-      placeholder="اسم المندوب"
+      placeholder="اسم المندوب الرئيسي"
       value={value}
       error={error}
       onChange={onChange}
-      onMenuScrollBottom={() => fetchNextPage()}
+      // onMenuScrollBottom={() => fetchNextPage()}
       onSearch={setSearch}
     />
   );

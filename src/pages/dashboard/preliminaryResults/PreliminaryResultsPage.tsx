@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { FilterType } from "@components/content/Dashboard/PreliminaryResults/FilterSection/FilterType";
 import { HStack, Text, VStack } from "@chakra-ui/react";
 import { Ebox, GradientButton } from "@components/core";
 import {
@@ -10,19 +10,24 @@ import {
 import { GoDownload } from "react-icons/go";
 import { useExportCandidates } from "@services/hooks/insights/useInsights";
 import { saveXLSXFile } from "@constants/functions/SaveXLSX";
+import { usePermission } from "@services/hooks/auth/Permission";
 const PreliminaryResultsPage = () => {
-  const [filter, SFilter] = useState<FilterType | undefined>(undefined);
+  const [filter, SFilter] = useState<any>({});
   const ex = useExportCandidates();
+  usePermission("/preliminary-results");
+
   const handleExport = () => {
     ex.mutateAsync({}).then((res) => {
       saveXLSXFile(res, "candidates.xlsx");
     });
   };
+
   return (
     <VStack spacing="20px" align="stretch">
       <Ebox title="فلترة البحث">
         <FilterSection SFilter={SFilter} />
       </Ebox>
+
       <Ebox
         title="عدد الاصوات"
         element={

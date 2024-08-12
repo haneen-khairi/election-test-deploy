@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import taskCss from "./tasks.module.css"
 import { Box, Flex, Grid, Text, VStack } from "@chakra-ui/react";
@@ -21,6 +23,7 @@ import {
   LogarithmicScale,
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { usePermission } from "@services/hooks/auth/Permission";
  
 ChartJS.register(
   ArcElement,
@@ -35,27 +38,25 @@ ChartJS.register(
 );
 const TasksPage = () => {
   const colors = ["#EEB72A","#14B4D2"];
+  usePermission("/tasks");
 
   const [_filter, setFilter] = useState<any>(undefined);
-  console.log("🚀 ~ TasksPage ~ _filter:", _filter)
-  // const [tasks, setTasks] = useState([])
+  const [_tasks, setTasks] = useState([])
   const [statistics, setStatistics] = useState<any>()
   const {data} = useAuthStore()
-  console.log("🚀 ~ TasksPage ~ token:", data?.tokens?.access)
-  // async function getTasks(){
-  //   try {
-  //     const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/task/tasks`, {
-  //       headers: {
-  //         'Authorization': `Bearer ${data?.tokens?.access}` 
-  //       }
-  //     })
-  //     // console.log("🚀 ~ getTasks ~ response:", response.data.data)
-  //     setTasks(response.data.data)
-  //   } catch (error) {
-  //     console.log("🚀 ~ getTasks ~ error:", error)
+  async function getTasks(){
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/task/tasks`, {
+        headers: {
+          'Authorization': `Bearer ${data?.tokens?.access}` 
+        }
+      })
+      setTasks(response.data.data)
+    } catch (error) {
+      console.error("🚀 ~ getTasks ~ error:", error)
       
-  //   }
-  // }
+    }
+  }
   async function getStatiticsData(date: string = "" , time: string = "", taskType: string = ""){
     try {
     const response = await axios.get(`${import.meta.env.VITE_PRIVATE_API_URL}/task/summary?task_type=${taskType}&date=${date}&time=${time}`, {
@@ -64,17 +65,18 @@ const TasksPage = () => {
         }
       })
       setStatistics(response.data.data)
-      // console.log("🚀 ~ getStatiticsData ~ response:", response.data.data)
     } catch (error) {
-      console.log("🚀 ~ getStatiticsData ~ error:", error)
+      console.error("🚀 ~ getStatiticsData ~ error:", error)
       
     }
   }
   useEffect(() => {
     if(_filter === undefined){
+      getTasks()
       getStatiticsData()
     }else{
       getStatiticsData(_filter?.date || "", _filter?.time || "", _filter?.type_of_tasks || "")
+
     }
     return () => {
       
@@ -88,7 +90,6 @@ const TasksPage = () => {
           setFilter={setFilter}
           onReset={getStatiticsData}
           onSuccess={()=> {
-            console.log("sucesss on filter")
             getStatiticsData(_filter?.date || "", _filter?.time || "", _filter?.type_of_tasks || "")
           }}
         />
@@ -228,28 +229,6 @@ statistics?.done?.mandobs_count}  nameOfCard="منجزة"/>
             time={task?.time || ""}
           />) : ""}
         </Flex>
-        {/* {tasks?.length && tasks?.map((task: any) =><TasksCard
-          key={task.id}
-          status={task?.status?.name || ""}
-          title="مهمة 1"
-          text={task.description}
-          representative={task?.mondob?.name || ""}
-          representativeType={task?.type?.name || ""}
-          representativeMission="مهمة 1"
-          date={task?.date || ""}
-          time={task?.time || ""}
-        />)}
-        {tasks?.length && tasks?.map((task: any) =><TasksCard
-          key={task.id}
-          status={task?.status?.name || ""}
-          title="مهمة 1"
-          text={task.description}
-          representative={task?.mondob?.name || ""}
-          representativeType={task?.type?.name || ""}
-          representativeMission="مهمة 1"
-          date={task?.date || ""}
-          time={task?.time || ""}
-        />)} */}
         </Grid>
     </VStack>
   );

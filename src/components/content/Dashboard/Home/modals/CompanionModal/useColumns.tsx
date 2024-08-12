@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useMemo } from "react";
-import {
-  Text,
-} from "@chakra-ui/react";
-import { truncateText } from "@constants/functions/TruncateText";
+import { Button, Text, useToast } from "@chakra-ui/react";
 import { CellValue } from "react-table";
 import { CheckBox } from "@components/core";
+import { FaRegCopy } from "react-icons/fa";
+import { EToast } from "@constants/functions/toast";
 
 const useColumns = () => {
   const [checkedRows, setCheckedRows] = useState<string[]>([]);
+  const toast = useToast();
 
   const handleCheckboxChange = (id: string) => {
     if (checkedRows.includes(id)) {
@@ -18,12 +18,20 @@ const useColumns = () => {
     }
   };
 
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error("Failed to copy to clipboard:", err);
+    }
+  };
+
   const columns = useMemo(
     () => [
       {
         Header: " ",
         Cell: ({ cell }: CellValue) => {
-          const id = cell.row.original.id;
+          const id = cell.row.original.token;
           return (
             <CheckBox
               checked={checkedRows.includes(id)}
@@ -37,17 +45,33 @@ const useColumns = () => {
         Cell: ({ cell }: CellValue) => {
           return (
             <Text color="mPrimary" fontWeight="600" noOfLines={1}>
-              {truncateText(
-                `${cell.row.original.voter.first_name} ${cell.row.original.voter.second_name} ${cell.row.original.voter.third_name} ${cell.row.original.voter.last_name}`,
-                150,
-              )}
+              {cell.row.original.name}
             </Text>
           );
         },
       },
       {
         Header: "الرابط",
-        accessor: "url",
+        Cell: ({ cell }: CellValue) => {
+          return (
+            <Button
+              onClick={() => {
+                copyToClipboard(
+                  `${window.location.host}/supporter/${cell.row.original.token}`,
+                );
+
+                EToast({
+                  toast,
+                  status: "success",
+                  title: "تم نسخ الرابط",
+                });
+              }}
+            >
+              <FaRegCopy />
+              {cell.row.original.url}
+            </Button>
+          );
+        },
       },
     ],
     [checkedRows, handleCheckboxChange],

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import MessageBlackIcon from '@assets/icons/MessageBlackIcon'
 import {
   Box, Button, Flex, Grid, GridItem, Table,
@@ -20,6 +22,7 @@ import NewMenuFormModal from '@components/content/Dashboard/messages/NewMenuForm
 import NewMessageForm from '@components/content/Dashboard/messages/NewMessageForm'
 import SentMessages from '@components/content/Dashboard/messages/SentMessages'
 import { Btn } from '@components/core'
+import { usePermission } from '@services/hooks/auth/Permission'
 import useAuthStore from '@store/AuthStore'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
@@ -52,12 +55,13 @@ export default function MessagesPage() {
     onOpen: onOpenMenuEditModal,
     onClose: onCloseMenuEditModal
   } = useDisclosure()
+
+  usePermission("/messages");
+
   function handleOnEdit() {
-    console.log("🚀 ~ handleOnEdit ~ handleOnEdit:")
 
   }
   function handleOnDelete() {
-    console.log("🚀 ~ handleOnDelete ~ handleOnDelete:")
   }
   async function getLists(){
     try {
@@ -67,9 +71,8 @@ export default function MessagesPage() {
           }
         })
         setMessagesLists(response.data.data)
-        console.log("🚀 ~ getLists ~ response:", response.data)
       } catch (error) {
-        console.log("🚀 ~ getLists ~ error:", error)
+        console.error("🚀 ~ getLists ~ error:", error)
         
       }
   }
@@ -81,9 +84,8 @@ export default function MessagesPage() {
           }
         })
         setSmsLength(response.data.data.available_credits)
-        console.log("🚀 ~ setSmsLength ~ response:", response.data)
       } catch (error) {
-        console.log("🚀 ~ setSmsLength ~ error:", error)
+        console.error("🚀 ~ setSmsLength ~ error:", error)
         
       }
   }
@@ -99,12 +101,11 @@ export default function MessagesPage() {
             'Authorization': `Bearer ${data?.tokens?.access}` 
           }
         })
-        if(response.data.data.length > 0){
+        if(response.data.data?.length > 0){
           setListRecords(response.data.data)
         }
-        console.log("🚀 ~ getListDetails ~ response:", response.data)
       } catch (error) {
-        console.log("🚀 ~ getListDetails ~ error:", error)
+        console.error("🚀 ~ getListDetails ~ error:", error)
         
       }
   }
@@ -116,9 +117,8 @@ export default function MessagesPage() {
           }
         })
         setMessagesSmsHistory(response.data.data)
-        console.log("🚀 ~ getSmsHistory ~ response:", response.data)
       } catch (error) {
-        console.log("🚀 ~ getSmsHistory ~ error:", error)
+        console.error("🚀 ~ getSmsHistory ~ error:", error)
         
       }
   }

@@ -7,6 +7,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Text,
 } from "@chakra-ui/react";
 import { BsPlus } from "react-icons/bs";
 
@@ -18,7 +19,8 @@ interface Props {
   onClose: () => void;
   isClose?: boolean;
   extraHeaderButton?: boolean;
-  extraHeaderButtonOnClick?: () => void
+  extraHeaderButtonText?: string;
+  extraHeaderButtonOnClick?: () => void;
 }
 const Popup = ({
   title,
@@ -28,7 +30,8 @@ const Popup = ({
   size = "md",
   extraHeaderButtonOnClick = () => {},
   isClose = true,
-  extraHeaderButton = false
+  extraHeaderButton = false,
+  extraHeaderButtonText = "أضافة نوع مهام جديد",
 }: Props) => {
   return (
     <Modal
@@ -39,7 +42,17 @@ const Popup = ({
     >
       <ModalOverlay />
       <ModalContent rounded="12px" style={{ position: "relative" }}>
-        {title && <ModalHeader dir="rtl">{title} {extraHeaderButton && <Button onClick={extraHeaderButtonOnClick}><BsPlus /> أضافة نوع مهمة جديد</Button>}</ModalHeader>}
+        {title && (
+          <ModalHeader display="flex" dir="rtl" gap="20px">
+            {title}
+            {extraHeaderButton && (
+              <Button onClick={extraHeaderButtonOnClick}>
+                <BsPlus />
+                <Text>{extraHeaderButtonText}</Text>
+              </Button>
+            )}
+          </ModalHeader>
+        )}
         {isClose && (
           <ModalCloseButton position="absolute" left="20px" top="15px" />
         )}

@@ -1,26 +1,33 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ETable } from "@components/core";
 import { useGetDelegatesVotes } from "@services/hooks/voters/useVoters";
-import useVostersStore from "@store/VostersSotre";
 import useColumns from "./useColumns";
 import { useMemo } from "react";
 import { DelegatesVotes } from "@services/hooks/voters/Voters";
+import useDelegatesStore from "@store/DelegatesStore";
 
-const DelegatesTable = () => {
-  const { setPage, page } = useVostersStore();
-  const { data, isLoading, isFetching } = useGetDelegatesVotes();
+const DelegatesTable = ({
+  filter,
+  setFilter,
+}: {
+  filter: any;
+  setFilter: any;
+}) => {
+  const { setPage, page } = useDelegatesStore();
+  const { data, isLoading, isFetching } = useGetDelegatesVotes(filter);
 
-  const voters: DelegatesVotes[] = useMemo(
-    () => (isLoading ? [] : data?.data || []),
+  const delegates: DelegatesVotes[] = useMemo(
+    () => (isLoading ? [] : data?.data?.filter((item: any) => item.name) || []),
     [data, isLoading],
   );
 
-  const { columns } = useColumns();
+  const { columns } = useColumns({ setFilter, filter });
 
   return (
     <ETable
       columns={columns}
-      data={voters}
+      data={delegates}
       isFetching={isFetching}
       count={data?.count}
       setPage={setPage}

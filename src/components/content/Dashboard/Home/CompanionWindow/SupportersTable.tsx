@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { DownloadDB, SwitchIcon, TrashIcon } from "@assets/icons";
+import { SwitchIcon, TrashIcon } from "@assets/icons";
 import { Button, HStack, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { ETable } from "@components/core";
 import useColumns from "./useColumns";
@@ -13,6 +13,7 @@ import {
 import { MdDeselect, MdSelectAll } from "react-icons/md";
 import { InfoModal } from "../../Modals";
 import BulkMoveModal from "../../Modals/BulkMoveModal/BulkMoveModal";
+import DownloadButton from "@components/core/downloadButton/DownloadButton";
 
 const SupportersTable = ({ filter }: { filter: any }) => {
   const { data, isLoading, isFetching } = useGetSupporters(filter);
@@ -39,7 +40,7 @@ const SupportersTable = ({ filter }: { filter: any }) => {
     }[] = supporters as [];
 
     setCheckedRows(
-      checkedRows.length === 0
+      checkedRows?.length === 0
         ? supportersData.map((supporter) => supporter.id)
         : [],
     );
@@ -48,8 +49,7 @@ const SupportersTable = ({ filter }: { filter: any }) => {
   return (
     <VStack>
       <HStack p="30px 30px 20px 30px" w="100%" fontWeight={600} fontSize="18px">
-        <Text ml="5px">جدول المؤازرة</Text>
-        <Text ml="auto">({supporters?.length || 0} صوت)</Text>
+        <Text ml="auto">جدول المؤازرة</Text>
 
         {checkedRows?.length > 0 && (
           <>
@@ -58,7 +58,7 @@ const SupportersTable = ({ filter }: { filter: any }) => {
               p="10px 15px"
               variant="ghost"
               colorScheme="green"
-              fontSize="20px"
+              fontSize="18px"
               onClick={bulkRemove.onOpen}
               size="sm"
               _hover={{
@@ -76,7 +76,7 @@ const SupportersTable = ({ filter }: { filter: any }) => {
               p="10px 15px"
               variant="ghost"
               colorScheme="green"
-              fontSize="20px"
+              fontSize="18px"
               onClick={bulkMove.onOpen}
               size="sm"
             >
@@ -91,12 +91,12 @@ const SupportersTable = ({ filter }: { filter: any }) => {
           p="10px 15px"
           variant="ghost"
           colorScheme="green"
-          fontSize="20px"
+          fontSize="18px"
           size="sm"
           onClick={handleCheckAll}
         >
-          {checkedRows.length !== 0 ? <MdDeselect /> : <MdSelectAll />}
-          {checkedRows.length !== 0 ? (
+          {checkedRows?.length !== 0 ? <MdDeselect /> : <MdSelectAll />}
+          {checkedRows?.length !== 0 ? (
             <Text mr="10px" color="#318973">
               إلغاء التحديد
             </Text>
@@ -107,19 +107,10 @@ const SupportersTable = ({ filter }: { filter: any }) => {
           )}
         </Button>
 
-        <Button
-          rounded="full"
-          p="10px 15px"
-          variant="ghost"
-          colorScheme="green"
-          fontSize="20px"
-          size="sm"
-        >
-          <DownloadDB />
-          <Text mr="10px" color="#318973">
-            تحميل
-          </Text>
-        </Button>
+        <DownloadButton
+          url="supporter/assign_selected_users_to_my_votes"
+          fileName="content.xlsx"
+        />
       </HStack>
 
       <InfoModal
@@ -157,7 +148,7 @@ const SupportersTable = ({ filter }: { filter: any }) => {
 
       <ETable
         columns={columns}
-        data={supporters || []}
+        data={supporters}
         isFetching={isFetching}
         count={data?.count}
         setPage={setPage}

@@ -35,7 +35,7 @@ const FilterSection = ({ SFilter }: Props) => {
       second_name: undefined,
       third_name: undefined,
       last_name: undefined,
-      Place_of_residence: undefined,
+      place_of_residence: undefined,
       electoral_district: undefined,
       gender: undefined,
     },
@@ -51,9 +51,10 @@ const FilterSection = ({ SFilter }: Props) => {
     second_name,
     third_name,
     electoral_district,
-    Place_of_residence,
+    place_of_residence,
     gender,
   } = watch();
+
   const { setFilter } = useFilterStore();
 
   useEffect(() => {
@@ -64,7 +65,7 @@ const FilterSection = ({ SFilter }: Props) => {
         second_name,
         third_name,
         electoral_district,
-        Place_of_residence,
+        place_of_residence,
         gender,
       });
     }
@@ -74,7 +75,7 @@ const FilterSection = ({ SFilter }: Props) => {
     second_name,
     third_name,
     electoral_district,
-    Place_of_residence,
+    place_of_residence,
     gender,
     isDirty,
     setFilter,
@@ -90,6 +91,7 @@ const FilterSection = ({ SFilter }: Props) => {
             name="first_name"
             render={({ field: { onChange, value } }) => (
               <FirstNameSelect
+                filter={{}}
                 onChange={onChange}
                 value={value}
                 error={errors.first_name?.message}
@@ -104,6 +106,7 @@ const FilterSection = ({ SFilter }: Props) => {
             name="second_name"
             render={({ field: { onChange, value } }) => (
               <SecondNameSelect
+                filter={{}}
                 onChange={onChange}
                 value={value}
                 error={errors.second_name?.message}
@@ -118,6 +121,7 @@ const FilterSection = ({ SFilter }: Props) => {
             name="third_name"
             render={({ field: { onChange, value } }) => (
               <MiddleNameSelect
+                filter={{}}
                 onChange={onChange}
                 value={value}
                 error={errors.third_name?.message}
@@ -132,6 +136,7 @@ const FilterSection = ({ SFilter }: Props) => {
             name="last_name"
             render={({ field: { onChange, value } }) => (
               <LastNameSelect
+                filter={{}}
                 onChange={onChange}
                 value={value}
                 error={errors.last_name?.message}
@@ -143,12 +148,12 @@ const FilterSection = ({ SFilter }: Props) => {
         <Box w="32%" flexGrow="1">
           <Controller
             control={control}
-            name="Place_of_residence"
+            name="place_of_residence"
             render={({ field: { onChange, value } }) => (
               <PlaceOfResidenceSelect
                 onChange={onChange}
                 value={value}
-                error={errors.Place_of_residence?.message}
+                error={errors.place_of_residence?.message}
                 key={value}
               />
             )}
@@ -203,16 +208,17 @@ const FilterSection = ({ SFilter }: Props) => {
           icon={<SlRefresh />}
           iconPlacment="right"
           onClick={() => {
-            reset(),
-              setFilter({
-                first_name: undefined,
-                last_name: undefined,
-                second_name: undefined,
-                third_name: undefined,
-                Place_of_residence: undefined,
-              });
+            reset();
+            setFilter({
+              first_name: undefined,
+              last_name: undefined,
+              second_name: undefined,
+              third_name: undefined,
+              place_of_residence: undefined,
+              gender: undefined,
+            });
+            handleSubmit(handleFilter)();
           }}
-          disabled={!isDirty}
         >
           <Text>مسح الكل</Text>
         </Btn>

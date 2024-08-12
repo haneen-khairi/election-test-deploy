@@ -1,135 +1,67 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useMemo } from "react";
-import {
-  Box,
-  Button,
-  HStack,
-  Text,
-  UseDisclosureReturn,
-} from "@chakra-ui/react";
-import { ShowTime } from "@constants/functions/ShowTime";
+import { Text } from "@chakra-ui/react";
 import { truncateText } from "@constants/functions/TruncateText";
-import { FaInfoCircle } from "react-icons/fa";
-import { MdEdit } from "react-icons/md";
 import { CellValue } from "react-table";
-import { CheckBox } from "@components/core";
+// import { CheckBox } from "@components/core";
 
 interface Props {
-  edit: UseDisclosureReturn;
-  info: UseDisclosureReturn;
+  names: string | undefined;
 }
 
-const useColumns = ({ edit, info }: Props) => {
+const useColumns = ({ names }: Props) => {
   const [checkedRows, setCheckedRows] = useState<string[]>([]);
-  const [recordID, setRecordID] = useState<string>();
 
-  const handleCheckboxChange = (id: string) => {
-    if (checkedRows.includes(id)) {
-      setCheckedRows(checkedRows.filter((rowId) => rowId !== id));
-    } else {
-      setCheckedRows([...checkedRows, id]);
-    }
-  };
+  // const handleCheckboxChange = (id: string) => {
+  //   if (checkedRows.includes(id)) {
+  //     setCheckedRows(checkedRows.filter((rowId) => rowId !== id));
+  //   } else {
+  //     setCheckedRows([...checkedRows, id]);
+  //   }
+  // };
 
   const columns = useMemo(
     () => [
       {
-        Header: " ",
-        Cell: ({ cell }: CellValue) => {
-          const id = cell.row.original.id;
-          return (
-            <CheckBox
-              checked={checkedRows.includes(id)}
-              onChange={() => handleCheckboxChange(id)}
-            />
-          );
-        },
-      },
-      {
         Header: "الإسم",
         Cell: ({ cell }: CellValue) => {
           return (
-            <HStack justifyContent="flex-start">
-              <Text color="mPrimary" fontWeight="600" noOfLines={1}>
-                {truncateText(
-                  `${cell.row.original.first_name} ${cell.row.original.second_name} ${cell.row.original.third_name} ${cell.row.original.last_name}`,
-                  150
-                )}
-              </Text>
-            </HStack>
+            <Text color="mPrimary" fontWeight="600" noOfLines={1}>
+              {truncateText(cell.row.original.full_name, 150)}
+            </Text>
           );
         },
       },
       {
-        Header: "المندوب الرئيسي",
-        accessor: "mandoub_main",
+        Header: "رقم الهاتف",
+        accessor: "mobile_number",
       },
       {
-        Header: "مندوب الحركة",
-        accessor: "mandoub_haraka",
-      },
-      {
-        Header: "مكان الإنتخاب",
-        accessor: "place_of_residence",
-      },
-      {
-        Header: "صندوق رقم",
-        accessor: "box",
-      },
-      {
-        Header: "وقت الإنتخاب",
+        Header: "حالة الضمان",
         Cell: ({ cell }: CellValue) => {
           return (
-            <Text>{ShowTime(cell.row.original.election_time) || "-"}</Text>
+            <Text fontWeight="600">
+              {cell.row.original.status ? `${cell.row.original.status} %` : "-"}
+            </Text>
           );
         },
       },
       {
-        Header: "  ",
+        Header: "إسم المندوب",
         Cell: ({ cell }: CellValue) => {
-          const id = cell.row.original.id;
           return (
-            <HStack justifyContent="flex-end">
-              {checkedRows.includes(id) && checkedRows.length <= 1 && (
-                <Box
-                  as={Button}
-                  size="xs"
-                  rounded="full"
-                  px="0"
-                  variant="ghost"
-                  fontSize="15px"
-                  color="primary.500"
-                  onClick={() => {
-                    setRecordID(cell.row.original.id);
-                    edit.onOpen();
-                  }}
-                >
-                  <MdEdit />
-                </Box>
-              )}
-              <Box
-                as={Button}
-                size="xs"
-                rounded="full"
-                px="0"
-                variant="ghost"
-                fontSize="15px"
-                color="primary.500"
-                onClick={() => {
-                  setRecordID(cell.row.original.id);
-                  info.onOpen();
-                }}
-              >
-                <FaInfoCircle />
-              </Box>
-            </HStack>
+            <Text fontWeight="600">
+              {cell.row.original.delegate_name || "---"}
+            </Text>
           );
         },
       },
     ],
-    [checkedRows]
+    [checkedRows, names],
   );
 
-  return { columns, checkedRows, recordID, setCheckedRows };
+  return { columns, checkedRows, setCheckedRows };
 };
 
 export default useColumns;

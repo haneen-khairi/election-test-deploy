@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { InputSelect } from "@components/core";
 import { useGetplaceOfResidenceDropdown } from "@services/hooks/dropdown/useDropDown";
 import { useEffect, useRef, useState } from "react";
@@ -9,6 +10,7 @@ interface Props {
   multi?: boolean;
   label?: string;
   placeholder?: string;
+  isDisabled?: boolean;
 }
 const PlaceOfResidenceSelect = ({
   value,
@@ -17,12 +19,14 @@ const PlaceOfResidenceSelect = ({
   multi = false,
   label,
   placeholder,
+  isDisabled = false,
 }: Props) => {
   const [search, setSearch] = useState<string>();
-  const { data, fetchNextPage, hasNextPage, isFetching } =
-    useGetplaceOfResidenceDropdown(search);
   const [isFetchingNextPage, setIsFetchingNextPage] = useState<boolean>(false);
   const sentinelRef = useRef(null);
+  const { data, fetchNextPage, hasNextPage, isFetching } =
+    useGetplaceOfResidenceDropdown(search);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -48,6 +52,7 @@ const PlaceOfResidenceSelect = ({
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const options = data?.pages.flatMap((page) => page.data);
+
   return (
     <InputSelect
       loading={isFetching}
@@ -55,7 +60,7 @@ const PlaceOfResidenceSelect = ({
         options
           ? options?.map((el) => ({
               label: el.name || "",
-              value: el.id?.toString() || "",
+              value: el.id || "",
             }))
           : []
       }
@@ -67,6 +72,7 @@ const PlaceOfResidenceSelect = ({
       onMenuScrollBottom={() => fetchNextPage()}
       onSearch={setSearch}
       label={label}
+      isDisabled={isDisabled}
     />
   );
 };

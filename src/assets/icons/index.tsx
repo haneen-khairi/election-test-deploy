@@ -1128,7 +1128,7 @@ export const FamiliesRepresentations = () => (
   </svg>
 );
 
-export const DownloadDB = () => (
+export const DownloadDB = ({ color }: { color?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="20"
@@ -1138,28 +1138,28 @@ export const DownloadDB = () => (
   >
     <path
       d="M15.8333 13.3333V18.3333M15.8333 18.3333L18.3333 15.8333M15.8333 18.3333L13.3333 15.8333"
-      stroke="#318973"
+      stroke={color || "#318973"}
       stroke-width="1.66667"
       stroke-linecap="round"
       stroke-linejoin="round"
     />
     <path
       d="M3.33325 5V10C3.33325 10 3.33325 12.5 9.16659 12.5C14.9999 12.5 14.9999 10 14.9999 10V5"
-      stroke="#318973"
+      stroke={color || "#318973"}
       stroke-width="1.66667"
       stroke-linecap="round"
       stroke-linejoin="round"
     />
     <path
       d="M9.16659 2.5C14.9999 2.5 14.9999 5 14.9999 5C14.9999 5 14.9999 7.5 9.16659 7.5C3.33325 7.5 3.33325 5 3.33325 5C3.33325 5 3.33325 2.5 9.16659 2.5Z"
-      stroke="#318973"
+      stroke={color || "#318973"}
       stroke-width="1.66667"
       stroke-linecap="round"
       stroke-linejoin="round"
     />
     <path
       d="M9.16659 17.5C3.33325 17.5 3.33325 15 3.33325 15V10"
-      stroke="#318973"
+      stroke={color || "#318973"}
       stroke-width="1.66667"
       stroke-linecap="round"
       stroke-linejoin="round"

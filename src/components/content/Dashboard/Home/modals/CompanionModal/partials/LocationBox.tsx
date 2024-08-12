@@ -3,8 +3,8 @@ import { Box, FormControl, FormLabel, HStack, Text } from "@chakra-ui/react";
 import { GrMapLocation } from "react-icons/gr";
 
 interface Value {
-  longitude: number;
-  latitude: number;
+  longitude?: number;
+  latitude?: number;
 }
 interface Props {
   placeholder: string;

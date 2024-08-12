@@ -49,8 +49,8 @@ const ExpensesBarChart = ({
       } as { names: string[]; amounts: number[] },
     );
 
-  const maxCount =
-    amounts.reduce((acc, curr) => (curr > acc ? curr : acc), 0) || 0;
+  // const maxCount =
+  //   amounts.reduce((acc, curr) => (curr > acc ? curr : acc), 0) || 0;
 
   return (
     <Box w="100%">
@@ -68,11 +68,6 @@ const ExpensesBarChart = ({
                 barThickness: 17,
                 borderRadius: 50,
               },
-              {
-                data: Array(amounts.length).fill(maxCount + maxCount * 0.2),
-                backgroundColor: tab === 1 ? "#ECFFF5" : "#ffecec",
-                barThickness: 17,
-              },
             ],
           }}
           height="450px"
@@ -81,15 +76,15 @@ const ExpensesBarChart = ({
             maintainAspectRatio: false,
             devicePixelRatio: 3,
             plugins: {
-              tooltip: {
-                enabled: false,
-              },
+              // tooltip: {
+              //   enabled: false,
+              // },
               legend: {
                 display: false,
               },
             },
             scales: {
-              x: { stacked: true },
+              x: {},
               y: {},
             },
           }}

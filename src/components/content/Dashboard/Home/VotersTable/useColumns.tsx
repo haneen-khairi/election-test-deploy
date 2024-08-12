@@ -8,18 +8,19 @@ import {
   Text,
   UseDisclosureReturn,
 } from "@chakra-ui/react";
-import { ShowTime } from "@constants/functions/ShowTime";
 import { truncateText } from "@constants/functions/TruncateText";
 import { CellValue } from "react-table";
 import { CheckBox } from "@components/core";
-import { EditPenIcon, TrashIcon } from "@assets/icons";
+import { IoQrCode } from "react-icons/io5";
+import { MdEdit } from "react-icons/md";
 
 interface Props {
   edit: UseDisclosureReturn;
   remove: UseDisclosureReturn;
+  treePage?: boolean;
 }
 
-const useColumns = ({ edit, remove }: Props) => {
+const useColumns = ({ edit, treePage = false }: Props) => {
   const [checkedRows, setCheckedRows] = useState<string[]>([]);
   const [recordID, setRecordID] = useState<string>();
 
@@ -77,71 +78,77 @@ const useColumns = ({ edit, remove }: Props) => {
           );
         },
       },
+      ...(treePage
+        ? []
+        : [
+            {
+              Header: "المندوب الرئيسي",
+              accessor: "mandoub_main",
+            },
+            {
+              Header: "مندوب الحركة",
+              accessor: "mandoub_haraka",
+            },
+          ]),
       {
-        Header: "المندوب الرئيسي",
-        accessor: "mandoub_main",
-      },
-      {
-        Header: "مندوب الحركة",
-        accessor: "mandoub_haraka",
-      },
-      {
-        Header: "مكان الإنتخاب",
+        Header: "مكان الإقامة",
         accessor: "place_of_residence",
       },
       {
-        Header: "صندوق رقم",
-        accessor: "box",
-      },
-      {
-        Header: "وقت الإنتخاب",
+        Header: "اسم المدرسة",
         Cell: ({ cell }: CellValue) => {
-          return (
-            <Text>{ShowTime(cell.row.original.election_time) || "-"}</Text>
-          );
+          return `${cell.row.original.school || ""} (${cell.row.original.box || "0"})`;
         },
       },
-      {
-        Header: "  ",
-        Cell: ({ cell }: CellValue) => {
-          // const id = cell.row.original.id;
-          return (
-            <HStack justifyContent="center" gap="20px">
-              <Box
-                as={Button}
-                size="xs"
-                rounded="full"
-                px="0"
-                variant="ghost"
-                fontSize="15px"
-                color="primary.500"
-                onClick={() => {
-                  setRecordID(cell.row.original.id);
-                  edit.onOpen();
-                }}
-              >
-                <EditPenIcon />
-              </Box>
+      ...(treePage
+        ? []
+        : [
+            {
+              Header: "  ",
+              Cell: ({ cell }: CellValue) => {
+                // const id = cell.row.original.id;
+                return (
+                  <HStack>
+                    <Button
+                      as={Button}
+                      size="xs"
+                      rounded="full"
+                      px="0"
+                      variant="ghost"
+                      color="primary.500"
+                      disabled={!cell.row.original.qr_code_key}
+                      onClick={() => {
+                        if (!cell.row.original.qr_code_key) return;
 
-              <Box
-                as={Button}
-                size="xs"
-                rounded="full"
-                px="0"
-                variant="ghost"
-                fontSize="15px"
-                color="primary.500"
-                onClick={() => {
-                  setRecordID(cell.row.original.id);
-                  remove.onOpen();
-                }}
-              >
-                <TrashIcon />
-              </Box>
-            </HStack>
-          );
-        },
-      },
+                        const url = new URL(
+                          `/qr/${cell.row.original.qr_code_key}`,
+                          window.location.origin,
+                        );
+                        window.open(url.toString(), "_blank");
+                      }}
+                    >
+                      <IoQrCode size={16} />
+                    </Button>
+
+                    <Box
+                      as={Button}
+                      size="xs"
+                      rounded="full"
+                      px="0"
+                      variant="ghost"
+                      color="primary.500"
+                      onClick={() => {
+                        setRecordID(cell.row.original.id);
+                        edit.onOpen();
+                      }}
+                    >
+                      <MdEdit size={20} />
+                    </Box>
+                  </HStack>
+                );
+              },
+            },
+          ]),
     ],
     [checkedRows, edit, handleCheckboxChange],
   );

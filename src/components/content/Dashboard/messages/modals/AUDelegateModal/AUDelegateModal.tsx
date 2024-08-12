@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Box, HStack, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import {
@@ -52,7 +53,7 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
   const { data: VotingCenter, isLoading: isVotingCenterLoading } =
     useGetVotingCenterDropDown();
   const { data: Boxes, isLoading: isBoxesLoading } = useGetBoxesDropDown(
-    values.school,
+    values.voting_center,
   );
 
   const { data, isLoading } = useGetDelegate(
@@ -136,15 +137,12 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
     if (data?.data && !isLoading) {
       setValue("mobile_number", data?.data.mobile_number || "");
       setValue("name", data?.data.name || "");
-      setValue("group", data?.data.group.id || "");
+      setValue("group", Number(data?.data.group.id));
       setValue(
         "place_of_residence",
         data?.data.place_of_residence?.map((item) => item.id.toString()),
       );
-      setValue(
-        "school",
-        data?.data.voting_center?.map((item) => item.id),
-      );
+      setValue("voting_center", data?.data.voting_center as any);
       setValue(
         "electoral_boxes",
         data?.data?.electoral_boxes?.map((item) => item.id),
@@ -227,7 +225,8 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                     error={errors.password?.message}
                   />
                 </Box>
-                {(values.group == "4" || values.group == "3") && (
+                {(Number(values?.group || 0) == 4 ||
+                  Number(values?.group || 0) == 3) && (
                   <Box w="40%" flexGrow="1">
                     <Controller
                       control={control}
@@ -245,12 +244,12 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                     />
                   </Box>
                 )}
-                {values.group == "2" && (
+                {Number(values?.group || 0) == 2 && (
                   <>
                     <Box w="100%" flexGrow="1">
                       <Controller
                         control={control}
-                        name="school"
+                        name="voting_center"
                         render={({ field: { onChange, value } }) => (
                           <InputSelect
                             loading={isVotingCenterLoading}
@@ -267,7 +266,7 @@ const AddDelegateModal = ({ isOpen, onClose, recordID }: Props) => {
                             placeholder="اختر المدرسة"
                             onChange={onChange}
                             value={value}
-                            error={errors.school?.message}
+                            error={errors.voting_center?.message}
                           />
                         )}
                       />

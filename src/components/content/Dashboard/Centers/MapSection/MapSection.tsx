@@ -116,7 +116,7 @@ const MapSection = () => {
                     >
                       <BoxIcon />
                       <Text fontSize="14px" fontWeight="700">
-                        {item.boxes_count} صناديق
+                        {item?.boxes_count} صناديق
                       </Text>
                     </HStack>
                   </Box>

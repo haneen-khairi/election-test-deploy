@@ -6,7 +6,7 @@ const CryptoStorage = {
     const jsonString = JSON.stringify(obj);
     const encrypted = CryptoJS.AES.encrypt(
       jsonString,
-      ENCRYPTION_KEY
+      ENCRYPTION_KEY,
     ).toString();
     localStorage.setItem(storageKey, encrypted);
   },
@@ -16,6 +16,7 @@ const CryptoStorage = {
     if (storedData) {
       const bytes = CryptoJS.AES.decrypt(storedData, ENCRYPTION_KEY);
       const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+      if (!decryptedData) return null;
       return JSON.parse(decryptedData);
     }
     return null;

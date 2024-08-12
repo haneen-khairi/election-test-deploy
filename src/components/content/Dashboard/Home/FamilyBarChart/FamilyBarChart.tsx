@@ -42,7 +42,7 @@ const FamilyBarChartSection = () => {
     _event: ChartEvent,
     chartElement: CustomChartElement[]
   ) => {
-    if (chartElement.length > 0) {
+    if (chartElement?.length > 0) {
       const index = chartElement[0].index;
       const clickedFamily = filteredData?.data[index].family;
       setFilter({ last_name: clickedFamily || "" });

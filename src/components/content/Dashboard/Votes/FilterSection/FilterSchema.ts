@@ -4,7 +4,7 @@ export const FilterSchema = yup.object().shape({
   second_name: yup.string(),
   third_name: yup.string(),
   last_name: yup.string(),
-  Place_of_residence: yup.string(),
+  place_of_residence: yup.string(),
   electoral_district: yup.string(),
   gender: yup.string(),
 });

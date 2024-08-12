@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 export const filterSectionSchema = yup.object().shape({
   district: yup.string(),
-  representative_name: yup.string(),
+  mandoub_main: yup.string(),
   companion_name: yup.string(),
   gender: yup.string(),
   first_name: yup.string(),
@@ -11,7 +11,8 @@ export const filterSectionSchema = yup.object().shape({
   last_name: yup.string(),
   place_of_residence: yup.string(),
   electoral_district: yup.string(),
-  boxes: yup.string(),
-  centers: yup.string(),
+  box: yup.string(),
+  voting_center: yup.string(),
   supporter_name: yup.string(),
+  status: yup.string(),
 });

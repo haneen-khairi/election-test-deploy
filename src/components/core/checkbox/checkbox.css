@@ -7,12 +7,13 @@
 .custom-checkbox input {
   opacity: 0;
   cursor: pointer;
+  margin-right: 15px;
 }
 
 .custom-checkbox-checkmark {
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   padding: 9px;
   background-color: #fff;
   border: 1px solid #ccc;

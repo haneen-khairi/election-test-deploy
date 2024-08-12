@@ -3,7 +3,7 @@ export interface FilterType {
   second_name?: string;
   third_name?: string;
   last_name?: string;
-  Place_of_residence?: string;
+  place_of_residence?: string;
   electoral_district?: string;
   gender?: string;
 }

@@ -11,7 +11,6 @@ interface Props {
 }
 const CenterInfoModal = ({ isOpen, onClose, center }: Props) => {
   const { data, isLoading } = useGetVotingCentersBoxes(center?.id || "", isOpen);
-  console.log(data);
   return (
     <Popup title={center?.name} size="xl" isOpen={isOpen} onClose={onClose}>
       {isLoading ? (
@@ -27,7 +26,7 @@ const CenterInfoModal = ({ isOpen, onClose, center }: Props) => {
                 </Box>
                 <Box>
                   <Text color="primary.200" fontWeight="700">
-                    {data?.data.boxes_count} صندوق
+                    {data?.data?.boxes_count} صندوق
                   </Text>
                   <Text color="#46515D" fontWeight="400">
                     مراكز الإقتراع

@@ -8,8 +8,8 @@ const useColumns = () => {
       {
         Header: "اسم المرشح",
         Cell: ({ cell }: CellValue) => {
-          const name = cell.row.original?.candidate_name;
-          const image = cell.row.orginal?.candidate_image || "";
+          const name = cell.row.original?.name;
+          const image = cell.row.orginal?.image || "";
           return (
             <HStack>
               <WrapItem>
@@ -23,7 +23,7 @@ const useColumns = () => {
       {
         Header: "عدد الأصوات",
         Cell: ({ cell }: CellValue) => {
-          const total_votes = cell.row.original.total_votes;
+          const total_votes = cell.row.original?.vote_count || 0;
           return (
             <Text color="primary.200">
               {total_votes + " "}
@@ -33,7 +33,7 @@ const useColumns = () => {
         },
       },
     ],
-    []
+    [],
   );
 
   return { columns };

@@ -76,15 +76,15 @@ const AccountsBarChart = ({
             maintainAspectRatio: false,
             devicePixelRatio: 3,
             plugins: {
-              tooltip: {
-                enabled: false,
-              },
+              // tooltip: {
+              //   enabled: false,
+              // },
               legend: {
                 display: false,
               },
             },
             scales: {
-              x: { stacked: true },
+              x: {},
               y: {},
             },
           }}

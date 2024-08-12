@@ -21,6 +21,7 @@ export const AvatarMenu = () => {
   const { logout, data } = useAuthStore();
   const navigate = useNavigate();
   const alert = useDisclosure();
+
   return (
     <>
       <InfoModal
@@ -37,7 +38,7 @@ export const AvatarMenu = () => {
         <MenuButton as={Button} variant="unstyled">
           <HStack>
             <WrapItem>
-              <Avatar size="sm" src="" />
+              <Avatar size="sm" src={data?.user?.image || ""} />
             </WrapItem>
             <Text fontSize="14px" fontWeight="500">
               {data?.user?.name || "الاسم غير معروف"}

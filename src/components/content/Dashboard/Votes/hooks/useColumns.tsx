@@ -8,7 +8,6 @@ import {
   UseDisclosureReturn,
 } from "@chakra-ui/react";
 import { StatusBadge } from "@components/content/StatusBadge";
-import { ShowTime } from "@constants/functions/ShowTime";
 import { truncateText } from "@constants/functions/TruncateText";
 import { FaInfoCircle } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
@@ -84,20 +83,12 @@ const useColumns = ({ edit, info }: Props) => {
         accessor: "box",
       },
       {
-        Header: "وقت الإنتخاب",
-        Cell: ({ cell }: CellValue) => {
-          return (
-            <Text>{ShowTime(cell.row.original.election_time) || "-"}</Text>
-          );
-        },
-      },
-      {
         Header: "اجراءات",
         Cell: ({ cell }: CellValue) => {
           const id = cell.row.original.id;
           return (
             <HStack justifyContent="flex-end">
-              {checkedRows.includes(id) && checkedRows.length <= 1 && (
+              {checkedRows.includes(id) && checkedRows?.length <= 1 && (
                 <Box
                   as={Button}
                   size="xs"

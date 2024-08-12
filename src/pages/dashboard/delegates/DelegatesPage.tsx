@@ -3,19 +3,19 @@ import {
   FilterSection,
   TableSection,
 } from "@components/content/Dashboard/Delegates";
-import { FilterType } from "@components/content/Dashboard/Delegates/FilterSection/FilterType";
 import { Ebox } from "@components/core";
-import { useState } from "react";
+import { usePermission } from "@services/hooks/auth/Permission";
 
 const DelegatesPage = () => {
-  const [filter, SFilter] = useState<FilterType | undefined>(undefined);
+  usePermission("/delegates");
+
   return (
     <VStack spacing="20px" align="stretch">
       <Ebox title="فلترة البحث">
-        <FilterSection SFilter={SFilter} />
+        <FilterSection />
       </Ebox>
 
-      <TableSection filter={filter} />
+      <TableSection />
     </VStack>
   );
 };

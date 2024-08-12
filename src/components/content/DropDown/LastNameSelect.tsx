@@ -1,19 +1,34 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { InputSelect } from "@components/core";
 import { useGetLastNameDropdown } from "@services/hooks/dropdown/useDropDown";
 import { useEffect, useRef, useState } from "react";
 
 interface Props {
   value: unknown;
+  multi?: boolean;
   onChange: (value: unknown) => void;
   error?: string;
+  filter: any;
+  token?: string;
 }
 
-const MiddleNameSelect = ({ value, onChange, error }: Props) => {
+const LastNameSelect = ({
+  value,
+  onChange,
+  error,
+  filter,
+  multi = false,
+  token,
+}: Props) => {
   const [search, setSearch] = useState<string>();
+
   const { data, fetchNextPage, hasNextPage, isFetching } =
-    useGetLastNameDropdown(search);
+    useGetLastNameDropdown(search, filter, token || null);
+
   const [isFetchingNextPage, setIsFetchingNextPage] = useState<boolean>(false);
   const sentinelRef = useRef(null);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -24,7 +39,7 @@ const MiddleNameSelect = ({ value, onChange, error }: Props) => {
           });
         }
       },
-      { threshold: 1.0 }
+      { threshold: 1.0 },
     );
 
     if (sentinelRef.current) {
@@ -45,12 +60,12 @@ const MiddleNameSelect = ({ value, onChange, error }: Props) => {
       options={
         options
           ? options?.map((el) => ({
-              label: el.name || "",
-              value: el.name?.toString() || "",
+              label: el?.name || "",
+              value: el?.name?.toString() || "",
             }))
           : []
       }
-      multi={false}
+      multi={multi}
       placeholder="إسم العائلة"
       onChange={onChange}
       error={error}
@@ -61,4 +76,4 @@ const MiddleNameSelect = ({ value, onChange, error }: Props) => {
   );
 };
 
-export default MiddleNameSelect;
+export default LastNameSelect;

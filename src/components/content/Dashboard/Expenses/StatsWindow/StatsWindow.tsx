@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DBPlusIcon, DownloadDB } from "@assets/icons";
+import { DBPlusIcon } from "@assets/icons";
 import { Grid, HStack, Text, VStack } from "@chakra-ui/react";
 import { Ebox } from "@components/core";
 import { DBIcon, UpwardArrow } from "@assets/icons";
@@ -11,6 +11,7 @@ import {
   useGetExpensesStats,
 } from "@services/hooks/expenses/useExpenses";
 import { displaySpinner } from "@services/utils/displaySpinner";
+import DownloadButton from "@components/core/downloadButton/DownloadButton";
 
 interface SideBox {
   text: string;
@@ -26,17 +27,29 @@ const StatsWindow = () => {
     {
       text: "الرصيد الحالي",
       icon: <></>,
-      number: displaySpinner(expensesStats?.data?.current_amount, isLoading1, "---"),
+      number: displaySpinner(
+        expensesStats?.data?.current_amount,
+        isLoading1,
+        "---",
+      ),
     },
     {
       text: "الدخل",
       icon: <UpwardArrow />,
-      number: displaySpinner(expensesStats?.data?.total_income, isLoading1, "---"),
+      number: displaySpinner(
+        expensesStats?.data?.total_income,
+        isLoading1,
+        "---",
+      ),
     },
     {
       text: "المصروفات",
       icon: <DBIcon />,
-      number: displaySpinner(expensesStats?.data?.total_expenses, isLoading1, "---"),
+      number: displaySpinner(
+        expensesStats?.data?.total_expenses,
+        isLoading1,
+        "---",
+      ),
     },
   ];
 
@@ -65,8 +78,10 @@ const StatsWindow = () => {
         <Ebox>
           <HStack w="100%" fontWeight={600} mb="20px">
             <Text ml="auto">جدول الدخل والمصروفات</Text>
-            <DownloadDB />
-            <Text color="#318973">تحميل</Text>
+            <DownloadButton
+              url="expense/get_expenses_and_income_table"
+              fileName="content.xlsx"
+            />
           </HStack>
 
           <ExpensesTable />
@@ -99,7 +114,10 @@ const StatsWindow = () => {
             <Text>المصروفات</Text>
           </HStack>
 
-          <ExpensesLineChart data={expensesChart as any} isLoading={isLoading2} />
+          <ExpensesLineChart
+            data={expensesChart as any}
+            isLoading={isLoading2}
+          />
         </VStack>
       </Ebox>
     </VStack>

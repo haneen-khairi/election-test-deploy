@@ -2,14 +2,17 @@ import { useState, useRef } from "react";
 import { Image, Text, Icon, Button, Flex } from "@chakra-ui/react";
 import { BsFilePdf, BsFileWord, BsXCircle } from "react-icons/bs";
 
-
 interface FileInputProps {
-    selectedFile: File | null;
-    setSelectedFile: (x: File | null)=> void,
-    isTicket?: boolean
+  selectedFile: File | null;
+  setSelectedFile: (x: File | null) => void;
+  isTicket?: boolean;
 }
 
-function FileInput ({selectedFile, setSelectedFile , isTicket = false}: FileInputProps) {
+function FileInput({
+  selectedFile,
+  setSelectedFile,
+  isTicket = false,
+}: FileInputProps) {
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -37,7 +40,11 @@ function FileInput ({selectedFile, setSelectedFile , isTicket = false}: FileInpu
     if (!file) return;
 
     const fileType = file.type;
-    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
 
     if (allowedTypes.includes(fileType)) {
       //   setMessage(`File ${file.name} selected!`);
@@ -93,23 +100,35 @@ function FileInput ({selectedFile, setSelectedFile , isTicket = false}: FileInpu
           onChange={handleFileSelect}
           ref={inputRef}
         />
-        {!isTicket && <Image
-          width={{ lg: "120px", md: "110px", sm: "100px" }}
-          src={"/images/upload.svg"}
-          alt={"Upload"}
-          mb={"20px"}
-          pointerEvents={"none"}
-        /> }
-         {isTicket && <Flex justify={'flex-start'} gap={'8px'} mb={'16px'} width={'100%'}><Image
-          width={{ lg: "16px", md: "16px", sm: "16px" }}
-          src={"/images/paperclip.svg"}
-          alt={"Upload"}
-          pointerEvents={"none"}
-        />
-        <p>Attachment</p>
-        </Flex> }
+        {!isTicket && (
+          <Image
+            width={{ lg: "120px", md: "110px", sm: "100px" }}
+            src={"/images/upload.svg"}
+            alt={"Upload"}
+            mb={"20px"}
+            pointerEvents={"none"}
+          />
+        )}
+        {isTicket && (
+          <Flex justify={"flex-start"} gap={"8px"} mb={"16px"} width={"100%"}>
+            <Image
+              width={{ lg: "16px", md: "16px", sm: "16px" }}
+              src={"/images/paperclip.svg"}
+              alt={"Upload"}
+              pointerEvents={"none"}
+            />
+            <p>Attachment</p>
+          </Flex>
+        )}
         <>
-          <Text textAlign={isTicket ? 'start' : 'center'} width={'100%'} fontSize={"14px"} mb={'16px'} fontWeight={"400"} pointerEvents={"none"}>
+          <Text
+            textAlign={isTicket ? "start" : "center"}
+            width={"100%"}
+            fontSize={"14px"}
+            mb={"16px"}
+            fontWeight={"400"}
+            pointerEvents={"none"}
+          >
             Drop your image here, or
             <Text as={"span"} color={"#287AE0"}>
               {" "}
@@ -119,11 +138,11 @@ function FileInput ({selectedFile, setSelectedFile , isTicket = false}: FileInpu
           <Text
             fontSize={"12px"}
             color={"#969DB2"}
-            textAlign={isTicket ? 'start' : 'center'}
+            textAlign={isTicket ? "start" : "center"}
             fontWeight={"400"}
             pointerEvents={"none"}
-            mb={'16px'}
-            width={'100%'}
+            mb={"16px"}
+            width={"100%"}
           >
             Supports: PDF, DOC And DOCX
           </Text>
@@ -150,6 +169,6 @@ function FileInput ({selectedFile, setSelectedFile , isTicket = false}: FileInpu
       )}
     </>
   );
-};
+}
 
 export default FileInput;

@@ -1,17 +1,17 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createBrowserRouter } from "react-router-dom";
 import { LoginPage, UserVerfication } from "@pages/auth";
 import {
   CentersPage,
   DelegatesPage,
-  ExpensesPage,
+  AccountancySystemPage,
   HomePage,
   Layout,
   PreliminaryResultsPage,
   TasksPage,
   TransportationStatistics,
   VotersPage,
-  VotesPage,
   FamilyTree,
 } from "@pages/dashboard";
 import { GlobeLayout } from "@pages/layout";
@@ -21,24 +21,27 @@ import MessagesPage from "@pages/dashboard/messages/MessagesPage";
 import MessageServiceLayout from "@pages/layout/MessageServiceLayout";
 import SentMessagesPage from "@pages/Home/SentMessagesPage";
 import ProfilePage from "@pages/Home/ProfilePage";
+import QRPage from "@pages/public/QRPage";
+import SupportersPage from "@pages/public/SupportersPage";
+import NamesWithOthersPage from "@pages/dashboard/namesWithOthers/CentersPage";
 
 const ErrorPage = () => {
-    const error: any = useRouteError();
+  const error: any = useRouteError();
 
-    return (
-        <div>
-            <p>an unexpected error has occurred.</p>
-            <p>
-                <i>{error.statusText || error.message}</i>
-            </p>
-        </div>
-    );
+  return (
+    <div>
+      <p>an unexpected error has occurred.</p>
+      <p>
+        <i>{error.statusText || error.message}</i>
+      </p>
+    </div>
+  );
 };
 
 const router = createBrowserRouter([
   {
     element: <GlobeLayout />,
-    errorElement: <ErrorPage />, 
+    errorElement: <ErrorPage />,
     children: [
       {
         element: (
@@ -56,10 +59,6 @@ const router = createBrowserRouter([
             element: <VotersPage />,
           },
           {
-            path: "/my-votes",
-            element: <VotesPage />,
-          },
-          {
             path: "/centers",
             element: <CentersPage />,
           },
@@ -69,7 +68,7 @@ const router = createBrowserRouter([
           },
           {
             path: "/expenses",
-            element: <ExpensesPage />,
+            element: <AccountancySystemPage />,
           },
           {
             path: "/tasks",
@@ -90,7 +89,11 @@ const router = createBrowserRouter([
           {
             path: "/family-tree",
             element: <FamilyTree />,
-          }
+          },
+          {
+            path: "/names-with-others",
+            element: <NamesWithOthersPage />,
+          },
         ],
       },
       {
@@ -98,6 +101,22 @@ const router = createBrowserRouter([
         element: (
           <IsAuth page="login">
             <LoginPage />
+          </IsAuth>
+        ),
+      },
+      {
+        path: "/qr/:code",
+        element: (
+          <IsAuth page="qr">
+            <QRPage />
+          </IsAuth>
+        ),
+      },
+      {
+        path: "/supporter/:id",
+        element: (
+          <IsAuth page="supporter">
+            <SupportersPage />
           </IsAuth>
         ),
       },
@@ -116,19 +135,14 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/profile",
-        element: (
-          <ProfilePage />
-        ),
+        element: <ProfilePage />,
       },
       {
         path: "/sentMessages",
-        element: (
-          <SentMessagesPage />
-        ),
+        element: <SentMessagesPage />,
       },
-
-    ]
-  }
+    ],
+  },
 ]);
 
 export default router;

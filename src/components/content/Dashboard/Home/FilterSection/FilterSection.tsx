@@ -10,9 +10,8 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { PlaceOfResidenceSelect } from "@components/content/DropDown";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { filterSectionSchema } from "./FilterSectionSchemas";
 import useAuthStore from "@store/AuthStore";
 import Filters from "./Filters";
@@ -25,51 +24,91 @@ import {
   StackIcon,
 } from "@assets/icons";
 import { Btn } from "@components/core";
-import ElectoralDistrictSelect from "@components/content/DropDown/ElectoralDistrictSelect";
-import CompanionModal from "../modals/CompanionModal/CompanionModal";
-import { useEffect } from "react";
-import { SlRefresh } from "react-icons/sl";
+import SupporterModal from "../modals/CompanionModal/SupporterModal";
+import { useEffect, useMemo, useState } from "react";
+import { useDownloadMyLists } from "@services/hooks/excel/useExcel";
+import { saveXLSXFile } from "@constants/functions/SaveXLSX";
+import { Link } from "react-router-dom";
+import { usePermission } from "@services/hooks/auth/Permission";
 
 const HomeFilterSection = ({
   activeTabIndex,
   setActiveTabIndex,
   setFilter,
-  onResetTable= () => {},
-  homePage = true,
+  filter,
 }: {
   activeTabIndex: number;
+  filter: any;
   setFilter: React.Dispatch<React.SetStateAction<any | undefined>>;
   setActiveTabIndex?: React.Dispatch<React.SetStateAction<number>>;
-  homePage?: boolean,
-  onResetTable: () => void
 }) => {
   const { data } = useAuthStore();
   const companion = useDisclosure();
+  const [isFetching, setIsFetching] = useState<boolean>(false);
+  const { allowList } = usePermission();
 
   const {
     control,
     reset,
     watch,
     formState: { errors, isDirty },
+    handleSubmit,
   } = useForm({
     resolver: yupResolver(filterSectionSchema),
     defaultValues: {
-      district: undefined,
-      representative_name: undefined,
-      gender: "M",
+      mandoub_main: undefined,
+      gender: undefined,
       first_name: undefined,
       second_name: undefined,
       third_name: undefined,
       last_name: undefined,
       place_of_residence: undefined,
       electoral_district: undefined,
-      boxes: undefined,
-      centers: undefined,
+      box: undefined,
+      voting_center: undefined,
       supporter_name: undefined,
+      status: undefined,
     },
   });
 
-  const { place_of_residence, district } = watch();
+  const tabs = useMemo(() => {
+    const base = [];
+
+    if (allowList?.candidate)
+      base.push({
+        text: " عدد الناخبين",
+        icon: <PeopleIcon color={activeTabIndex === 0 ? "#318973" : "#000"} />,
+      });
+
+    base.push(
+      {
+        text: "أصواتي",
+        icon: <StackIcon color={activeTabIndex === 1 ? "#318973" : "#000"} />,
+      },
+      {
+        text: "قوائمي",
+        icon: <PeopleIcon color={activeTabIndex === 2 ? "#318973" : "#000"} />,
+      },
+    );
+
+    if (allowList?.candidate)
+      base.push(
+        {
+          text: "مؤازرة",
+          icon: (
+            <CompanionIcon color={activeTabIndex === 3 ? "#318973" : "#000"} />
+          ),
+        },
+        {
+          text: "اليوم الانتخابي",
+          icon: (
+            <CalenderIcon color={activeTabIndex === 4 ? "#318973" : "#000"} />
+          ),
+        },
+      );
+
+    return base;
+  }, [allowList]);
 
   const handleSearch = () => {
     const newFilter: any = {};
@@ -79,13 +118,15 @@ const HomeFilterSection = ({
       "first_name",
       "second_name",
       "third_name",
-      "last_name",
-      "representative_name",
-      "district",
+      "mandoub_main",
+      "supporter_name",
+      "electoral_district",
+      "status",
       "place_of_residence",
+      "last_name",
       // ---
       "boxes",
-      "centers",
+      "voting_center",
     ].forEach((field) => {
       const item = watch(field as any);
       if (item) newFilter[field] = item;
@@ -97,95 +138,66 @@ const HomeFilterSection = ({
     }));
   };
 
-  console.log(watch("place_of_residence"));
-  
+  const downloadMyLists = useDownloadMyLists();
+
+  const getFiltersLayout = () => {
+    if (activeTabIndex === 0)
+      return {
+        columns: "repeat(12, 1fr)",
+        rows: "repeat(3, auto)",
+      };
+
+    if (activeTabIndex === 4)
+      return {
+        columns: "repeat(12, 1fr)",
+        rows: "repeat(5, auto)",
+      };
+
+    return {
+      columns: "repeat(12, 1fr)",
+      rows: "repeat(3, auto)",
+    };
+  };
+
+  const handleExport = async () => {
+    setIsFetching(true);
+
+    downloadMyLists
+      .mutateAsync({})
+      .then((res) => {
+        saveXLSXFile(res, "candidates.xlsx");
+      })
+      .finally(() => {
+        setIsFetching(false);
+      });
+  };
 
   useEffect(() => {
-    const newFilter: any = {};
-
-    ["place_of_residence", "district"].forEach((field) => {
-      const item = watch(field as any);
-      if (item) newFilter[field] = item;
-    });
-
-    setFilter((prev: any) => ({
-      ...prev,
-      ...newFilter,
-    }));
-  }, [place_of_residence, district]);
+    setFilter({});
+    reset();
+  }, [activeTabIndex]);
 
   return (
-    homePage ? <VStack w="100%" alignItems="start">
+    <VStack w="100%" alignItems="start">
       <HStack w="100%" justifyContent="space-between">
         <VStack alignItems="start" w="50%">
           <Heading size="md" display="flex" gap="10px">
             <Text>مرحبا</Text>
             <Text>{data?.user?.name || "الاسم غير معروف,"}</Text>
           </Heading>
+
           <Text fontSize="md">
             هذه هي لوحة التحكم الخاصة بك حيث يمكنك عرض إحصائيات أصواتك لانتخابات
             عام 2024
           </Text>
 
-          <CompanionModal
+          <SupporterModal
             isOpen={companion.isOpen}
             onClose={companion.onClose}
           />
         </VStack>
 
-        {activeTabIndex === 0 && (
-          <HStack gap="12px" w="50%">
-            <Controller
-              control={control}
-              name="place_of_residence"
-              render={({ field: { onChange, value } }) => (
-                <PlaceOfResidenceSelect
-                  key={value}
-                  value={value}
-                  onChange={onChange}
-                  error={errors.place_of_residence?.message}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="district"
-              render={({ field: { onChange, value } }) => (
-                <ElectoralDistrictSelect
-                  key={value}
-                  value={value}
-                  onChange={onChange}
-                  error={errors.district?.message}
-                />
-              )}
-            />
-
-            <Btn
-              w="100%"
-              type="outlined"
-              fontSize="17px"
-              color="red"
-              border="1px solid red"
-              borderColor="red"
-              borderRadius="50px"
-              icon={<SlRefresh />}
-              iconPlacment="right"
-              _hover={{
-                backgroundColor: "red",
-                color: "white",
-              }}
-              onClick={() => {
-                reset();
-                setFilter({});
-              }}
-            >
-              <Text>مسح الكل</Text>
-            </Btn>
-          </HStack>
-        )}
-
-        {activeTabIndex === 3 && (
+        {activeTabIndex === 3 && allowList?.candidate && (
           <Btn
             type="solid"
             borderRadius="50px"
@@ -201,114 +213,75 @@ const HomeFilterSection = ({
           </Btn>
         )}
 
-        {activeTabIndex === 2 && (
-          <Btn
-            type="solid"
-            borderRadius="50px"
-            icon={<DownloadIcon />}
-            iconPlacment="right"
-            bg="#318973"
-            color="#fff"
-            fontSize="17px"
-            onClick={() => {}}
-            padding="20px 25px"
-            mb="auto"
-          >
-            <Text>تحميل ملف Excel</Text>
-          </Btn>
+        {activeTabIndex === (allowList?.candidate ? 2 : 1) && (
+          <VStack>
+            <Btn
+              type="solid"
+              borderRadius="50px"
+              icon={<DownloadIcon />}
+              iconPlacment="right"
+              bg={isFetching ? "#63636357" : "#318973"}
+              borderColor={isFetching ? "transparent" : "#318973"}
+              color="#fff"
+              disabled={isFetching}
+              fontSize="17px"
+              onClick={handleExport}
+              padding="20px 25px"
+              mb="auto"
+            >
+              <Text>{isFetching ? "جاري التنزيل ..." : "تحميل ملف Excel"}</Text>
+            </Btn>
+
+            <HStack
+              as={Link}
+              to="/names-with-others"
+              cursor="pointer"
+              p="12px"
+              rounded="8px"
+              fontSize="16px"
+              fontWeight="600"
+              transition="0.3s ease"
+              _hover={{
+                textDecoration: "underline",
+              }}
+            >
+              <Text>أسامي مع مناديب آخرين</Text>
+            </HStack>
+          </VStack>
         )}
       </HStack>
 
       <Box>
         <TabsContainer
           setActiveTabIndex={setActiveTabIndex}
-          tabs={[
-            {
-              text: " عدد الناخبين",
-              icon: (
-                <PeopleIcon color={activeTabIndex === 0 ? "#318973" : "#000"} />
-              ),
-            },
-            {
-              text: "أصواتي",
-              icon: (
-                <StackIcon color={activeTabIndex === 1 ? "#318973" : "#000"} />
-              ),
-            },
-            {
-              text: "قوائمي",
-              icon: (
-                <PeopleIcon color={activeTabIndex === 2 ? "#318973" : "#000"} />
-              ),
-            },
-            {
-              text: "مؤازرة",
-              icon: (
-                <CompanionIcon
-                  color={activeTabIndex === 3 ? "#318973" : "#000"}
-                />
-              ),
-            },
-            {
-              text: "اليوم الانتخابي",
-              icon: (
-                <CalenderIcon
-                  color={activeTabIndex === 4 ? "#318973" : "#000"}
-                />
-              ),
-            },
-          ]}
+          tabs={tabs}
           mt="15px"
         />
       </Box>
 
-      {activeTabIndex !== 0 && (
+      {activeTabIndex !== (allowList?.candidate ? 2 : 1) && (
         <Grid
-          templateColumns={
-            activeTabIndex !== 4
-              ? "repeat(4, 1fr) 150px"
-              : "repeat(2, 1fr) 150px"
-          }
-          templateRows="repeat(2, 1fr)"
+          as={"form"}
+          templateColumns={getFiltersLayout().columns}
+          templateRows={getFiltersLayout().rows}
           mt="20px"
           gap="16px"
           w="100%"
         >
           <Filters
-            forMessagePage={!homePage}
-            handleSearch={handleSearch}
+            handleSearch={handleSubmit(handleSearch)}
             control={control}
             errors={errors}
             reset={reset}
             isDirty={isDirty}
             activeTabIndex={activeTabIndex}
+            setFilter={setFilter}
+            filter={filter}
+            watch={watch}
           />
         </Grid>
       )}
-    </VStack> : 
-        <Grid
-          templateColumns={
-            activeTabIndex !== 4
-              ? "repeat(4, 1fr) 150px"
-              : "repeat(2, 1fr) 150px"
-          }
-          templateRows="repeat(2, 1fr)"
-          mt="20px"
-          gap="16px"
-          w="100%"
-        >
-          <Filters
-            forMessagePage={!homePage}
-            handleSearch={handleSearch}
-            control={control}
-            errors={errors}
-            reset={reset}
-            isDirty={isDirty}
-            activeTabIndex={activeTabIndex}
-            onResetSearch={onResetTable}
-          />
-        </Grid>
-      
+    </VStack>
   );
 };
 

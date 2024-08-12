@@ -5,14 +5,21 @@ import {
   SwitchIcon,
   UpwardArrow,
 } from "@assets/icons";
-import { Box, HStack, Heading, Input, Text, VStack } from "@chakra-ui/react";
-import { FilterType } from "@components/content/Dashboard/Voters/FilterSection/FilterType";
+import {
+  Box,
+  HStack,
+  Heading,
+  Text,
+  VStack,
+  useDisclosure,
+} from "@chakra-ui/react";
 import TabsContainer from "@components/core/tabsContainer/TabsContainer";
-import { yupResolver } from "@hookform/resolvers/yup";
 import useAuthStore from "@store/AuthStore";
-import { useForm } from "react-hook-form";
-import { FilterSchema } from "./FilterSchema";
 import { Btn } from "@components/core";
+import IncomeModal from "../modals/IncomeModal/IncomeModal";
+import ExpenseModal from "../modals/ExpenseModal/ExpenseModal";
+import TransModal from "../modals/TransModal/TransModal";
+import AccountModal from "../modals/AccountModal/AccountModal";
 
 const ExpensesFilterSection = ({
   activeTabIndex,
@@ -20,16 +27,13 @@ const ExpensesFilterSection = ({
 }: {
   activeTabIndex: number;
   setActiveTabIndex: React.Dispatch<React.SetStateAction<number>>;
-  setFilter: React.Dispatch<React.SetStateAction<FilterType | undefined>>;
 }) => {
   const { data } = useAuthStore();
 
-  const { watch } = useForm({
-    resolver: yupResolver(FilterSchema),
-    defaultValues: {
-      date: "",
-    },
-  });
+  const addIncome = useDisclosure();
+  const addAccount = useDisclosure();
+  const transBetweenAccounts = useDisclosure();
+  const addExpense = useDisclosure();
 
   return (
     <VStack>
@@ -72,22 +76,17 @@ const ExpensesFilterSection = ({
           />
         </VStack>
 
-        <HStack>
-          {activeTabIndex === 0 && (
-            <Box w="240px" mb="auto">
-              <Input
-                type="date"
-                placeholder="التاريخ"
-                name="date"
-                sx={{
-                  color: watch("date") ? "black" : "#718096",
-                }}
-              />
-            </Box>
-          )}
+        <IncomeModal isOpen={addIncome.isOpen} onClose={addIncome.onClose} />
+        <AccountModal isOpen={addAccount.isOpen} onClose={addAccount.onClose} />
+        <ExpenseModal isOpen={addExpense.isOpen} onClose={addExpense.onClose} />
+        <TransModal
+          isOpen={transBetweenAccounts.isOpen}
+          onClose={transBetweenAccounts.onClose}
+        />
 
+        <HStack>
           {activeTabIndex === 1 && (
-            <>
+            <Box display="grid" gridTemplateColumns="auto auto" gap="10px">
               <Btn
                 type="solid"
                 borderRadius="50px"
@@ -96,9 +95,22 @@ const ExpensesFilterSection = ({
                 bg="#318973"
                 color="#fff"
                 fontSize="17px"
-                onClick={() => {}}
+                onClick={() => addIncome.onOpen()}
               >
                 <Text>أضافة دخل</Text>
+              </Btn>
+
+              <Btn
+                type="solid"
+                borderRadius="50px"
+                icon={<PlusIcon />}
+                iconPlacment="right"
+                bg="#318973"
+                color="#fff"
+                fontSize="17px"
+                onClick={() => addAccount.onOpen()}
+              >
+                <Text>أضافة حساب</Text>
               </Btn>
 
               <Btn
@@ -110,15 +122,16 @@ const ExpensesFilterSection = ({
                 border="1px solid #318973"
                 borderColor="1px solid #318973"
                 bg="#fff"
+                gridColumn="span 2"
                 _hover={{
                   opacity: 0.7,
                 }}
                 fontSize="17px"
-                onClick={() => {}}
+                onClick={() => transBetweenAccounts.onOpen()}
               >
                 <Text>تحويل بين حساباتي</Text>
               </Btn>
-            </>
+            </Box>
           )}
 
           {activeTabIndex === 2 && (
@@ -134,9 +147,9 @@ const ExpensesFilterSection = ({
                 bg: "#c02323",
                 opacity: 0.7,
               }}
-              onClick={() => {}}
+              onClick={() => addExpense.onOpen()}
             >
-              <Text>أضافة دخل</Text>
+              <Text>أضافة مصروف</Text>
             </Btn>
           )}
         </HStack>

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { BoxesType, VotingCentersType } from "./Centers";
 
 export const useGetVotingCenters = (isMapLoaded?: boolean) => {
-  const api = new APIClient<VotingCentersType>(`data/map/voting_center`);
+  const api = new APIClient<VotingCentersType>(`data/voting_center`);
   return useQuery({
     queryKey: ["VotingCenters"],
     queryFn: () => api.getList(),

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
 import {
@@ -95,7 +96,7 @@ const MainRepsTable: React.FC<Props> = ({
             <>
               {Array.from({ length: 10 }).map((_item, idx) => (
                 <Tr p="5" key={idx as number}>
-                  {Array.from({ length: columns.length || 0 }).map(
+                  {Array.from({ length: columns?.length || 0 }).map(
                     (_item, index) => (
                       <Td key={index as number}>
                         <Skeleton
@@ -141,13 +142,13 @@ const MainRepsTable: React.FC<Props> = ({
                 </Tr>
               );
             })}
-          {rows.length === 0 && !isFetching && (
+          {rows?.length === 0 && !isFetching && (
             <Tr p="5">
               <Td
                 textAlign="center"
                 color="gray.400"
                 fontSize="14px"
-                colSpan={columns.length}
+                colSpan={columns?.length}
               >
                 {noDataElement && noDataFilterElement
                   ? filter !== undefined

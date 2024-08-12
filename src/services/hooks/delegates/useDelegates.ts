@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import APIClient from "@services/api";
 import {
   keepPreviousData,
@@ -7,12 +8,12 @@ import {
 } from "@tanstack/react-query";
 import { GetDelegate, GetDelegates, PostDelegate } from "./Delegates";
 import { ItemResponse } from "@services/structure";
-import { FilterType } from "@components/content/Dashboard/Delegates/FilterSection/FilterType";
 import useDelegatesStore from "@store/DelegatesStore";
+import useSupportersStore from "@store/SupportersStore";
 
 const manadeebURL = "account/manadeeb";
-export const useGetDelegates = (filter?: FilterType) => {
-  const { page } = useDelegatesStore();
+export const useGetDelegates = () => {
+  const { page, filter } = useDelegatesStore();
   const api = new APIClient<GetDelegates>(manadeebURL + "/");
   return useQuery({
     queryKey: ["Delegates", filter, page],
@@ -41,6 +42,7 @@ export const useGetDelegate = (id: string, isEnabled: boolean) => {
 export const usePostDelegate = () => {
   const clientQuery = useQueryClient();
   const api = new APIClient<PostDelegate>("account/register/");
+
   return useMutation<ItemResponse<string>, Error, PostDelegate>({
     mutationFn: async (data: PostDelegate) => {
       const response = (await api.post(data)) as ItemResponse<string>;
@@ -62,6 +64,7 @@ export const usePostDelegate = () => {
 export const usePutDelegate = (id: string) => {
   const clientQuery = useQueryClient();
   const api = new APIClient<PostDelegate>(`${manadeebURL}/${id}`);
+  
   return useMutation<ItemResponse<string>, Error, PostDelegate>({
     mutationFn: async (data: PostDelegate) => {
       const response = (await api.put(data)) as ItemResponse<string>;
@@ -98,6 +101,41 @@ export const useDeleteDelegate = (id: string) => {
       });
 
       return "Deleted";
+    },
+    onError: (error: Error) => {
+      if (error) return error;
+    },
+  });
+};
+
+export const useGetSupporterNamesModal = () => {
+  const api = new APIClient<any>("supporter/almuazereen");
+  const { modalPage } = useSupportersStore();
+
+  return useQuery({
+    queryKey: ["SupporterNames"],
+    queryFn: () =>
+      api.getList({
+        params: {
+          page: modalPage,
+        },
+      }),
+  });
+};
+
+export const useAddSupporter = () => {
+  const clientQuery = useQueryClient();
+  const api = new APIClient<any>("supporter/generate_token");
+
+  return useMutation<ItemResponse<string>, Error, any>({
+    mutationFn: async (data: any) => {
+      const response = (await api.post(data)) as any;
+      return response;
+    },
+    onSuccess: async () => {
+      await clientQuery.invalidateQueries({
+        queryKey: ["SupporterNames"],
+      });
     },
     onError: (error: Error) => {
       if (error) return error;

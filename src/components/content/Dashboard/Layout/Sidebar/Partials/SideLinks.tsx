@@ -1,9 +1,12 @@
 import { HStack, Text, VStack } from "@chakra-ui/react";
 import { links } from "@constants/variables/SideBar";
+import { usePermission } from "@services/hooks/auth/Permission";
+import { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const SideLinks = () => {
   const location = useLocation();
+  const { allowList } = usePermission();
 
   const getLinkStyles = (index: number, url: string) => {
     const isActive =
@@ -19,9 +22,33 @@ const SideLinks = () => {
     };
   };
 
+  const filteredLinks = useMemo(
+    () =>
+      links.filter(({ url }) => {
+        if (url === "/family-tree") {
+          return allowList?.familyTree;
+        }
+
+        if (allowList?.candidate) return true;
+
+        if (url === "/delegates" && !allowList?.addDelegates) {
+          return false;
+        }
+
+        if (
+          allowList?.mainDelegate &&
+          ["/", "/voters", "/centers"].includes(url)
+        )
+          return true;
+
+        return false;
+      }) || [],
+    [allowList],
+  );
+
   return (
     <VStack align="stretch" mt="24px" spacing="6px">
-      {links.map((link, index) => (
+      {filteredLinks.map((link, index) => (
         <HStack
           key={index}
           as={Link}

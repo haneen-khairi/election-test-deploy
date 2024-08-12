@@ -18,7 +18,7 @@ interface Props {
 }
 
 const TableSection = ({ filter, status }: Props) => {
-  const { data, isLoading, isFetching } = useGetVoters(filter, status);
+  const { data, isLoading, isFetching } = useGetVoters(filter);
   const { setPage, page } = useVostersStore();
 
   // Modal Configurations
@@ -43,7 +43,7 @@ const TableSection = ({ filter, status }: Props) => {
     }[] = MyVotes as [];
 
     setCheckedRows(
-      checkedRows.length === 0 ? votersData.map((voter) => voter.id) : [],
+      checkedRows?.length === 0 ? votersData.map((voter) => voter.id) : [],
     );
   };
 
@@ -69,7 +69,7 @@ const TableSection = ({ filter, status }: Props) => {
         full
         element={
           <HStack>
-            {checkedRows.length > 1 && (
+            {checkedRows?.length > 1 && (
               <Button
                 rounded="full"
                 p="0"
@@ -92,7 +92,7 @@ const TableSection = ({ filter, status }: Props) => {
               size="sm"
               onClick={handleCheckAll}
             >
-              {checkedRows.length !== 0 ? <MdDeselect /> : <MdSelectAll />}
+              {checkedRows?.length !== 0 ? <MdDeselect /> : <MdSelectAll />}
             </Button>
           </HStack>
         }
