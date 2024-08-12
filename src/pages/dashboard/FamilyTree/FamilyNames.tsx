@@ -1,8 +1,9 @@
 import { Box, SimpleGrid, Button, HStack, Text } from "@chakra-ui/react";
-import { useState } from "react";
-
 type Props = {
     families: Family[],
+    nextPage: number,
+    count: number,
+    onPaginate: (action:string) => void
 }
 
 type Family = {
@@ -13,27 +14,15 @@ type Family = {
     id: string
 }
 
-const FamilyNames = ({ families }: Props) => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5;
-
-    const totalPages = Math.ceil(families.length / itemsPerPage);
-
-    const currentData = families.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-    const handleNextPage = () => {
-        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-    };
-
-    const handlePrevPage = () => {
-        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    };
+const FamilyNames = ({ families, nextPage, count,  onPaginate }: Props) => {
+    console.log("🚀 ~ FamilyNames ~ nextPage:", nextPage)
+ 
 
     return (
         <>
             <Box background={'#fff'} p={10} borderRadius={'10px'}>
                 <SimpleGrid columns={1} spacing={5} minW={'250px'}>
-                    {currentData.length ? currentData.map((family: Family) => (
+                {families.length ? families.map((family: Family) => (
                         <Box 
                             key={family.id}
                             borderBottom={'1px solid #c2c2c2'} 
@@ -47,10 +36,10 @@ const FamilyNames = ({ families }: Props) => {
                     )) : ""}
                 </SimpleGrid>
                 <HStack mt={5} justifyContent="space-between">
-                    <Button onClick={handlePrevPage} isDisabled={currentPage === 1}>السابق</Button>
-                    <Text> {currentPage} - {totalPages}</Text>
-                    <Button onClick={handleNextPage} isDisabled={currentPage === totalPages}>التالي</Button>
-                </HStack>
+                <Button onClick={()=> onPaginate('prev')} isDisabled={nextPage === 2}>السابق</Button>
+                    <Text> {nextPage - 1} - {Math.ceil(count / 20)}</Text>
+                    <Button onClick={()=> onPaginate('next')} >التالي</Button>
+                     </HStack>
             </Box>
         </>
     );

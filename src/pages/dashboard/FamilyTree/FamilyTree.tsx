@@ -45,7 +45,11 @@ import {
     const [familyId, setFamilyId] = useState("");
     const [treeName, setTreeName] = useState<any[]>([]);
     const [familyNamesDetails, setFamilyNamesDetails] = useState<any[]>([]);
-    
+    const [paginationObject, setPaginationObject] = useState<any>({
+      next: null,
+      count: null,
+      previous: null
+    })
     async function getTreeNames() {
       try {
         const res = await axios.get(
@@ -62,17 +66,23 @@ import {
       }
     }
   
-    async function getFamilyNameById(id: string) {
+    async function getFamilyNameById(id: string, page: number = 1){
       try {
         setFamilyId(id);
         const res = await axios.get(
-          `${import.meta.env.VITE_PRIVATE_API_URL}/candidate/voters?family_tree_id=${id}`,
+          `${import.meta.env.VITE_PRIVATE_API_URL}/candidate/voters?family_tree_id=${id}?page=${page}`,
           {
             headers: {
               Authorization: `Bearer ${data?.tokens?.access}`,
             },
           }
         );  
+           setPaginationObject({
+          next: res.data.next,
+          previous: res.data.previous,
+          count: res.data.count
+        })
+        console.log("🚀 ~ getFamilyNameById ~ res:", res.data.data);
         setFamilyNamesDetails(res.data.data);
       } catch (error) {
         console.error("🚀 ~ getFamilyNameById ~ error:", error);
@@ -142,7 +152,12 @@ import {
             
             </ButtonGroup>}
             {familyNamesDetails.length ? (
-                <FamilyNames families={familyNamesDetails} />
+                <FamilyNames count={paginationObject.count}  nextPage={paginationObject.next} onPaginate={
+                  (action) => {
+                    if(action === 'prev') getFamilyNameById(familyId, paginationObject.previous)
+                    if(action === 'next') getFamilyNameById(familyId, paginationObject.next)
+                  }
+                } families={familyNamesDetails} />
               ) : (
                 ""
               )}
