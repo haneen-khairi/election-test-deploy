@@ -88,7 +88,7 @@ import {
         console.error("🚀 ~ getFamilyNameById ~ error:", error);
       }
     }
-  
+ 
     useEffect(() => {
       getTreeNames();
   
@@ -152,12 +152,12 @@ import {
             
             </ButtonGroup>}
             {familyNamesDetails.length ? (
-                <FamilyNames count={paginationObject.count}  nextPage={paginationObject.next} onPaginate={
+                <FamilyNames   count={paginationObject.count}  nextPage={paginationObject.next} onPaginate={
                   (action) => {
                     if(action === 'prev') getFamilyNameById(familyId, paginationObject.previous)
                     if(action === 'next') getFamilyNameById(familyId, paginationObject.next)
                   }
-                } families={familyNamesDetails} />
+                } families={familyNamesDetails}   family_tree_id={familyId} />
               ) : (
                 ""
               )}
