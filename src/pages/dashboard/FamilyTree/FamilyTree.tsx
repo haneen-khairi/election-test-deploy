@@ -70,7 +70,7 @@ import {
       try {
         setFamilyId(id);
         const res = await axios.get(
-          `${import.meta.env.VITE_PRIVATE_API_URL}/candidate/voters?family_tree_id=${id}?page=${page}`,
+          `${import.meta.env.VITE_PRIVATE_API_URL}/candidate/voters?family_tree_id=${id}&page=${page}`,
           {
             headers: {
               Authorization: `Bearer ${data?.tokens?.access}`,
@@ -154,7 +154,7 @@ import {
             
             </ButtonGroup>}
             {familyNamesDetails.length ? (
-                <FamilyNames   count={paginationObject.count}  nextPage={paginationObject.next} onPaginate={
+                <FamilyNames  onSuccess={() => getFamilyNameById(familyId)} count={paginationObject.count}  nextPage={paginationObject.next} onPaginate={
                   (action) => {
                     if(action === 'prev') getFamilyNameById(familyId, paginationObject.previous)
                     if(action === 'next') getFamilyNameById(familyId, paginationObject.next)
