@@ -33,8 +33,7 @@ export const FamilyList = ({
       alignItems="center"
       justifyContent="space-between"
       transition="background-color 0.3s, color 0.3s"
-      _hover={{ bg: "primary.600" }}
-      // _active={{ bg: "#c2c2c2", color: "#000" }}
+      _hover={{ bg: "primary.600" }} 
     >
       {family.name}
     </Button>

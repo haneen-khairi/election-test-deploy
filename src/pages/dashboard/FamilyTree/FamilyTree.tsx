@@ -82,6 +82,8 @@ import {
           previous: res.data.previous,
           count: res.data.count
         })
+        console.log("🚀 ~ getFamilyNameById ~ id:", id);
+        console.log("🚀 ~ getFamilyNameById ~ page:", page);
         console.log("🚀 ~ getFamilyNameById ~ res:", res.data.data);
         setFamilyNamesDetails(res.data.data);
       } catch (error) {

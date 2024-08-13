@@ -22,6 +22,7 @@ type Family = {
 
 const FamilyNames = ({ families, nextPage, count,  onPaginate, family_tree_id }: Props) => {
     console.log("🚀 ~ FamilyNames ~ nextPage:", nextPage)
+    console.log("🚀 ~ FamilyNames ~ nextPage:", family_tree_id)
     const { data } = useAuthStore();
     const handleDelete = async (id :  string) => {
         try {
